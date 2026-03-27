@@ -6,6 +6,10 @@ import type {
   Cutoff,
   SyllabusSection,
   ExamDate,
+  Bundle,
+  BundleFile,
+  Order,
+  Coupon,
 } from "@/lib/types/database";
 
 // --- Exams ---
@@ -125,6 +129,66 @@ export async function upsertExamDate(examDate: Partial<ExamDate> & { exam_id: st
 
 export async function deleteExamDate(id: string): Promise<void> {
   const { error } = await supabase.from("exam_dates").delete().eq("id", id);
+  if (error) throw error;
+}
+
+// --- Bundles ---
+export async function getAdminBundles(): Promise<(Bundle & { files?: BundleFile[] })[]> {
+  const { data, error } = await supabase.from("bundles").select("*, files:bundle_files(*), exam:exams(slug, title)").order("created_at", { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function upsertBundle(bundle: Partial<Bundle> & { title: string; slug: string; price_paise: number }): Promise<Bundle> {
+  const { data, error } = await supabase.from("bundles").upsert(bundle, { onConflict: "id" }).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteBundle(id: string): Promise<void> {
+  const { error } = await supabase.from("bundles").delete().eq("id", id);
+  if (error) throw error;
+}
+
+export async function uploadBundleFile(file: File, storagePath: string): Promise<string> {
+  const { data, error } = await supabase.storage.from("bundles").upload(storagePath, file, { upsert: true });
+  if (error) throw error;
+  return data.path;
+}
+
+export async function insertBundleFile(bundleFile: { bundle_id: string; file_name: string; storage_path: string; file_size_kb: number | null; sort_order: number }): Promise<BundleFile> {
+  const { data, error } = await supabase.from("bundle_files").insert(bundleFile).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteBundleFile(id: string): Promise<void> {
+  const { error } = await supabase.from("bundle_files").delete().eq("id", id);
+  if (error) throw error;
+}
+
+// --- Orders ---
+export async function getAdminOrders(): Promise<Order[]> {
+  const { data, error } = await supabase.from("orders").select("*, bundle:bundles(title, slug), coupon:coupons(code)").order("created_at", { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+// --- Coupons ---
+export async function getAdminCoupons(): Promise<Coupon[]> {
+  const { data, error } = await supabase.from("coupons").select("*").order("created_at", { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function upsertCoupon(coupon: Partial<Coupon> & { code: string; discount_percent: number }): Promise<Coupon> {
+  const { data, error } = await supabase.from("coupons").upsert({ ...coupon, code: coupon.code.toUpperCase() }, { onConflict: "id" }).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteCoupon(id: string): Promise<void> {
+  const { error } = await supabase.from("coupons").delete().eq("id", id);
   if (error) throw error;
 }
 

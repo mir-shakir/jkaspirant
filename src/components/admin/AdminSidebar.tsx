@@ -12,6 +12,9 @@ const navItems = [
   { href: "/admin/cutoffs", label: "Cut-offs" },
   { href: "/admin/syllabus", label: "Syllabus" },
   { href: "/admin/dates", label: "Exam Dates" },
+  { href: "/admin/bundles", label: "Bundles" },
+  { href: "/admin/orders", label: "Orders" },
+  { href: "/admin/coupons", label: "Coupons" },
 ];
 
 export function AdminSidebar() {

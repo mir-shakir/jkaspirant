@@ -3,6 +3,7 @@ import { MobileNav } from "./MobileNav";
 
 const navLinks = [
   { href: "/exams", label: "Exams" },
+  { href: "/bundles", label: "Resources" },
   { href: "/notifications", label: "Notifications" },
 ];
 

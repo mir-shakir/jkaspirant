@@ -81,3 +81,58 @@ export interface ExamDate {
   is_tentative: boolean;
   created_at: string;
 }
+
+export interface Bundle {
+  id: string;
+  slug: string;
+  title: string;
+  description: string | null;
+  price_paise: number;
+  exam_id: string | null;
+  cover_image_url: string | null;
+  is_active: boolean;
+  seo_title: string | null;
+  seo_description: string | null;
+  focus_keyword: string | null;
+  created_at: string;
+  updated_at: string;
+  exam?: Pick<Exam, "slug" | "title">;
+  files?: BundleFile[];
+}
+
+export interface BundleFile {
+  id: string;
+  bundle_id: string;
+  file_name: string;
+  storage_path: string;
+  file_size_kb: number | null;
+  sort_order: number;
+  created_at: string;
+}
+
+export interface Order {
+  id: string;
+  bundle_id: string | null;
+  buyer_email: string;
+  amount_paid_paise: number;
+  razorpay_order_id: string | null;
+  razorpay_payment_id: string | null;
+  coupon_id: string | null;
+  download_token: string;
+  token_expires_at: string;
+  status: "pending" | "paid" | "free";
+  created_at: string;
+  bundle?: Pick<Bundle, "title" | "slug">;
+  coupon?: Pick<Coupon, "code">;
+}
+
+export interface Coupon {
+  id: string;
+  code: string;
+  discount_percent: number;
+  max_uses: number | null;
+  times_used: number;
+  expires_at: string | null;
+  is_active: boolean;
+  created_at: string;
+}
