@@ -11,6 +11,7 @@ interface BuyButtonProps {
 
 export function BuyButton({ bundleId, bundleSlug, bundleTitle, pricePaise }: BuyButtonProps) {
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState<{ discount_percent: number } | null>(null);
   const [couponError, setCouponError] = useState("");
@@ -72,7 +73,8 @@ export function BuyButton({ bundleId, bundleSlug, bundleTitle, pricePaise }: Buy
       name: "JK Aspirant",
       description: bundleTitle,
       order_id: data.razorpay_order_id,
-      prefill: { email: email.trim() },
+      prefill: { email: email.trim(), contact: phone.trim() },
+      notes: { bundle_id: bundleId, buyer_email: email.trim() },
       handler: function (response: { razorpay_payment_id: string }) {
         window.location.href = `/bundles/${bundleSlug}/download?token=${data.razorpay_order_id}&payment_id=${response.razorpay_payment_id}`;
       },
@@ -107,6 +109,11 @@ export function BuyButton({ bundleId, bundleSlug, bundleTitle, pricePaise }: Buy
               </div>
 
               <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone number</label>
+                <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="9876543210" className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+              </div>
+
+              <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Coupon code (optional)</label>
                 <div className="mt-1 flex gap-2">
                   <input type="text" value={couponCode} onChange={(e) => { setCouponCode(e.target.value.toUpperCase()); setCouponApplied(null); setCouponError(""); }} placeholder="e.g. SHARE50" className="block flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
@@ -127,7 +134,7 @@ export function BuyButton({ bundleId, bundleSlug, bundleTitle, pricePaise }: Buy
             </div>
 
             <div className="mt-6 flex gap-3">
-              <button onClick={handlePurchase} disabled={!email.trim() || loading} className="flex-1 rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50">
+              <button onClick={handlePurchase} disabled={!email.trim() || !phone.trim() || loading} className="flex-1 rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50">
                 {loading ? "Processing..." : finalPricePaise === 0 ? "Get Free Download" : `Pay ₹${finalPricePaise / 100}`}
               </button>
               <button onClick={() => setShowModal(false)} className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300">Cancel</button>
