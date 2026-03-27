@@ -1,3 +1,5 @@
+export const revalidate = 1800; // ISR: revalidate every 30 minutes
+
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Link from "next/link";

@@ -7,6 +7,8 @@ import { getAllExams } from "@/lib/queries/exams";
 import { getLatestNotifications } from "@/lib/queries/notifications";
 import { getAllBundles } from "@/lib/queries/bundles";
 
+export const revalidate = 1800; // ISR: revalidate every 30 minutes
+
 export const metadata = buildMetadata({
   title: "JK Aspirant — JKSSB & JKPSC Exam Hub",
   description:

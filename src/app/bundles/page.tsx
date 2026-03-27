@@ -11,6 +11,8 @@ export const metadata: Metadata = buildMetadata({
   keywords: ["JKSSB PDF", "JKPSC study material", "JKSSB previous papers download"],
 });
 
+export const revalidate = 1800; // ISR: revalidate every 30 minutes
+
 export default async function BundlesPage() {
   const bundles = await getAllBundles();
   const breadcrumbItems = [{ name: "Resources", path: "/bundles" }];
