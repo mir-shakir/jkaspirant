@@ -10,6 +10,7 @@ interface Stats {
   totalNotifications: number;
   pendingNotifications: number;
   totalPapers: number;
+  totalResources: number;
 }
 
 function StatCard({ label, value, highlight = false }: { label: string; value: number; highlight?: boolean }) {
@@ -33,11 +34,12 @@ export default function AdminDashboardPage() {
         <div className="flex-1 p-6">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
           {stats ? (
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
               <StatCard label="Active Exams" value={stats.totalExams} />
               <StatCard label="Published Notifications" value={stats.totalNotifications} />
               <StatCard label="Pending Review" value={stats.pendingNotifications} highlight />
               <StatCard label="Papers Uploaded" value={stats.totalPapers} />
+              <StatCard label="Active Resources" value={stats.totalResources} />
             </div>
           ) : (
             <p className="mt-6 text-gray-500">Loading stats...</p>

@@ -27,22 +27,31 @@ export function NotificationCard({ notification }: NotificationCardProps) {
   return (
     <Link
       href={`/notifications/${notification.slug}`}
-      className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md dark:border-gray-800 dark:bg-gray-900"
+      className="surface-card flex items-start gap-4 p-5 transition duration-200 hover:-translate-y-1 hover:shadow-[0_20px_56px_rgba(15,23,42,0.1)]"
     >
-      <div className="flex-1">
-        <p className="text-sm font-medium text-gray-900 dark:text-white">
-          {notification.title}
-        </p>
-        <div className="mt-1 flex items-center gap-2">
+      <div className="mt-1 h-11 w-11 shrink-0 rounded-2xl bg-[hsla(var(--warm),0.14)] text-center text-xs font-semibold leading-[2.75rem] text-[hsl(var(--warm))]">
+        {formattedDate ? formattedDate.split(" ")[0] : "New"}
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
           {notification.category && (
-            <span className="inline-block rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+            <span className="rounded-full bg-[hsl(var(--panel-soft))] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[hsl(var(--muted))]">
               {categoryLabels[notification.category] || notification.category}
             </span>
           )}
           {formattedDate && (
-            <span className="text-xs text-gray-400">{formattedDate}</span>
+            <span className="text-xs text-[hsl(var(--muted))]">{formattedDate}</span>
           )}
         </div>
+        <p className="mt-3 text-base font-semibold text-[hsl(var(--foreground))]">
+          {notification.title}
+        </p>
+        <p className="mt-2 text-sm text-[hsl(var(--muted))]">
+          Read more and start preparing →
+        </p>
+      </div>
+      <div className="hidden self-center rounded-full bg-[hsl(var(--panel-soft))] px-3 py-1.5 text-xs font-semibold text-[hsl(var(--foreground))] sm:block">
+        Open
       </div>
     </Link>
   );

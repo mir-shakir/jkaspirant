@@ -7,7 +7,7 @@ interface DateTimelineProps {
 export function DateTimeline({ dates }: DateTimelineProps) {
   if (dates.length === 0) {
     return (
-      <p className="text-gray-500 dark:text-gray-400">
+      <p className="surface-card p-5 text-[hsl(var(--muted))]">
         Important dates have not been announced yet.
       </p>
     );
@@ -15,7 +15,7 @@ export function DateTimeline({ dates }: DateTimelineProps) {
 
   return (
     <div className="relative space-y-0">
-      <div className="absolute left-3 top-2 bottom-2 w-px bg-gray-200 dark:bg-gray-700" />
+      <div className="absolute bottom-2 left-4 top-2 w-px bg-[hsl(var(--line))]" />
 
       {dates.map((date) => {
         const formattedDate = date.event_date
@@ -27,17 +27,17 @@ export function DateTimeline({ dates }: DateTimelineProps) {
           : "TBA";
 
         return (
-          <div key={date.id} className="relative flex items-start gap-4 py-3">
-            <div className="relative z-10 mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full border-2 border-teal-600 bg-white dark:border-teal-400 dark:bg-gray-950" />
+          <div key={date.id} className="surface-card relative flex items-start gap-4 p-4 pl-5">
+            <div className="relative z-10 mt-1.5 h-3 w-3 shrink-0 rounded-full border-2 border-[hsl(var(--accent-strong))] bg-[hsl(var(--panel))]" />
 
             <div>
-              <p className="text-sm font-semibold text-gray-900 dark:text-white">
+              <p className="text-sm font-semibold text-[hsl(var(--foreground))]">
                 {date.event_name}
               </p>
-              <p className="mt-0.5 text-sm text-gray-600 dark:text-gray-400">
+              <p className="mt-1 text-sm text-[hsl(var(--muted))]">
                 {formattedDate}
                 {date.is_tentative && (
-                  <span className="ml-2 rounded bg-yellow-50 px-1.5 py-0.5 text-xs text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
+                  <span className="ml-2 rounded-full bg-[hsla(var(--warm),0.14)] px-2 py-0.5 text-xs text-[hsl(var(--warm))]">
                     Tentative
                   </span>
                 )}

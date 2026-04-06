@@ -12,8 +12,15 @@ export function createServerClient() {
       { auth: { persistSession: false } }
     );
   }
+  const isDev = process.env.NODE_ENV === "development";
 
   return createClient(supabaseUrl, serviceRoleKey, {
     auth: { persistSession: false },
+    ...(isDev && {
+      global: {
+        fetch: (url: RequestInfo | URL, options: RequestInit = {}) =>
+          fetch(url, { ...options, cache: "no-store" }),
+      },
+    }),
   });
 }

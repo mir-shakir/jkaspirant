@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import { ExamCard } from "@/components/ExamCard";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { SearchHero } from "@/components/SearchHero";
+import { SectionHeader } from "@/components/SectionHeader";
 import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getAllExams } from "@/lib/queries/exams";
 
@@ -16,9 +18,29 @@ export default async function ExamsPage() {
   const exams = await getAllExams();
 
   const breadcrumbItems = [{ name: "Exams", path: "/exams" }];
+  const searchItems = exams.flatMap((exam) => [
+    {
+      title: exam.title,
+      description: "Open exam hub",
+      href: `/exams/${exam.slug}`,
+      tag: "Exam",
+    },
+    {
+      title: `${exam.title} previous papers`,
+      description: "Download papers",
+      href: `/exams/${exam.slug}/previous-papers`,
+      tag: "Paper",
+    },
+    {
+      title: `${exam.title} syllabus`,
+      description: "Section-wise syllabus",
+      href: `/exams/${exam.slug}/syllabus`,
+      tag: "Syllabus",
+    },
+  ]);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
+    <div className="page-shell py-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -28,23 +50,34 @@ export default async function ExamsPage() {
 
       <Breadcrumb items={breadcrumbItems} />
 
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
-        All Exams
-      </h1>
-      <p className="mt-2 text-gray-600 dark:text-gray-400">
-        Select an exam to view syllabus, previous papers, cut-offs, and
-        important dates.
-      </p>
+      <SearchHero
+        kicker="Your exams"
+        title="Find your exam and start preparing — papers, syllabus, dates, all in one place."
+        placeholder="Type your exam name..."
+        items={searchItems}
+        quickLinks={[
+          { label: "All papers", href: "/resources" },
+          { label: "Study packs", href: "/bundles" },
+          { label: "Latest updates", href: "/notifications" },
+        ]}
+      />
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <section className="mt-10">
+        <SectionHeader
+          kicker="All exams"
+          title="JKSSB & JKPSC exams we cover"
+        />
+      </section>
+
+      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {exams.map((exam) => (
           <ExamCard key={exam.id} exam={exam} />
         ))}
       </div>
 
       {exams.length === 0 && (
-        <p className="mt-8 text-center text-gray-500 dark:text-gray-400">
-          No exams available yet. Check back soon.
+        <p className="surface-card mt-8 p-5 text-center text-[hsl(var(--muted))]">
+          No exams listed yet — we&apos;re working on adding them. Check back soon!
         </p>
       )}
     </div>

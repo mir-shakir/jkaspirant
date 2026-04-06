@@ -19,7 +19,7 @@ export function CutoffTable({ cutoffs }: CutoffTableProps) {
 
   if (cutoffs.length === 0) {
     return (
-      <p className="text-gray-500 dark:text-gray-400">
+      <p className="surface-card p-5 text-[hsl(var(--muted))]">
         Cut-off data is not yet available for this exam.
       </p>
     );
@@ -36,10 +36,10 @@ export function CutoffTable({ cutoffs }: CutoffTableProps) {
           <button
             key={year}
             onClick={() => setSelectedYear(year)}
-            className={`rounded-md px-3 py-1 text-sm font-medium transition-colors ${
+            className={`rounded-full px-4 py-2 text-sm font-medium transition ${
               selectedYear === year
-                ? "bg-teal-600 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+                ? "bg-[hsl(var(--accent-strong))] text-white"
+                : "border border-[hsl(var(--line))] bg-[hsl(var(--panel))] text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
             }`}
           >
             {year}
@@ -47,23 +47,23 @@ export function CutoffTable({ cutoffs }: CutoffTableProps) {
         ))}
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+      <div className="surface-card overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 dark:bg-gray-900">
+          <thead className="bg-[hsl(var(--panel-soft))]">
             <tr>
-              <th className="px-4 py-3 text-left font-semibold text-gray-900 dark:text-white">Category</th>
-              <th className="px-4 py-3 text-left font-semibold text-gray-900 dark:text-white">Cut-off Score</th>
-              <th className="px-4 py-3 text-left font-semibold text-gray-900 dark:text-white">Total Posts</th>
-              <th className="px-4 py-3 text-left font-semibold text-gray-900 dark:text-white">Applicants</th>
+              <th className="px-4 py-3 text-left font-semibold text-[hsl(var(--foreground))]">Category</th>
+              <th className="px-4 py-3 text-left font-semibold text-[hsl(var(--foreground))]">Cut-off Score</th>
+              <th className="px-4 py-3 text-left font-semibold text-[hsl(var(--foreground))]">Total Posts</th>
+              <th className="px-4 py-3 text-left font-semibold text-[hsl(var(--foreground))]">Applicants</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
+          <tbody className="divide-y divide-[hsl(var(--line))]">
             {filtered.map((cutoff) => (
               <tr key={cutoff.id}>
-                <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{cutoff.category}</td>
-                <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{cutoff.cutoff_score ?? "—"}</td>
-                <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{cutoff.total_posts ?? "—"}</td>
-                <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{cutoff.total_applied ?? "—"}</td>
+                <td className="px-4 py-3 font-medium text-[hsl(var(--foreground))]">{cutoff.category}</td>
+                <td className="px-4 py-3 text-[hsl(var(--muted))]">{cutoff.cutoff_score ?? "—"}</td>
+                <td className="px-4 py-3 text-[hsl(var(--muted))]">{cutoff.total_posts ?? "—"}</td>
+                <td className="px-4 py-3 text-[hsl(var(--muted))]">{cutoff.total_applied ?? "—"}</td>
               </tr>
             ))}
           </tbody>

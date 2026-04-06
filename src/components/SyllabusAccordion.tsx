@@ -12,7 +12,7 @@ export function SyllabusAccordion({ sections }: SyllabusAccordionProps) {
 
   if (sections.length === 0) {
     return (
-      <p className="text-gray-500 dark:text-gray-400">
+      <p className="surface-card p-5 text-[hsl(var(--muted))]">
         Syllabus details are not yet available for this exam.
       </p>
     );
@@ -23,25 +23,25 @@ export function SyllabusAccordion({ sections }: SyllabusAccordionProps) {
       {sections.map((section, index) => (
         <div
           key={section.id}
-          className="rounded-lg border border-gray-200 dark:border-gray-800"
+          className="surface-card overflow-hidden"
         >
           <button
             onClick={() => setOpenIndex(openIndex === index ? null : index)}
-            className="flex w-full items-center justify-between px-4 py-3 text-left"
+            className="flex w-full items-center justify-between px-5 py-4 text-left"
             aria-expanded={openIndex === index}
           >
             <div className="flex items-center gap-3">
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+              <span className="text-sm font-semibold text-[hsl(var(--foreground))]">
                 {section.section_title}
               </span>
               {section.marks_weight && (
-                <span className="rounded bg-teal-50 px-2 py-0.5 text-xs font-medium text-teal-700 dark:bg-teal-900/30 dark:text-teal-400">
+                <span className="rounded-full bg-[hsl(var(--panel-soft))] px-2.5 py-1 text-xs font-medium text-[hsl(var(--accent-strong))]">
                   {section.marks_weight} marks
                 </span>
               )}
             </div>
             <svg
-              className={`h-5 w-5 text-gray-400 transition-transform ${
+              className={`h-5 w-5 text-[hsl(var(--muted))] transition-transform ${
                 openIndex === index ? "rotate-180" : ""
               }`}
               fill="none"
@@ -57,12 +57,12 @@ export function SyllabusAccordion({ sections }: SyllabusAccordionProps) {
             </svg>
           </button>
           {openIndex === index && (
-            <div className="border-t border-gray-200 px-4 py-3 dark:border-gray-800">
+            <div className="border-t border-[hsl(var(--line))] px-5 py-4">
               <ul className="space-y-1">
                 {section.topics.map((topic, topicIndex) => (
                   <li
                     key={topicIndex}
-                    className="text-sm text-gray-600 dark:text-gray-400"
+                    className="text-sm text-[hsl(var(--muted))]"
                   >
                     &bull; {topic}
                   </li>
