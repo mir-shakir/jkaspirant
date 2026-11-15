@@ -260,7 +260,7 @@ export default async function ExamOverviewPage({ params }: PageProps) {
             kicker="Stay updated"
             title="Recent notifications for this exam"
           />
-          <div className="mt-6 space-y-3">
+          <div className="mt-6 surface-card divide-y overflow-hidden">
             {relatedNotifications.slice(0, 3).map((notification) => (
               <NotificationCard key={notification.id} notification={notification} />
             ))}

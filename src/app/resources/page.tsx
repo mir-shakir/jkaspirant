@@ -181,7 +181,7 @@ export default async function ResourcesPage() {
             kicker="Stay updated"
             title="Recent exam notifications"
           />
-          <div className="mt-5 space-y-3">
+          <div className="mt-5 surface-card divide-y overflow-hidden">
             {notifications.map((notification) => (
               <NotificationCard key={notification.id} notification={notification} />
             ))}

@@ -2,31 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  Design: "the notice board". Paper, ink, a chinar-red accent and saffron highlights.
+  Editorial serif (Newsreader) for headlines, Geist for UI, Geist Mono for dates and numbers.
+*/
 @layer base {
   :root {
-    --background: 42 43% 97%;
-    --panel: 0 0% 100%;
-    --panel-soft: 36 57% 94%;
-    --foreground: 216 31% 17%;
-    --muted: 218 14% 38%;
-    --line: 30 21% 85%;
-    --accent: 200 82% 38%;
-    --accent-strong: 199 89% 28%;
-    --warm: 24 95% 59%;
-    --success: 155 54% 35%;
+    --background: 40 33% 96%;
+    --panel: 40 40% 99%;
+    --panel-soft: 38 32% 91%;
+    --foreground: 220 35% 13%;
+    --muted: 220 10% 38%;
+    --line: 35 16% 82%;
+    --accent: 8 68% 46%;
+    --accent-strong: 8 72% 38%;
+    --warm: 33 92% 46%;
+    --success: 152 52% 29%;
+    --ink: 220 35% 13%;
   }
 
   .dark {
-    --background: 222 33% 10%;
-    --panel: 224 31% 14%;
-    --panel-soft: 223 25% 18%;
-    --foreground: 210 20% 96%;
-    --muted: 215 20% 72%;
-    --line: 224 19% 24%;
-    --accent: 191 84% 56%;
-    --accent-strong: 191 84% 48%;
-    --warm: 31 92% 62%;
-    --success: 155 55% 56%;
+    --background: 222 28% 8%;
+    --panel: 222 24% 11.5%;
+    --panel-soft: 222 20% 15.5%;
+    --foreground: 40 30% 93%;
+    --muted: 220 12% 68%;
+    --line: 222 16% 21%;
+    --accent: 10 82% 64%;
+    --accent-strong: 9 66% 48%;
+    --warm: 36 92% 60%;
+    --success: 150 45% 55%;
+    --ink: 40 30% 93%;
   }
 
   * {
@@ -35,22 +41,41 @@
 
   html {
     scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
-    background:
-      radial-gradient(circle at top, rgba(251, 191, 36, 0.12), transparent 28%),
-      linear-gradient(180deg, hsl(var(--background)), hsl(var(--background)));
+    background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    font-family: var(--font-sans), sans-serif;
+    font-family: var(--font-sans), system-ui, sans-serif;
     @apply antialiased;
+  }
+
+  /* faint paper grain */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  .dark body::before {
+    opacity: 0.6;
+  }
+  body > * {
+    position: relative;
+    z-index: 1;
   }
 
   h1,
   h2,
   h3,
   h4 {
-    @apply tracking-tight;
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.015em;
   }
 
   a,
@@ -58,11 +83,11 @@
   input,
   select,
   textarea {
-    @apply outline-none;
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--accent))] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))];
   }
 
   ::selection {
-    background: rgba(14, 116, 144, 0.18);
+    background: hsla(var(--warm), 0.3);
   }
 }
 
@@ -71,33 +96,108 @@
     @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
   }
 
+  .font-display {
+    font-family: var(--font-display), Georgia, serif;
+  }
+
+  .font-mono-num {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
   .surface-card {
     background: hsl(var(--panel));
     border: 1px solid hsl(var(--line));
-    @apply rounded-[28px] shadow-[0_16px_50px_rgba(15,23,42,0.06)];
+    @apply rounded-xl;
   }
 
   .surface-soft {
     background: hsl(var(--panel-soft));
     border: 1px solid hsl(var(--line));
-    @apply rounded-[24px];
+    @apply rounded-xl;
   }
 
   .section-kicker {
     color: hsl(var(--accent-strong));
-    @apply text-xs font-semibold uppercase tracking-[0.24em];
+    font-family: var(--font-mono), ui-monospace, monospace;
+    @apply text-[11px] font-medium uppercase tracking-[0.18em];
+  }
+  .dark .section-kicker {
+    color: hsl(var(--accent));
+  }
+
+  /* newspaper double rule */
+  .rule-double {
+    border-top: 3px double hsl(var(--foreground) / 0.8);
+  }
+
+  .stamp {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    @apply inline-flex items-center rounded-[4px] border-[1.5px] px-1.5 py-[1px] text-[10px] font-semibold uppercase tracking-[0.14em];
+    border-color: hsl(var(--accent));
+    color: hsl(var(--accent));
+    transform: rotate(-3deg);
+  }
+
+  .tag {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    @apply inline-flex items-center rounded px-1.5 py-0.5 text-[10.5px] font-medium uppercase tracking-[0.1em];
+    background: hsl(var(--panel-soft));
+    color: hsl(var(--muted));
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition active:scale-[0.98];
+    background: hsl(var(--accent-strong));
+  }
+  .btn-primary:hover {
+    background: hsl(var(--accent));
   }
 
   .pill-link {
-    @apply inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition hover:-translate-y-0.5;
+    @apply inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 text-sm font-medium transition;
     background: hsl(var(--panel));
     border-color: hsl(var(--line));
     color: hsl(var(--foreground));
   }
+  .pill-link:hover {
+    border-color: hsl(var(--foreground) / 0.35);
+  }
 
   .pill-link-muted {
-    @apply inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium;
-    background: hsla(var(--panel), 0.75);
+    @apply inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium;
+    background: hsl(var(--panel-soft));
     color: hsl(var(--foreground));
+  }
+
+  .field {
+    @apply w-full rounded-lg border px-3 py-2.5 text-base;
+    background: hsl(var(--background));
+    border-color: hsl(var(--line));
+    color: hsl(var(--foreground));
+  }
+  .field:focus {
+    border-color: hsl(var(--accent));
+  }
+}
+
+@layer utilities {
+  .reveal {
+    animation: reveal 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      animation: none;
+    }
   }
 }

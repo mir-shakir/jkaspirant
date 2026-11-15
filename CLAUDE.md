@@ -89,6 +89,11 @@ Claude Code sessions (scheduled or manual, on the owner's Mac or in the cloud) d
 - **Scratch output** (drafts, downloaded PDFs) goes in `tmp/` (gitignored). PDFs to keep go to Supabase Storage.
 - **Accuracy over speed:** official sources only, link the original notice, never invent dates/numbers. New items are drafts until the owner approves, unless the owner has switched auto-publish on.
 - **Ask the owner** when blocked on accounts, credentials, CAPTCHAs, or anything needing a judgement call — then wait.
+- **Config-driven pages** (edit + commit, no DB needed):
+  - `src/config/spotlight.ts` — homepage "exam in focus" card and stage tracker (move stages as answer key/result come out; set to `null` when nothing is hot).
+  - `src/config/rank-predictor.ts` — one entry per exam rank tool (`/tools/<toolSlug>`). Flip `answerKeyReleased` / `patternVerified` / `isOpen` as things change.
+  - `src/config/tools.ts` — the tools list.
+- Rank predictor data lives in `score_submissions` (migration `006`), written only via `src/app/api/rank/route.ts` (service role). Estimation maths in `src/lib/rank.ts`.
 - Paid PDF bundles (Razorpay) are **paused**; don't feature them until traffic exists.
 
 ## Implementation Plans

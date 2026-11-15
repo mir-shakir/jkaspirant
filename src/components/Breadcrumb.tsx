@@ -11,27 +11,22 @@ interface BreadcrumbProps {
 
 export function Breadcrumb({ items }: BreadcrumbProps) {
   return (
-    <nav aria-label="Breadcrumb" className="mb-5">
-      <ol className="flex flex-wrap items-center gap-2 text-sm text-[hsl(var(--muted))]">
+    <nav aria-label="Breadcrumb" className="mb-4">
+      <ol className="flex flex-wrap items-center gap-1.5 font-mono-num text-[11px] uppercase tracking-[0.12em] text-[hsl(var(--muted))]">
         <li>
-          <Link href="/" className="pill-link-muted hover:bg-[hsl(var(--panel))]">
+          <Link href="/" className="hover:text-[hsl(var(--foreground))]">
             Home
           </Link>
         </li>
         {items.map((item, index) => (
-          <li key={item.path} className="flex items-center gap-2">
-            <span aria-hidden="true" className="text-[hsl(var(--line))]">
-              /
-            </span>
+          <li key={item.path} className="flex items-center gap-1.5">
+            <span aria-hidden="true">/</span>
             {index === items.length - 1 ? (
-              <span className="pill-link-muted bg-[hsl(var(--panel))] text-[hsl(var(--foreground))]">
+              <span className="text-[hsl(var(--foreground))]" aria-current="page">
                 {item.name}
               </span>
             ) : (
-              <Link
-                href={item.path}
-                className="pill-link-muted hover:bg-[hsl(var(--panel))]"
-              >
+              <Link href={item.path} className="hover:text-[hsl(var(--foreground))]">
                 {item.name}
               </Link>
             )}

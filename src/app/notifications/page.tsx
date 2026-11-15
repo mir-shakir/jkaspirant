@@ -52,9 +52,11 @@ export default async function NotificationsPage() {
         />
       </section>
 
-      <div className="mt-5 space-y-3">
+      <div className="mt-5">
         {notifications.length > 0 ? (
-          notifications.map((n) => <NotificationCard key={n.id} notification={n} />)
+          <div className="surface-card divide-y overflow-hidden">
+            {notifications.map((n) => <NotificationCard key={n.id} notification={n} />)}
+          </div>
         ) : (
           <p className="surface-card mt-8 p-5 text-center text-[hsl(var(--muted))]">No updates yet — we&apos;ll post here as soon as something important comes up.</p>
         )}
