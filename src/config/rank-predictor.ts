@@ -81,7 +81,13 @@ export const rankExams: RankExamConfig[] = [
       anchorRank: 240,
       spread: 16.5,
       uncertainty: 5,
-      selectionTilt: 1,
+      // Until the answer key is out, people sharing scores are mostly strong
+      // candidates from prep groups: the first 35 scores had a median near 86,
+      // about where the cut-off is expected. So assume sharers sit far above
+      // the average candidate and let them move the estimate only a little.
+      // Revisit both once the answer key is out and the mix broadens.
+      selectionTilt: 2.75,
+      sampleDoubt: 0.7,
     },
     leaderboardMaxScore: 112,
     answerKeyReleased: false,

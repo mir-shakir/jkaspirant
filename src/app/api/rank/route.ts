@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { createServerClient } from "@/lib/supabase/server";
 import { getRankExamByKey, type RankExamConfig } from "@/config/rank-predictor";
-import { BUCKET_WIDTH, computeScore, maskName, validateCounts, type ShareStats } from "@/lib/rank";
+import { BUCKET_WIDTH, cleanName, computeScore, maskName, validateCounts, type ShareStats } from "@/lib/rank";
 
 // Rank predictor backend.
 //
@@ -65,6 +65,8 @@ function envRef() {
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return "missing-service-role-key";
   return null;
 }
+
+const withoutKeys = (obj: Record<string, unknown>, keys: string[]) => Object.fromEntries(Object.entries(obj).filter(([k]) => !keys.includes(k)));
 
 const isMissingColumn = (e: unknown) => ["PGRST204", "42703"].includes((e as { code?: string })?.code ?? "");
 
@@ -208,7 +210,10 @@ export async function POST(req: NextRequest) {
   if (missing) return NextResponse.json({ error: "Not configured", ref: missing }, { status: 503 });
   const supabase = createServerClient();
 
-  const masked = typeof body.name === "string" ? maskName(body.name.slice(0, 60)) : null;
+  // The full name is stored privately; the leaderboard only ever shows the masked form.
+  const fullName = typeof body.name === "string" ? cleanName(body.name) : "";
+  const masked = fullName ? maskName(fullName) : null;
+  const nameFields = masked ? { display_name: masked, full_name: fullName } : {};
 
   try {
     const existing = await findRow(supabase, exam.examKey, deviceId);
@@ -218,8 +223,10 @@ export async function POST(req: NextRequest) {
       if (!existing) return NextResponse.json({ error: "Save your score first" }, { status: 409 });
       const on = body.on !== false;
       if (on && !masked && !existing.display_name) return NextResponse.json({ error: "Enter your name" }, { status: 400 });
-      const patch = on ? { on_leaderboard: true, ...(masked ? { display_name: masked } : {}) } : { on_leaderboard: false };
-      const { error } = await supabase.from("score_submissions").update(patch).eq("id", existing.id);
+      const patch = on ? { on_leaderboard: true, ...nameFields } : { on_leaderboard: false };
+      let { error } = await supabase.from("score_submissions").update(patch).eq("id", existing.id);
+      // full_name column not created yet (migration 008): save without it.
+      if (error && isMissingColumn(error)) ({ error } = await supabase.from("score_submissions").update(withoutKeys(patch, ["full_name"])).eq("id", existing.id));
       if (error) throw error;
       const row = { ...existing, ...patch };
       const board = await getLeaderboard(supabase, exam);
@@ -234,7 +241,7 @@ export async function POST(req: NextRequest) {
     if (!exam.categories.includes(category)) return NextResponse.json({ error: "Pick a category" }, { status: 400 });
 
     const score = computeScore(exam, correct as number, wrong as number);
-    const boardFields = body.board === true && masked ? { display_name: masked, on_leaderboard: true } : {};
+    const boardFields = body.board === true && masked ? { ...nameFields, on_leaderboard: true } : {};
     const source = exam.answerKeyReleased ? "answer_key" : "self_estimate";
     let row: Row | null = existing;
     let saved = true;
@@ -254,6 +261,8 @@ export async function POST(req: NextRequest) {
       } else {
         const base = { exam_key: exam.examKey, device_id: deviceId, ip_hash: ipHash, category, correct, wrong, score, source };
         let res = await supabase.from("score_submissions").insert({ ...base, ...boardFields }).select("*").single();
+        // Newer columns may not exist yet (migrations 007 / 008): drop them step by step.
+        if (res.error && isMissingColumn(res.error)) res = await supabase.from("score_submissions").insert({ ...base, ...withoutKeys(boardFields, ["full_name"]) }).select("*").single();
         if (res.error && isMissingColumn(res.error)) res = await supabase.from("score_submissions").insert(base).select("*").single();
         // Two taps at once: the other request won, so read what it saved.
         if (res.error && (res.error as { code?: string }).code === "23505") row = await findRow(supabase, exam.examKey, deviceId);
@@ -270,8 +279,11 @@ export async function POST(req: NextRequest) {
           : boardFields;
         let res = await supabase.from("score_submissions").update(patch).eq("id", existing.id).select("*").single();
         if (res.error && isMissingColumn(res.error)) {
+          res = await supabase.from("score_submissions").update(withoutKeys(patch, ["full_name"])).eq("id", existing.id).select("*").single();
+        }
+        if (res.error && isMissingColumn(res.error)) {
           // Leaderboard columns not created yet (migration 007): save the score part only.
-          const scoreOnly = Object.fromEntries(Object.entries(patch).filter(([k]) => k !== "display_name" && k !== "on_leaderboard"));
+          const scoreOnly = withoutKeys(patch, ["display_name", "on_leaderboard", "full_name"]);
           res = changed
             ? await supabase.from("score_submissions").update(scoreOnly).eq("id", existing.id).select("*").single()
             : await supabase.from("score_submissions").select("*").eq("id", existing.id).single();

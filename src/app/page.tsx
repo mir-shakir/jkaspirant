@@ -24,7 +24,7 @@ export const metadata = buildMetadata({
 // what is happening now, what is coming, and what just changed.
 export default async function HomePage() {
   const [exams, notifications] = await Promise.all([getAllExams(), getLatestNotifications(4)]);
-  const events = upcomingEvents(3);
+  const events = upcomingEvents(4);
 
   const websiteJsonLd = {
     "@context": "https://schema.org",
@@ -67,9 +67,9 @@ export default async function HomePage() {
       </Section>
 
       {exams.length > 0 && (
-        <Section title="Exams" id="your-exam">
+        <Section title="Exams" action={{ href: "/exams", label: "All exams" }} id="your-exam">
           <GroupList>
-            {exams.slice(0, 5).map((exam) => (
+            {exams.filter((exam) => !liveExams[exam.slug]?.awaited).map((exam) => (
               <Row
                 key={exam.id}
                 href={`/exams/${exam.slug}`}

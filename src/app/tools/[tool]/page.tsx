@@ -59,7 +59,7 @@ export default function RankToolPage({ params }: PageProps) {
     },
     {
       q: "What do you save about me?",
-      a: "Your answer counts, score and category, linked to this phone so you can see your rank again later and so each person counts once. No phone number or roll number. If you join the leaderboard we save only a masked name like S***, never your full name.",
+      a: "Your answer counts, score and category, linked to this phone so you can see your rank again later and so each person counts once. No phone number or roll number. If you join the leaderboard we save your name, but other people only ever see the first two letters of each part, like Sh*** Mi***.",
     },
   ];
 

@@ -63,4 +63,24 @@ export const contentNotifications: ContentNotification[] = [
     source_url: JKSSB_WHATS_NEW,
     exam: { slug: "sub-inspector", title: "JK Police Sub-Inspector" },
   },
+  {
+    slug: "jkssb-police-constable-exam-dates-2026",
+    title: "JK Police Constable exams from 13 December: full schedule",
+    category: "notification",
+    published_at: "2026-11-15T16:00:00+05:30",
+    summary:
+      "JKSSB has scheduled the JK Police Constable written exams for 13, 20, 27 and 30 December 2026, and Sub-Inspector (Telecommunication) for 23 December.",
+    body: `
+<p>JKSSB announced these Home Department exam dates in its schedule notice of early August 2026. Admit cards are issued seven days before each exam. Dates can change, so confirm on the official site before you travel.</p>
+<h2>Exam dates</h2>
+<ul>
+  <li><strong>13 December 2026:</strong> Constable (Executive), Notification 12 of 2025, Items 273–274</li>
+  <li><strong>20 December 2026:</strong> Constable (Armed / IRP / SDRF), Notification 14 of 2025, Items 323–324</li>
+  <li><strong>23 December 2026:</strong> Sub-Inspector (Telecommunication), Notification 11 of 2025, Item 272</li>
+  <li><strong>27 December 2026:</strong> Constable (Telecommunication), Notification 15 of 2025</li>
+  <li><strong>30 December 2026:</strong> Constable (Photographer), Notification 15 of 2025</li>
+</ul>`,
+    source_url: JKSSB_WHATS_NEW,
+    exam: { slug: "police-constable", title: "JK Police Constable" },
+  },
 ];
