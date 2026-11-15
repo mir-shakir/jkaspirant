@@ -15,6 +15,7 @@ import {
 } from "@/lib/rank";
 import { Leaderboard, type Board } from "./Leaderboard";
 import { TelegramNudge } from "@/components/TelegramNudge";
+import { track } from "@/lib/analytics";
 
 export interface RankPredictorExam extends PredictExam {
   examKey: string;
@@ -196,7 +197,14 @@ export function RankPredictor({ exam }: { exam: RankPredictorExam }) {
       setStats(data.stats ?? null);
       if (data.board) setPub((prev) => (prev ? { ...prev, board: data.board, total: data.stats?.total ?? prev.total } : prev));
       remember(data.mine ?? localMine);
+      track(editing ? "score_corrected" : "rank_predicted", {
+        category,
+        score_band: `${Math.floor(score / 10) * 10}s`,
+        saved: !!data.saved && !data.locked,
+        joined_board: !!(joinBoard && masked),
+      });
     } catch {
+      track("rank_predicted", { category, saved: false });
       // Still give the estimate; it just isn't counted yet.
       setMine(localMine);
       setStats(null);
@@ -220,6 +228,7 @@ export function RankPredictor({ exam }: { exam: RankPredictorExam }) {
 
   async function setBoard(on: boolean, joinName?: string) {
     const data = await send({ action: "board", on, ...(joinName ? { name: joinName } : {}) });
+    track(on ? "leaderboard_join" : "leaderboard_leave");
     if (data.mine) setMine(data.mine);
     if (data.board) setPub((prev) => (prev ? { ...prev, board: data.board } : prev));
   }
@@ -481,15 +490,15 @@ function ShareRow({ examName }: { examName: string }) {
   return (
     <div className="mt-3 flex items-center gap-2">
       <span className="shrink-0 pr-1 text-[13px] text-[hsl(var(--muted))]">Share</span>
-      <a href={`https://wa.me/?text=${encodeURIComponent(`${text}: ${url}`)}`} target="_blank" rel="noopener noreferrer" className={item}>
+      <a href={`https://wa.me/?text=${encodeURIComponent(`${text}: ${url}`)}`} target="_blank" rel="noopener noreferrer" className={item} data-event="share" data-event-label="whatsapp">
         <span className="h-2 w-2 rounded-full bg-[#25D366]" aria-hidden />
         WhatsApp
       </a>
-      <a href={`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`} target="_blank" rel="noopener noreferrer" className={item}>
+      <a href={`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`} target="_blank" rel="noopener noreferrer" className={item} data-event="share" data-event-label="telegram">
         <span className="h-2 w-2 rounded-full bg-[#229ED9]" aria-hidden />
         Telegram
       </a>
-      <button type="button" onClick={copy} className={item} aria-live="polite">
+      <button type="button" onClick={copy} className={item} aria-live="polite" data-event="share" data-event-label="copy_link">
         {copied ? "Copied" : "Copy link"}
       </button>
     </div>
@@ -543,7 +552,7 @@ function Details({ exam, prediction: p, stats, mine }: { exam: RankPredictorExam
 
   return (
     <details className="group mt-4 border-y">
-      <summary className="flex min-h-[52px] cursor-pointer list-none items-center justify-between text-[15px] font-medium [&::-webkit-details-marker]:hidden">
+      <summary data-event="rank_details_open" className="flex min-h-[52px] cursor-pointer list-none items-center justify-between text-[15px] font-medium [&::-webkit-details-marker]:hidden">
         See the details
         <svg viewBox="0 0 20 20" className="h-4 w-4 text-[hsl(var(--muted))] transition-transform group-open:rotate-180" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
           <path d="m4.5 7.5 5.5 5.5 5.5-5.5" />
