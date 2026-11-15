@@ -14,6 +14,7 @@ import {
   type Verdict,
 } from "@/lib/rank";
 import { Leaderboard, type Board } from "./Leaderboard";
+import { TelegramNudge } from "@/components/TelegramNudge";
 
 export interface RankPredictorExam extends PredictExam {
   examKey: string;
@@ -447,6 +448,7 @@ function Result({ exam, prediction: p, stats, mine }: { exam: RankPredictorExam;
       </div>
 
       <ShareRow examName={exam.name} />
+      <TelegramNudge className="mt-3" />
 
       <Details exam={exam} prediction={p} stats={stats} mine={mine} />
     </section>

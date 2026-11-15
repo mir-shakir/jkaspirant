@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { TelegramLink } from "@/components/TelegramLink";
+import { TelegramNudge } from "@/components/TelegramNudge";
 import { GroupList, Row, categoryLabels, formatLongDate } from "@/components/ui";
 import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getNotificationBySlug, getNotificationSlugs } from "@/lib/queries/notifications";
@@ -87,7 +87,7 @@ export default async function NotificationDetailPage({ params }: PageProps) {
         </GroupList>
       )}
 
-      <TelegramLink className="mt-3 w-full justify-center" />
+      <TelegramNudge className="mt-6" />
     </article>
   );
 }

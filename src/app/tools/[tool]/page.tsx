@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { RankPredictor } from "@/components/rank/RankPredictor";
-import { TelegramLink } from "@/components/TelegramLink";
 import { GroupList, PageHeader, Row } from "@/components/ui";
 import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getRankExam, rankExams } from "@/config/rank-predictor";
@@ -118,7 +117,6 @@ export default function RankToolPage({ params }: PageProps) {
           sub={exam.answerKeyReleased ? "Answer key, objections and what comes next" : "Answer key awaited. We'll post it the day it's out."}
         />
       </GroupList>
-      <TelegramLink className="mt-3 w-full justify-center" />
 
       <section className="mt-9">
         <h2 className="text-[21px]">Common questions</h2>
