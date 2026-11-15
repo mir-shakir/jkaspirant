@@ -34,3 +34,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# operator scratch (drafts written by scripts / Claude sessions)
+/tmp/

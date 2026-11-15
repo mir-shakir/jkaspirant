@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-JK Aspirant — a mobile-first exam resource website for JKSSB and JKPSC candidates in Kashmir. Covers notifications, syllabi, previous papers, cut-off history, and exam calendars for 5 launch exams.
+JK Aspirant (https://jkaspirant.in) — a mobile-first exam resource website for JKSSB and JKPSC candidates in J&K. Covers notifications, syllabi, previous papers, cut-off history, exam calendars and score/rank tools. Goal: the clean, fast, trustworthy alternative to spammy ad-heavy aggregator sites.
+
+The site is **operated by Claude Code sessions**, not by hand-entering data in the admin CRM. See "Operations" below.
 
 ## Tech Stack
 
@@ -72,9 +74,23 @@ Every public page must have: `<title>`, meta description, Open Graph tags, JSON-
 
 Required env vars are documented in `.env.local.example`. Key ones:
 - `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` — client-side Supabase
-- `SUPABASE_SERVICE_ROLE_KEY` — server-side only, never expose to client
+- `SUPABASE_SERVICE_ROLE_KEY` — server-side only, never expose to client (also used by `scripts/` on the operator machine)
 - `VERCEL_REVALIDATION_SECRET` — ISR revalidation webhook
+- `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHANNEL_ID` — channel posting from `scripts/` only
+
+## Operations (how the site is maintained)
+
+Claude Code sessions (scheduled or manual, on the owner's Mac or in the cloud) do the content work. No paid AI APIs; no GitHub Actions pipelines yet.
+
+- **Repeatable jobs are skills** in `.claude/skills/` (e.g. `sync-notifications`). Scheduled runs invoke the skill rather than improvising, so output stays consistent.
+- **Deterministic steps are scripts** in `scripts/`. When a session gets something working (a scraper, an import), it saves it as a script and commits it; later runs execute the script and only fix it when it breaks.
+  - `scripts/publish-notification.mjs` — upsert a notification (draft by default), revalidate, announce on Telegram once. Run with `node --env-file=.env.local ...`.
+  - `scripts/sources/*.mjs` — one scraper per official source, printing JSON lines `{title, url, date}`.
+- **Scratch output** (drafts, downloaded PDFs) goes in `tmp/` (gitignored). PDFs to keep go to Supabase Storage.
+- **Accuracy over speed:** official sources only, link the original notice, never invent dates/numbers. New items are drafts until the owner approves, unless the owner has switched auto-publish on.
+- **Ask the owner** when blocked on accounts, credentials, CAPTCHAs, or anything needing a judgement call — then wait.
+- Paid PDF bundles (Razorpay) are **paused**; don't feature them until traffic exists.
 
 ## Implementation Plans
 
-Detailed phase 1 plans are in `docs/superpowers/plans/`. Master index: `2026-03-26-phase1-master-plan.md`. Execute sub-plans in order: database setup -> foundation -> core pages -> notifications -> admin CRM.
+Original phase 1 plans are in `docs/superpowers/plans/` (historical; phase 1 is built). Master index: `2026-03-26-phase1-master-plan.md`.
