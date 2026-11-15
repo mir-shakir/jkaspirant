@@ -7,7 +7,7 @@ interface PapersListProps {
 export function PapersList({ papers }: PapersListProps) {
   if (papers.length === 0) {
     return (
-      <p className="text-gray-500 dark:text-gray-400">
+      <p className="surface-card p-5 text-[hsl(var(--muted))]">
         No previous papers available yet. Check back soon.
       </p>
     );
@@ -28,20 +28,20 @@ export function PapersList({ papers }: PapersListProps) {
     <div className="space-y-6">
       {sortedYears.map((year) => (
         <div key={year}>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-lg font-semibold text-[hsl(var(--foreground))]">
             {year === 0 ? "Other" : year}
           </h3>
           <div className="mt-2 space-y-2">
             {byYear[year].map((paper) => (
               <div
                 key={paper.id}
-                className="flex items-center justify-between rounded-lg border border-gray-200 p-3 dark:border-gray-800"
+                className="surface-card flex items-center justify-between gap-4 p-4"
               >
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  <p className="text-sm font-medium text-[hsl(var(--foreground))]">
                     {paper.title}
                   </p>
-                  <div className="mt-0.5 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                  <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[hsl(var(--muted))]">
                     {paper.subject && <span>{paper.subject}</span>}
                     {paper.file_size_kb && (
                       <span>
@@ -57,7 +57,7 @@ export function PapersList({ papers }: PapersListProps) {
                     href={paper.file_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="shrink-0 rounded-md bg-teal-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-teal-700"
+                    className="shrink-0 rounded-full bg-[hsl(var(--accent-strong))] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[hsl(var(--accent))]"
                   >
                     Download PDF
                   </a>

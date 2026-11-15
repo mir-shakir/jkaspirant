@@ -89,44 +89,44 @@ export function BuyButton({ bundleId, bundleSlug, bundleTitle, pricePaise }: Buy
     <>
       <button
         onClick={() => setShowModal(true)}
-        className="w-full rounded-md bg-teal-600 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-teal-700"
+        className="w-full rounded-full bg-[hsl(var(--accent-strong))] px-6 py-3 text-base font-semibold text-white transition hover:bg-[hsl(var(--accent))]"
       >
         Buy Now &mdash; ₹{pricePaise / 100}
       </button>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-          <div className="w-full max-w-md rounded-lg bg-white p-6 dark:bg-gray-900">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm">
+          <div className="surface-card w-full max-w-md p-6">
+            <h3 className="text-lg font-semibold text-[hsl(var(--foreground))]">
               Purchase {bundleTitle}
             </h3>
 
             <div className="mt-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email address</label>
-                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
-                <p className="mt-1 text-xs text-gray-500">Download link will be sent to this email.</p>
+                <label className="block text-sm font-medium text-[hsl(var(--foreground))]">Email address</label>
+                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className="mt-1 block w-full rounded-2xl border border-[hsl(var(--line))] bg-[hsl(var(--panel-soft))] px-4 py-3 text-sm text-[hsl(var(--foreground))]" />
+                <p className="mt-1 text-xs text-[hsl(var(--muted))]">Download link will be sent to this email.</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone number</label>
-                <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="9876543210" className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+                <label className="block text-sm font-medium text-[hsl(var(--foreground))]">Phone number</label>
+                <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="9876543210" className="mt-1 block w-full rounded-2xl border border-[hsl(var(--line))] bg-[hsl(var(--panel-soft))] px-4 py-3 text-sm text-[hsl(var(--foreground))]" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Coupon code (optional)</label>
+                <label className="block text-sm font-medium text-[hsl(var(--foreground))]">Coupon code (optional)</label>
                 <div className="mt-1 flex gap-2">
-                  <input type="text" value={couponCode} onChange={(e) => { setCouponCode(e.target.value.toUpperCase()); setCouponApplied(null); setCouponError(""); }} placeholder="e.g. SHARE50" className="block flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
-                  <button type="button" onClick={handleApplyCoupon} className="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">Apply</button>
+                  <input type="text" value={couponCode} onChange={(e) => { setCouponCode(e.target.value.toUpperCase()); setCouponApplied(null); setCouponError(""); }} placeholder="e.g. SHARE50" className="block flex-1 rounded-2xl border border-[hsl(var(--line))] bg-[hsl(var(--panel-soft))] px-4 py-3 text-sm text-[hsl(var(--foreground))]" />
+                  <button type="button" onClick={handleApplyCoupon} className="rounded-2xl border border-[hsl(var(--line))] bg-[hsl(var(--panel))] px-4 py-3 text-sm font-medium text-[hsl(var(--foreground))]">Apply</button>
                 </div>
-                {couponApplied && <p className="mt-1 text-xs text-green-600 dark:text-green-400">{couponApplied.discount_percent}% discount applied!</p>}
-                {couponError && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{couponError}</p>}
+                {couponApplied && <p className="mt-1 text-xs text-[hsl(var(--success))]">{couponApplied.discount_percent}% discount applied!</p>}
+                {couponError && <p className="mt-1 text-xs text-red-600">{couponError}</p>}
               </div>
 
-              <div className="rounded-md bg-gray-50 p-3 dark:bg-gray-800">
+              <div className="surface-soft p-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Total</span>
-                  <span className="text-lg font-bold text-gray-900 dark:text-white">
+                  <span className="text-sm text-[hsl(var(--muted))]">Total</span>
+                  <span className="text-lg font-bold text-[hsl(var(--foreground))]">
                     {finalPricePaise === 0 ? "FREE" : `₹${finalPricePaise / 100}`}
                   </span>
                 </div>
@@ -134,10 +134,10 @@ export function BuyButton({ bundleId, bundleSlug, bundleTitle, pricePaise }: Buy
             </div>
 
             <div className="mt-6 flex gap-3">
-              <button onClick={handlePurchase} disabled={!email.trim() || !phone.trim() || loading} className="flex-1 rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50">
+              <button onClick={handlePurchase} disabled={!email.trim() || !phone.trim() || loading} className="flex-1 rounded-full bg-[hsl(var(--accent-strong))] px-4 py-3 text-sm font-medium text-white disabled:opacity-50">
                 {loading ? "Processing..." : finalPricePaise === 0 ? "Get Free Download" : `Pay ₹${finalPricePaise / 100}`}
               </button>
-              <button onClick={() => setShowModal(false)} className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300">Cancel</button>
+              <button onClick={() => setShowModal(false)} className="rounded-full border border-[hsl(var(--line))] px-4 py-3 text-sm font-medium text-[hsl(var(--foreground))]">Cancel</button>
             </div>
           </div>
         </div>

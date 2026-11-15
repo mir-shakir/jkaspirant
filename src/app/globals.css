@@ -4,14 +4,100 @@
 
 @layer base {
   :root {
-    --accent: 185 84% 30%;
+    --background: 42 43% 97%;
+    --panel: 0 0% 100%;
+    --panel-soft: 36 57% 94%;
+    --foreground: 216 31% 17%;
+    --muted: 218 14% 38%;
+    --line: 30 21% 85%;
+    --accent: 200 82% 38%;
+    --accent-strong: 199 89% 28%;
+    --warm: 24 95% 59%;
+    --success: 155 54% 35%;
   }
 
   .dark {
-    --accent: 185 70% 50%;
+    --background: 222 33% 10%;
+    --panel: 224 31% 14%;
+    --panel-soft: 223 25% 18%;
+    --foreground: 210 20% 96%;
+    --muted: 215 20% 72%;
+    --line: 224 19% 24%;
+    --accent: 191 84% 56%;
+    --accent-strong: 191 84% 48%;
+    --warm: 31 92% 62%;
+    --success: 155 55% 56%;
+  }
+
+  * {
+    @apply border-[hsl(var(--line))];
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-white text-gray-900 antialiased dark:bg-gray-950 dark:text-gray-100;
+    background:
+      radial-gradient(circle at top, rgba(251, 191, 36, 0.12), transparent 28%),
+      linear-gradient(180deg, hsl(var(--background)), hsl(var(--background)));
+    color: hsl(var(--foreground));
+    font-family: var(--font-sans), sans-serif;
+    @apply antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply tracking-tight;
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    @apply outline-none;
+  }
+
+  ::selection {
+    background: rgba(14, 116, 144, 0.18);
+  }
+}
+
+@layer components {
+  .page-shell {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+  }
+
+  .surface-card {
+    background: hsl(var(--panel));
+    border: 1px solid hsl(var(--line));
+    @apply rounded-[28px] shadow-[0_16px_50px_rgba(15,23,42,0.06)];
+  }
+
+  .surface-soft {
+    background: hsl(var(--panel-soft));
+    border: 1px solid hsl(var(--line));
+    @apply rounded-[24px];
+  }
+
+  .section-kicker {
+    color: hsl(var(--accent-strong));
+    @apply text-xs font-semibold uppercase tracking-[0.24em];
+  }
+
+  .pill-link {
+    @apply inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition hover:-translate-y-0.5;
+    background: hsl(var(--panel));
+    border-color: hsl(var(--line));
+    color: hsl(var(--foreground));
+  }
+
+  .pill-link-muted {
+    @apply inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium;
+    background: hsla(var(--panel), 0.75);
+    color: hsl(var(--foreground));
   }
 }

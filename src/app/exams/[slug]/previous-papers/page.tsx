@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { ExamSubNav } from "@/components/ExamSubNav";
 import { PapersList } from "@/components/PapersList";
+import { RelatedResources } from "@/components/RelatedResources";
 import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getExamBySlug, getExamSlugs, getPapers } from "@/lib/queries/exams";
 
@@ -39,13 +40,44 @@ export default async function PreviousPapersPage({ params }: PageProps) {
   ];
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
+    <div className="page-shell py-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(breadcrumbItems)) }} />
       <Breadcrumb items={breadcrumbItems} />
-      <ExamSubNav examSlug={exam.slug} activeTab="previous-papers" />
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">{exam.title} — Previous Year Papers</h1>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Download question papers from previous years to prepare effectively.</p>
+      <div className="surface-card p-6 sm:p-8">
+        <p className="section-kicker">Free resources</p>
+        <h1 className="mt-3 text-3xl font-semibold text-[hsl(var(--foreground))]">{exam.title} Previous Year Papers</h1>
+        <p className="mt-3 max-w-2xl text-sm leading-7 text-[hsl(var(--muted))]">
+          Download question papers quickly and move to the syllabus or important dates without leaving the exam flow.
+        </p>
+      </div>
+      <div className="mt-8">
+        <ExamSubNav examSlug={exam.slug} activeTab="previous-papers" />
+      </div>
       <div className="mt-6"><PapersList papers={papers} /></div>
+      <div className="mt-10">
+        <RelatedResources
+          items={[
+            {
+              href: `/exams/${exam.slug}`,
+              title: "Back to exam hub",
+              description: "Open the full exam overview and resource summary.",
+              label: "Hub",
+            },
+            {
+              href: `/exams/${exam.slug}/syllabus`,
+              title: "Open syllabus",
+              description: "Use the paper list together with the syllabus to focus preparation.",
+              label: "Syllabus",
+            },
+            {
+              href: `/exams/${exam.slug}/important-dates`,
+              title: "Check dates",
+              description: "Review key dates without leaving the exam section.",
+              label: "Timeline",
+            },
+          ]}
+        />
+      </div>
     </div>
   );
 }

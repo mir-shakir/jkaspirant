@@ -6,8 +6,12 @@ import Link from "next/link";
 import Script from "next/script";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { BuyButton } from "@/components/BuyButton";
+import { RelatedResources } from "@/components/RelatedResources";
+import { SectionHeader } from "@/components/SectionHeader";
+import { ResourceCard } from "@/components/ResourceCard";
 import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getBundleBySlug, getBundleSlugs } from "@/lib/queries/bundles";
+import { getResourcesForExam } from "@/lib/queries/resources";
 
 interface PageProps {
   params: { slug: string };
@@ -34,62 +38,140 @@ export default async function BundleDetailPage({ params }: PageProps) {
   const bundle = await getBundleBySlug(params.slug);
   if (!bundle) notFound();
 
+  // Fetch resources for all linked exams
+  const linkedExams = bundle.exams || [];
+  const examResourceArrays = await Promise.all(
+    linkedExams.map((exam) =>
+      getResourcesForExam(exam.id, 4).catch(() => [] as Awaited<ReturnType<typeof getResourcesForExam>>)
+    )
+  );
+  const examResources = examResourceArrays.flat();
+
   const files = bundle.files || [];
   const totalSizeKb = files.reduce((sum, f) => sum + (f.file_size_kb || 0), 0);
 
   const breadcrumbItems = [
-    { name: "Resources", path: "/bundles" },
+    { name: "Study Packs", path: "/bundles" },
     { name: bundle.title, path: `/bundles/${bundle.slug}` },
   ];
+  const freeRoutes = linkedExams.flatMap((exam) => [
+    {
+      href: `/exams/${exam.slug}`,
+      title: `${exam.title} exam hub`,
+      description: "Browse syllabus, papers, dates, and more.",
+      label: "Hub",
+    },
+    {
+      href: `/exams/${exam.slug}/previous-papers`,
+      title: `${exam.title} papers`,
+      description: "Download free past papers for practice.",
+      label: "Free",
+    },
+    {
+      href: `/exams/${exam.slug}/syllabus`,
+      title: `${exam.title} syllabus`,
+      description: "Detailed topic breakdown with marks.",
+      label: "Syllabus",
+    },
+  ]);
 
   return (
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
-      <div className="mx-auto max-w-3xl px-4 py-8">
+      <div className="page-shell py-8">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(breadcrumbItems)) }} />
         <Breadcrumb items={breadcrumbItems} />
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="space-y-8">
+            <div className="surface-card p-6 sm:p-8">
+              {linkedExams.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {linkedExams.map((exam) => (
+                    <Link key={exam.slug} href={`/exams/${exam.slug}`} className="pill-link-muted bg-[hsl(var(--panel))]">
+                      {exam.title}
+                    </Link>
+                  ))}
+                </div>
+              )}
 
-        {bundle.exam && (
-          <Link href={`/exams/${bundle.exam.slug}`} className="mb-2 inline-block text-sm text-teal-600 hover:text-teal-700 dark:text-teal-400">
-            {bundle.exam.title} &rarr;
-          </Link>
-        )}
+              <h1 className="mt-4 text-3xl font-semibold text-[hsl(var(--foreground))] sm:text-4xl">{bundle.title}</h1>
 
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">{bundle.title}</h1>
+              {bundle.description && (
+                <div className="mt-5 text-sm leading-7 text-[hsl(var(--muted))] [&_a]:text-[hsl(var(--accent-strong))] [&_h2]:mt-6 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-[hsl(var(--foreground))] [&_li]:ml-5 [&_li]:list-disc [&_p]:mt-3" dangerouslySetInnerHTML={{ __html: bundle.description }} />
+              )}
+            </div>
 
-        {bundle.description && (
-          <div className="prose prose-gray mt-4 max-w-none dark:prose-invert" dangerouslySetInnerHTML={{ __html: bundle.description }} />
-        )}
-
-        {files.length > 0 && (
-          <div className="mt-6">
-            <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Included files ({files.length})</h2>
-            <ul className="mt-2 space-y-1">
-              {files.map((file) => (
-                <li key={file.id} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                  <svg className="h-4 w-4 shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                  </svg>
-                  {file.file_name}
-                  {file.file_size_kb && (
-                    <span className="text-xs text-gray-400">
-                      ({file.file_size_kb > 1024 ? `${(file.file_size_kb / 1024).toFixed(1)} MB` : `${file.file_size_kb} KB`})
+            {files.length > 0 && (
+              <div className="surface-card p-6">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="text-lg font-semibold text-[hsl(var(--foreground))]">
+                    Included files ({files.length})
+                  </h2>
+                  {totalSizeKb > 0 && (
+                    <span className="rounded-full bg-[hsl(var(--panel-soft))] px-3 py-1 text-xs font-medium text-[hsl(var(--muted))]">
+                      Total {totalSizeKb > 1024 ? `${(totalSizeKb / 1024).toFixed(1)} MB` : `${totalSizeKb} KB`}
                     </span>
                   )}
-                </li>
-              ))}
-            </ul>
-            {totalSizeKb > 0 && (
-              <p className="mt-2 text-xs text-gray-400">
-                Total: {totalSizeKb > 1024 ? `${(totalSizeKb / 1024).toFixed(1)} MB` : `${totalSizeKb} KB`}
-              </p>
+                </div>
+                <ul className="mt-4 space-y-3">
+                  {files.map((file) => (
+                    <li key={file.id} className="surface-soft flex items-center justify-between gap-3 p-4 text-sm">
+                      <span className="font-medium text-[hsl(var(--foreground))]">
+                        {file.file_name}
+                      </span>
+                      {file.file_size_kb && (
+                        <span className="text-xs text-[hsl(var(--muted))]">
+                          {file.file_size_kb > 1024
+                            ? `${(file.file_size_kb / 1024).toFixed(1)} MB`
+                            : `${file.file_size_kb} KB`}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
+
+          <div className="surface-card h-fit p-6">
+            <p className="section-kicker">Study pack</p>
+            <p className="mt-3 text-4xl font-semibold text-[hsl(var(--foreground))]">
+              ₹{bundle.price_paise / 100}
+            </p>
+            <p className="mt-3 text-sm leading-6 text-[hsl(var(--muted))]">
+              All the study material you need, in one download. Free resources are always available too.
+            </p>
+            <div className="mt-6">
+              <BuyButton bundleId={bundle.id} bundleSlug={bundle.slug} bundleTitle={bundle.title} pricePaise={bundle.price_paise} />
+            </div>
+          </div>
+        </div>
+
+        {freeRoutes.length > 0 && (
+          <section className="mt-12">
+            <SectionHeader
+              kicker="Also helpful"
+              title="Free resources for this exam"
+            />
+            <div className="mt-6">
+              <RelatedResources items={freeRoutes} />
+            </div>
+          </section>
         )}
 
-        <div className="mt-8">
-          <BuyButton bundleId={bundle.id} bundleSlug={bundle.slug} bundleTitle={bundle.title} pricePaise={bundle.price_paise} />
-        </div>
+        {examResources.length > 0 && (
+          <section className="mt-12">
+            <SectionHeader
+              kicker="More to explore"
+              title="Extra notes & guides"
+            />
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              {examResources.map((resource) => (
+                <ResourceCard key={resource.id} resource={resource} />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </>
   );

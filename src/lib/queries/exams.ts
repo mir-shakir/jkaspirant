@@ -71,6 +71,21 @@ export async function getPapers(examId: string): Promise<Paper[]> {
   } catch { return []; }
 }
 
+export async function getLatestPapers(limit: number = 8): Promise<Paper[]> {
+  try {
+    const supabase = createServerClient();
+    const { data } = await supabase
+      .from("papers")
+      .select("*, exam:exams(slug, title)")
+      .eq("is_published", true)
+      .order("created_at", { ascending: false })
+      .limit(limit);
+    return data || [];
+  } catch {
+    return [];
+  }
+}
+
 export async function getCutoffs(examId: string): Promise<Cutoff[]> {
   try {
     const supabase = createServerClient();

@@ -7,23 +7,42 @@ interface ExamCardProps {
 
 export function ExamCard({ exam }: ExamCardProps) {
   return (
-    <Link
-      href={`/exams/${exam.slug}`}
-      className="block rounded-lg border border-gray-200 bg-white p-5 transition-shadow hover:shadow-md dark:border-gray-800 dark:bg-gray-900"
-    >
-      <h3 className="text-base font-semibold text-gray-900 dark:text-white">
-        {exam.title}
-      </h3>
-      {exam.department && (
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          {exam.department}
-        </p>
-      )}
-      {exam.vacancy_count && (
-        <p className="mt-2 text-xs font-medium text-teal-700 dark:text-teal-400">
-          {exam.vacancy_count} vacancies
-        </p>
-      )}
-    </Link>
+    <article className="surface-card p-5 transition duration-200 hover:-translate-y-1 hover:shadow-[0_20px_56px_rgba(15,23,42,0.1)]">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="section-kicker">Exam hub</p>
+          <h3 className="mt-2 text-xl font-semibold text-[hsl(var(--foreground))]">
+            <Link href={`/exams/${exam.slug}`} className="hover:text-[hsl(var(--accent-strong))]">
+              {exam.title}
+            </Link>
+          </h3>
+          {exam.department && (
+            <p className="mt-2 text-sm text-[hsl(var(--muted))]">
+              {exam.department}
+            </p>
+          )}
+        </div>
+        {exam.vacancy_count && (
+          <span className="rounded-full bg-[hsla(var(--warm),0.14)] px-3 py-1 text-xs font-semibold text-[hsl(var(--warm))]">
+            {exam.vacancy_count.toLocaleString("en-IN")} posts
+          </span>
+        )}
+      </div>
+
+      <div className="mt-5 grid grid-cols-2 gap-2">
+        <Link href={`/exams/${exam.slug}/previous-papers`} className="pill-link justify-center">
+          Papers
+        </Link>
+        <Link href={`/exams/${exam.slug}/syllabus`} className="pill-link justify-center">
+          Syllabus
+        </Link>
+        <Link href={`/exams/${exam.slug}/important-dates`} className="pill-link justify-center">
+          Dates
+        </Link>
+        <Link href={`/exams/${exam.slug}`} className="pill-link justify-center">
+          See all →
+        </Link>
+      </div>
+    </article>
   );
 }

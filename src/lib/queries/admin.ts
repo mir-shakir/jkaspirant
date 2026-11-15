@@ -10,6 +10,7 @@ import type {
   BundleFile,
   Order,
   Coupon,
+  Resource,
 } from "@/lib/types/database";
 
 // --- Exams ---
@@ -134,15 +135,42 @@ export async function deleteExamDate(id: string): Promise<void> {
 
 // --- Bundles ---
 export async function getAdminBundles(): Promise<(Bundle & { files?: BundleFile[] })[]> {
-  const { data, error } = await supabase.from("bundles").select("*, files:bundle_files(*), exam:exams(slug, title)").order("created_at", { ascending: false });
+  const { data, error } = await supabase.from("bundles").select("*, files:bundle_files(*), bundle_exams(exam:exams(id, slug, title))").order("created_at", { ascending: false });
   if (error) throw error;
-  return data || [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (data || []).map((row: any) => {
+    const { bundle_exams, ...rest } = row;
+    const exams = (bundle_exams || [])
+      .map((be: { exam: { id: string; slug: string; title: string } | null }) => be.exam)
+      .filter(Boolean);
+    return { ...rest, exams };
+  });
 }
 
 export async function upsertBundle(bundle: Partial<Bundle> & { title: string; slug: string; price_paise: number }): Promise<Bundle> {
-  const { data, error } = await supabase.from("bundles").upsert(bundle, { onConflict: "id" }).select().single();
+  // Strip exams/files from payload — they're managed separately
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { exams: _e, files: _f, ...payload } = bundle;
+  const { data, error } = await supabase.from("bundles").upsert(payload, { onConflict: "id" }).select().single();
   if (error) throw error;
   return data;
+}
+
+export async function setBundleExams(bundleId: string, examIds: string[]): Promise<void> {
+  // Delete existing links
+  await supabase.from("bundle_exams").delete().eq("bundle_id", bundleId);
+  // Insert new links
+  if (examIds.length > 0) {
+    const rows = examIds.map((examId) => ({ bundle_id: bundleId, exam_id: examId }));
+    const { error } = await supabase.from("bundle_exams").insert(rows);
+    if (error) throw error;
+  }
+}
+
+export async function getBundleExamIds(bundleId: string): Promise<string[]> {
+  const { data, error } = await supabase.from("bundle_exams").select("exam_id").eq("bundle_id", bundleId);
+  if (error) throw error;
+  return (data || []).map((row) => row.exam_id);
 }
 
 export async function deleteBundle(id: string): Promise<void> {
@@ -164,6 +192,39 @@ export async function insertBundleFile(bundleFile: { bundle_id: string; file_nam
 
 export async function deleteBundleFile(id: string): Promise<void> {
   const { error } = await supabase.from("bundle_files").delete().eq("id", id);
+  if (error) throw error;
+}
+
+// --- Resources ---
+export async function getAdminResources(): Promise<Resource[]> {
+  const { data, error } = await supabase
+    .from("resources")
+    .select("*, exam:exams(slug, title)")
+    .order("is_featured", { ascending: false })
+    .order("sort_order")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function upsertResource(
+  resource: Partial<Resource> & {
+    title: string;
+    resource_type: Resource["resource_type"];
+    url: string;
+  }
+): Promise<Resource> {
+  const { data, error } = await supabase
+    .from("resources")
+    .upsert(resource, { onConflict: "id" })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteResource(id: string): Promise<void> {
+  const { error } = await supabase.from("resources").delete().eq("id", id);
   if (error) throw error;
 }
 
@@ -193,17 +254,19 @@ export async function deleteCoupon(id: string): Promise<void> {
 }
 
 // --- Stats ---
-export async function getAdminStats(): Promise<{ totalExams: number; totalNotifications: number; pendingNotifications: number; totalPapers: number }> {
-  const [exams, notifs, pending, papers] = await Promise.all([
+export async function getAdminStats(): Promise<{ totalExams: number; totalNotifications: number; pendingNotifications: number; totalPapers: number; totalResources: number }> {
+  const [exams, notifs, pending, papers, resources] = await Promise.all([
     supabase.from("exams").select("id", { count: "exact", head: true }),
     supabase.from("notifications").select("id", { count: "exact", head: true }).eq("is_published", true),
     supabase.from("notifications").select("id", { count: "exact", head: true }).eq("is_published", false),
     supabase.from("papers").select("id", { count: "exact", head: true }),
+    supabase.from("resources").select("id", { count: "exact", head: true }).eq("is_active", true),
   ]);
   return {
     totalExams: exams.count || 0,
     totalNotifications: notifs.count || 0,
     pendingNotifications: pending.count || 0,
     totalPapers: papers.count || 0,
+    totalResources: resources.count || 0,
   };
 }

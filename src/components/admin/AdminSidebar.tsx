@@ -9,6 +9,7 @@ const navItems = [
   { href: "/admin/notifications", label: "Notifications" },
   { href: "/admin/exams", label: "Exams" },
   { href: "/admin/papers", label: "Papers" },
+  { href: "/admin/resources", label: "Resources" },
   { href: "/admin/cutoffs", label: "Cut-offs" },
   { href: "/admin/syllabus", label: "Syllabus" },
   { href: "/admin/dates", label: "Exam Dates" },

@@ -15,15 +15,15 @@ const tabs = [
 
 export function ExamSubNav({ examSlug, activeTab }: ExamSubNavProps) {
   return (
-    <nav className="mb-6 flex gap-1 overflow-x-auto border-b border-gray-200 dark:border-gray-800">
+    <nav className="mb-8 flex gap-2 overflow-x-auto pb-2">
       {tabs.map((tab) => (
         <Link
           key={tab.key}
           href={`/exams/${examSlug}${tab.path}`}
-          className={`whitespace-nowrap border-b-2 px-3 py-2 text-sm font-medium transition-colors ${
+          className={`whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition ${
             activeTab === tab.key
-              ? "border-teal-600 text-teal-600 dark:border-teal-400 dark:text-teal-400"
-              : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              ? "border-transparent bg-[hsl(var(--accent-strong))] text-white shadow-sm"
+              : "border-[hsl(var(--line))] bg-[hsl(var(--panel))] text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
           }`}
         >
           {tab.label}

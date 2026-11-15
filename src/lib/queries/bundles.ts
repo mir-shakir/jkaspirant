@@ -6,10 +6,10 @@ export async function getAllBundles(): Promise<Bundle[]> {
     const supabase = createServerClient();
     const { data } = await supabase
       .from("bundles")
-      .select("*, exam:exams(slug, title), files:bundle_files(*)")
+      .select("*, bundle_exams(exam:exams(id, slug, title)), files:bundle_files(*)")
       .eq("is_active", true)
       .order("created_at", { ascending: false });
-    return data || [];
+    return (data || []).map(flattenBundleExams);
   } catch { return []; }
 }
 
@@ -18,12 +18,21 @@ export async function getBundleBySlug(slug: string): Promise<Bundle | null> {
     const supabase = createServerClient();
     const { data } = await supabase
       .from("bundles")
-      .select("*, exam:exams(slug, title), files:bundle_files(*)")
+      .select("*, bundle_exams(exam:exams(id, slug, title)), files:bundle_files(*)")
       .eq("slug", slug)
       .eq("is_active", true)
       .single();
-    return data;
+    return data ? flattenBundleExams(data) : null;
   } catch { return null; }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function flattenBundleExams(row: any): Bundle {
+  const { bundle_exams, ...rest } = row;
+  const exams = (bundle_exams || [])
+    .map((be: { exam: { id: string; slug: string; title: string } | null }) => be.exam)
+    .filter(Boolean);
+  return { ...rest, exams };
 }
 
 export async function getBundleSlugs(): Promise<string[]> {

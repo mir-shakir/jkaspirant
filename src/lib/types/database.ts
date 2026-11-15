@@ -50,6 +50,7 @@ export interface Paper {
   seo_title: string | null;
   seo_description: string | null;
   created_at: string;
+  exam?: Pick<Exam, "slug" | "title">;
 }
 
 export interface Cutoff {
@@ -88,7 +89,6 @@ export interface Bundle {
   title: string;
   description: string | null;
   price_paise: number;
-  exam_id: string | null;
   cover_image_url: string | null;
   is_active: boolean;
   seo_title: string | null;
@@ -96,7 +96,7 @@ export interface Bundle {
   focus_keyword: string | null;
   created_at: string;
   updated_at: string;
-  exam?: Pick<Exam, "slug" | "title">;
+  exams?: Pick<Exam, "id" | "slug" | "title">[];
   files?: BundleFile[];
 }
 
@@ -135,4 +135,32 @@ export interface Coupon {
   expires_at: string | null;
   is_active: boolean;
   created_at: string;
+}
+
+export type ResourceType =
+  | "notes"
+  | "book"
+  | "official_link"
+  | "external_link"
+  | "guide"
+  | "bundle"
+  | "previous_paper";
+
+export interface Resource {
+  id: string;
+  title: string;
+  description: string | null;
+  resource_type: ResourceType;
+  exam_id: string | null;
+  url: string;
+  source_label: string | null;
+  cta_label: string | null;
+  is_external: boolean;
+  is_premium: boolean;
+  is_featured: boolean;
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+  exam?: Pick<Exam, "slug" | "title">;
 }
