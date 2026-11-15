@@ -19,7 +19,7 @@ export const siteConfig = {
 
 export const mainNav = [
   { href: "/notifications", label: "Updates" },
-  { href: "/tools", label: "Tools" },
   { href: "/exams", label: "Exams" },
-  { href: "/resources", label: "Papers" },
+  { href: "/calendar", label: "Calendar" },
+  { href: "/tools", label: "Tools" },
 ] as const;

@@ -1,71 +1,63 @@
 import type { Paper } from "@/lib/types/database";
+import { EmptyState } from "@/components/ui";
 
 interface PapersListProps {
   papers: Paper[];
 }
 
+function size(kb: number | null) {
+  if (!kb) return null;
+  return kb > 1024 ? `${(kb / 1024).toFixed(1)} MB` : `${kb} KB`;
+}
+
+/** Papers grouped by year. The whole row downloads the PDF. */
 export function PapersList({ papers }: PapersListProps) {
   if (papers.length === 0) {
-    return (
-      <p className="surface-card p-5 text-[hsl(var(--muted))]">
-        No previous papers available yet. Check back soon.
-      </p>
-    );
+    return <EmptyState>No previous papers for this exam yet. We add them as soon as we have a clean copy.</EmptyState>;
   }
 
-  const byYear = papers.reduce<Record<number, Paper[]>>((acc, paper) => {
+  const byYear = new Map<number, Paper[]>();
+  for (const paper of papers) {
     const year = paper.year || 0;
-    if (!acc[year]) acc[year] = [];
-    acc[year].push(paper);
-    return acc;
-  }, {});
-
-  const sortedYears = Object.keys(byYear)
-    .map(Number)
-    .sort((a, b) => b - a);
+    byYear.set(year, [...(byYear.get(year) ?? []), paper]);
+  }
+  const years = Array.from(byYear.keys()).sort((a, b) => b - a);
 
   return (
     <div className="space-y-6">
-      {sortedYears.map((year) => (
-        <div key={year}>
-          <h3 className="text-lg font-semibold text-[hsl(var(--foreground))]">
+      {years.map((year) => (
+        <section key={year}>
+          <h2 className="mb-2 font-mono-num text-[13px] font-medium uppercase tracking-[0.1em] text-[hsl(var(--muted))]">
             {year === 0 ? "Other" : year}
-          </h3>
-          <div className="mt-2 space-y-2">
-            {byYear[year].map((paper) => (
-              <div
-                key={paper.id}
-                className="surface-card flex items-center justify-between gap-4 p-4"
-              >
-                <div>
-                  <p className="text-sm font-medium text-[hsl(var(--foreground))]">
-                    {paper.title}
-                  </p>
-                  <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[hsl(var(--muted))]">
-                    {paper.subject && <span>{paper.subject}</span>}
-                    {paper.file_size_kb && (
-                      <span>
-                        {paper.file_size_kb > 1024
-                          ? `${(paper.file_size_kb / 1024).toFixed(1)} MB`
-                          : `${paper.file_size_kb} KB`}
-                      </span>
-                    )}
-                  </div>
+          </h2>
+          <div className="group-list">
+            {byYear.get(year)!.map((paper) => {
+              const meta = [paper.subject, size(paper.file_size_kb), "PDF"].filter(Boolean).join(" · ");
+              const inner = (
+                <>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[15px] font-medium leading-snug">{paper.title}</span>
+                    <span className="mt-0.5 block text-[13px] text-[hsl(var(--muted))]">{paper.file_url ? meta : "Coming soon"}</span>
+                  </span>
+                  {paper.file_url && (
+                    <svg viewBox="0 0 20 20" className="h-5 w-5 shrink-0 text-[hsl(var(--accent))]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <path d="M10 3.5v9m0 0L6.5 9M10 12.5 13.5 9M4 16.5h12" />
+                    </svg>
+                  )}
+                </>
+              );
+              return paper.file_url ? (
+                <a key={paper.id} href={paper.file_url} target="_blank" rel="noopener noreferrer" className="row" aria-label={`Download ${paper.title}`}>
+                  {inner}
+                </a>
+              ) : (
+                <div key={paper.id} className="row opacity-70">
+                  {inner}
                 </div>
-                {paper.file_url && (
-                  <a
-                    href={paper.file_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="shrink-0 rounded-full bg-[hsl(var(--accent-strong))] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[hsl(var(--accent))]"
-                  >
-                    Download PDF
-                  </a>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
-        </div>
+        </section>
       ))}
     </div>
   );

@@ -1,27 +1,31 @@
-// Homepage spotlight: the exam most aspirants care about right now.
-// Operator sessions edit this when stages move (answer key out, result out) and commit.
+// The one thing most aspirants care about right now. Shown at the top of the
+// homepage. Operator sessions edit this when a stage moves and commit.
+// Set to `null` when nothing is hot; the homepage then leads with updates.
 
 export type StageStatus = "done" | "current" | "upcoming";
 
 export interface Spotlight {
-  kicker: string;
-  title: string;
-  facts: string[];
-  stages: { label: string; date?: string; status: StageStatus }[];
+  /** Short label for the exam, e.g. "JKSSB FAA 2026" */
+  exam: string;
+  /** What is true right now, in a few words. This is the headline. */
+  headline: string;
+  /** One line of context under the headline. */
+  detail: string;
+  stages: { label: string; status: StageStatus }[];
   primaryCta: { href: string; label: string };
   secondaryCta?: { href: string; label: string };
 }
 
 export const spotlight: Spotlight | null = {
-  kicker: "Exam in focus",
-  title: "JKSSB Finance Accounts Assistant 2026",
-  facts: ["Exam held 15 Nov", "600 posts", "~1.5 lakh appeared"],
+  exam: "JKSSB FAA 2026",
+  headline: "Exam done. Answer key awaited.",
+  detail: "Held 15 Nov · 600 posts · 1.61 lakh registered",
   stages: [
-    { label: "Exam", date: "15 Nov", status: "done" },
-    { label: "Answer key", date: "Awaited", status: "current" },
+    { label: "Exam", status: "done" },
+    { label: "Answer key", status: "current" },
     { label: "Objections", status: "upcoming" },
     { label: "Result", status: "upcoming" },
   ],
-  primaryCta: { href: "/tools/jkssb-faa-rank-predictor", label: "Check your expected rank" },
-  secondaryCta: { href: "/exams/finance-accounts-assistant", label: "FAA exam hub" },
+  primaryCta: { href: "/tools/jkssb-faa-rank-predictor", label: "Predict my rank" },
+  secondaryCta: { href: "/notifications/jkssb-faa-exam-held-answer-key-awaited-2026", label: "What happens next" },
 };

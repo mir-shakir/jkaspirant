@@ -1,48 +1,37 @@
 import type { ExamDate } from "@/lib/types/database";
+import { DateBlock, EmptyState } from "@/components/ui";
+import { todayIST } from "@/content/calendar";
 
 interface DateTimelineProps {
   dates: ExamDate[];
 }
 
+/** Past dates fade back; the next one is marked. */
 export function DateTimeline({ dates }: DateTimelineProps) {
   if (dates.length === 0) {
-    return (
-      <p className="surface-card p-5 text-[hsl(var(--muted))]">
-        Important dates have not been announced yet.
-      </p>
-    );
+    return <EmptyState>No dates announced for this exam yet.</EmptyState>;
   }
+  const today = todayIST();
+  const nextId = dates.find((d) => d.event_date && d.event_date >= today)?.id;
 
   return (
-    <div className="relative space-y-0">
-      <div className="absolute bottom-2 left-4 top-2 w-px bg-[hsl(var(--line))]" />
-
+    <div className="group-list">
       {dates.map((date) => {
-        const formattedDate = date.event_date
-          ? new Date(date.event_date).toLocaleDateString("en-IN", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })
-          : "TBA";
-
+        const past = !!date.event_date && date.event_date < today;
         return (
-          <div key={date.id} className="surface-card relative flex items-start gap-4 p-4 pl-5">
-            <div className="relative z-10 mt-1.5 h-3 w-3 shrink-0 rounded-full border-2 border-[hsl(var(--accent-strong))] bg-[hsl(var(--panel))]" />
-
-            <div>
-              <p className="text-sm font-semibold text-[hsl(var(--foreground))]">
-                {date.event_name}
-              </p>
-              <p className="mt-1 text-sm text-[hsl(var(--muted))]">
-                {formattedDate}
-                {date.is_tentative && (
-                  <span className="ml-2 rounded-full bg-[hsla(var(--warm),0.14)] px-2 py-0.5 text-xs text-[hsl(var(--warm))]">
-                    Tentative
-                  </span>
-                )}
-              </p>
-            </div>
+          <div key={date.id} className={`row ${past ? "opacity-55" : ""}`}>
+            <DateBlock iso={date.event_date} />
+            <span className="min-w-0 flex-1">
+              <span className="block text-[15px] font-medium leading-snug">{date.event_name}</span>
+              <span className="mt-0.5 block text-[13px] text-[hsl(var(--muted))]">
+                {date.event_date
+                  ? new Date(date.event_date).toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Kolkata" })
+                  : "To be announced"}
+                {date.is_tentative && " · Tentative"}
+              </span>
+            </span>
+            {date.id === nextId && <span className="tag tag-new">Next</span>}
+            {past && <span className="tag">Done</span>}
           </div>
         );
       })}

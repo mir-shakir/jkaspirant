@@ -1,193 +1,75 @@
 import { Metadata } from "next";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { SearchHero } from "@/components/SearchHero";
-import { SectionHeader } from "@/components/SectionHeader";
-import { ExamCard } from "@/components/ExamCard";
-import { BundleCard } from "@/components/BundleCard";
-import { NotificationCard } from "@/components/NotificationCard";
-import { RelatedResources } from "@/components/RelatedResources";
-import { ResourceCard } from "@/components/ResourceCard";
+import { EmptyState, GroupList, PageHeader, Row, Section } from "@/components/ui";
 import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getAllExams, getLatestPapers } from "@/lib/queries/exams";
-import { getLatestNotifications } from "@/lib/queries/notifications";
-import { getAllBundles } from "@/lib/queries/bundles";
-import { getAllResources, getFeaturedResources } from "@/lib/queries/resources";
+import { getAllResources } from "@/lib/queries/resources";
 
 export const revalidate = 1800;
 
 export const metadata: Metadata = buildMetadata({
-  title: "Resources — Papers, Syllabus, Bundles",
-  description:
-    "Browse previous papers, syllabus, exam hubs, study packs, and useful updates in one place.",
+  title: "Previous Papers & Study Resources — JKSSB, JKPSC",
+  description: "Previous year question papers and trusted study resources for JKSSB and JKPSC exams, free to download.",
   canonicalPath: "/resources",
-  keywords: ["JKSSB resources", "JKPSC previous papers", "JK exam notes"],
+  keywords: ["JKSSB previous papers", "JKPSC previous papers", "JKSSB question paper pdf"],
 });
 
 export default async function ResourcesPage() {
-  const [exams, bundles, papers, notifications, resources, featuredResources] =
-    await Promise.all([
-    getAllExams(),
-    getAllBundles(),
-    getLatestPapers(6),
-    getLatestNotifications(3),
-    getAllResources(),
-    getFeaturedResources(6),
-  ]);
-
-  const breadcrumbItems = [{ name: "Resources", path: "/resources" }];
-  const searchItems = [
-    ...exams.flatMap((exam) => [
-      {
-        title: `${exam.title} previous papers`,
-        description: "Download papers",
-        href: `/exams/${exam.slug}/previous-papers`,
-        tag: "Paper",
-      },
-      {
-        title: `${exam.title} syllabus`,
-        description: "Section-wise syllabus",
-        href: `/exams/${exam.slug}/syllabus`,
-        tag: "Syllabus",
-      },
-    ]),
-    ...bundles.map((bundle) => ({
-      title: bundle.title,
-      description: bundle.exams?.length
-        ? `Study pack for ${bundle.exams.map((e) => e.title).join(", ")}`
-        : "Curated study pack",
-      href: `/bundles/${bundle.slug}`,
-      tag: "Pack",
-    })),
-    ...notifications.map((notification) => ({
-      title: notification.title,
-      description: "Exam update",
-      href: `/notifications/${notification.slug}`,
-      tag: "Update",
-    })),
-    ...resources.map((resource) => ({
-      title: resource.title,
-      description:
-        resource.description ||
-        (resource.exam?.title
-          ? `Resource for ${resource.exam.title}`
-          : "Study resource"),
-      href: resource.url,
-      tag: "Resource",
-      external: resource.is_external,
-    })),
+  const [exams, papers, resources] = await Promise.all([getAllExams(), getLatestPapers(8), getAllResources(12)]);
+  const breadcrumbItems = [
+    { name: "Exams", path: "/exams" },
+    { name: "Papers", path: "/resources" },
   ];
-
-  const paperItems = papers.map((paper) => ({
-    href: paper.exam?.slug
-      ? `/exams/${paper.exam.slug}/previous-papers`
-      : "/resources",
-    title: paper.title,
-    description: paper.exam?.title
-      ? `Papers for ${paper.exam.title}`
-      : "Open paper list",
-    label: "Paper",
-  }));
-  const nonFeaturedResources = resources.filter(
-    (resource) => !featuredResources.some((item) => item.id === resource.id)
-  );
+  const links = resources.filter((r) => !r.is_premium);
 
   return (
-    <div className="page-shell py-8">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(buildBreadcrumbJsonLd(breadcrumbItems)),
-        }}
-      />
+    <div className="page-shell py-4 sm:py-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(breadcrumbItems)) }} />
       <Breadcrumb items={breadcrumbItems} />
+      <PageHeader title="Previous papers" lede="Free PDFs. Pick your exam to see every paper for it." />
 
-      <SearchHero
-        kicker="Resource library"
-        title="Everything for your exam prep — papers, notes, packs, and links."
-        placeholder="Try 'Junior Assistant papers' or 'FAA syllabus'..."
-        items={searchItems}
-        quickLinks={[
-          { label: "Exam hubs", href: "/exams" },
-          { label: "Study packs", href: "/bundles" },
-          { label: "Latest updates", href: "/notifications" },
-        ]}
-      />
-
-      {featuredResources.length > 0 && (
-        <section className="mt-10">
-          <SectionHeader
-            kicker="Top picks"
-            title="We recommend starting here"
-          />
-          <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {featuredResources.map((resource) => (
-              <ResourceCard key={resource.id} resource={resource} />
+      <Section title="By exam" className="!mt-6">
+        {exams.length > 0 ? (
+          <GroupList>
+            {exams.map((exam) => (
+              <Row key={exam.id} href={`/exams/${exam.slug}/previous-papers`} title={exam.title} sub={exam.department || undefined} />
             ))}
-          </div>
-        </section>
+          </GroupList>
+        ) : (
+          <EmptyState>Papers are being added. Check back soon.</EmptyState>
+        )}
+      </Section>
+
+      {papers.length > 0 && (
+        <Section title="Recently added">
+          <GroupList>
+            {papers.map((paper) => (
+              <Row
+                key={paper.id}
+                href={paper.exam?.slug ? `/exams/${paper.exam.slug}/previous-papers` : "/exams"}
+                title={paper.title}
+                sub={[paper.exam?.title, paper.year].filter(Boolean).join(" · ")}
+              />
+            ))}
+          </GroupList>
+        </Section>
       )}
 
-      <section className="mt-10">
-        <SectionHeader
-          kicker="Fresh papers"
-          title="Recently added previous year papers"
-        />
-        <div className="mt-5">
-          <RelatedResources items={paperItems} />
-        </div>
-      </section>
-
-      {nonFeaturedResources.length > 0 && (
-        <section className="mt-10">
-          <SectionHeader
-            kicker="More to explore"
-            title="Helpful notes, guides & links"
-          />
-          <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {nonFeaturedResources.map((resource) => (
-              <ResourceCard key={resource.id} resource={resource} />
+      {links.length > 0 && (
+        <Section title="Trusted resources">
+          <GroupList>
+            {links.map((resource) => (
+              <Row
+                key={resource.id}
+                href={resource.url}
+                external={resource.is_external}
+                title={resource.title}
+                sub={resource.source_label || resource.description || resource.exam?.title || undefined}
+              />
             ))}
-          </div>
-        </section>
+          </GroupList>
+        </Section>
       )}
-
-      <section className="mt-10">
-        <SectionHeader
-          kicker="By exam"
-          title="Jump into a specific exam"
-        />
-        <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {exams.map((exam) => (
-            <ExamCard key={exam.id} exam={exam} />
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-10 grid gap-8 lg:grid-cols-[1fr_1fr]">
-        <div>
-          <SectionHeader
-            kicker="Study packs"
-            title="Ready-made bundles to save time"
-          />
-          <div className="mt-5 grid gap-4">
-            {bundles.slice(0, 4).map((bundle) => (
-              <BundleCard key={bundle.id} bundle={bundle} />
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <SectionHeader
-            kicker="Stay updated"
-            title="Recent exam notifications"
-          />
-          <div className="mt-5 surface-card divide-y overflow-hidden">
-            {notifications.map((notification) => (
-              <NotificationCard key={notification.id} notification={notification} />
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

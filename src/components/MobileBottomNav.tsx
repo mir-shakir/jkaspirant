@@ -3,65 +3,47 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const navItems = [
-  {
-    href: "/",
-    label: "Home",
-    icon: "M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1v-9.5Z",
-  },
-  {
-    href: "/notifications",
-    label: "Updates",
-    icon: "M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9Zm4.3 13a2 2 0 0 0 3.4 0",
-  },
-  {
-    href: "/tools",
-    label: "Tools",
-    icon: "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM16.5 13v7M13 16.5h7",
-  },
-  {
-    href: "/exams",
-    label: "Exams",
-    icon: "M4 19.5V5a2 2 0 0 1 2-2h14v15H6a2 2 0 0 0-2 2Zm0 0A2 2 0 0 0 6 22h14",
-  },
+// The four places on the site. Each tab also owns the pages underneath it,
+// so the highlighted tab always answers "where am I?".
+const tabs = [
+  { href: "/", label: "Home", match: ["/calendar", "/search"], icon: "M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5V15h-6v5.5H4a.5.5 0 0 1-.5-.5v-9.5Z" },
+  { href: "/notifications", label: "Updates", match: [], icon: "M6 9a6 6 0 1 1 12 0c0 6.5 2.5 8 2.5 8h-17S6 15.5 6 9Zm4.2 11.5a2 2 0 0 0 3.6 0" },
+  { href: "/exams", label: "Exams", match: ["/resources"], icon: "M5 4.5h11.5a2.5 2.5 0 0 1 2.5 2.5v12.5H7.5A2.5 2.5 0 0 1 5 17V4.5Zm0 12.5a2.5 2.5 0 0 1 2.5-2.5H19M9 8.5h6" },
+  { href: "/tools", label: "Tools", match: [], icon: "M5 20V10m7 10V4m7 16v-7" },
 ];
 
 export function MobileBottomNav() {
   const pathname = usePathname();
+  if (pathname.startsWith("/admin")) return null;
+
+  const isActive = (tab: (typeof tabs)[number]) =>
+    tab.href === "/"
+      ? pathname === "/" || tab.match.some((m) => pathname.startsWith(m))
+      : pathname.startsWith(tab.href) || tab.match.some((m) => pathname.startsWith(m));
 
   return (
     <nav
-      aria-label="Bottom"
-      className="fixed inset-x-0 bottom-0 z-50 border-t bg-[hsl(var(--background)/0.95)] pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
+      aria-label="Sections"
+      className="fixed inset-x-0 bottom-0 z-50 border-t bg-[hsl(var(--background)/0.96)] pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
     >
       <div className="mx-auto grid max-w-md grid-cols-4">
-        {navItems.map((item) => {
-          const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+        {tabs.map((tab) => {
+          const active = isActive(tab);
           return (
             <Link
-              key={item.href}
-              href={item.href}
-              aria-current={isActive ? "page" : undefined}
-              className={`relative flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition ${
-                isActive ? "text-[hsl(var(--accent))]" : "text-[hsl(var(--muted))]"
+              key={tab.href}
+              href={tab.href}
+              aria-current={active ? "page" : undefined}
+              className={`flex h-[58px] flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors ${
+                active ? "text-[hsl(var(--accent))]" : "text-[hsl(var(--muted))]"
               }`}
             >
-              {isActive && (
-                <span className="absolute top-0 h-[2px] w-8 rounded-b bg-[hsl(var(--accent))]" />
-              )}
-              <svg
-                viewBox="0 0 24 24"
-                className="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
-              >
-                <path d={item.icon} />
-              </svg>
-              {item.label}
+              <span className={`flex h-7 w-14 items-center justify-center rounded-full transition-colors ${active ? "bg-[hsl(var(--accent)/0.12)]" : ""}`}>
+                <svg viewBox="0 0 24 24" className="h-[21px] w-[21px]" fill="none" stroke="currentColor" strokeWidth={active ? 2 : 1.7} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d={tab.icon} />
+                </svg>
+              </span>
+              {tab.label}
             </Link>
           );
         })}

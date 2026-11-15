@@ -13,22 +13,31 @@ const tabs = [
   { key: "important-dates", label: "Dates", path: "/important-dates" },
 ] as const;
 
+/** Tabs for one exam. Sticks under the header so switching never needs a scroll. */
 export function ExamSubNav({ examSlug, activeTab }: ExamSubNavProps) {
   return (
-    <nav className="mb-8 flex gap-2 overflow-x-auto pb-2">
-      {tabs.map((tab) => (
-        <Link
-          key={tab.key}
-          href={`/exams/${examSlug}${tab.path}`}
-          className={`whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition ${
-            activeTab === tab.key
-              ? "border-transparent bg-[hsl(var(--accent-strong))] text-white shadow-sm"
-              : "border-[hsl(var(--line))] bg-[hsl(var(--panel))] text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
-          }`}
-        >
-          {tab.label}
-        </Link>
-      ))}
+    <nav
+      aria-label="Exam sections"
+      className="sticky top-14 z-40 -mx-4 mt-4 border-b bg-[hsl(var(--background)/0.95)] backdrop-blur-md sm:-mx-6"
+    >
+      <div className="no-scrollbar flex gap-1 overflow-x-auto px-4 sm:px-6">
+        {tabs.map((tab) => {
+          const active = activeTab === tab.key;
+          return (
+            <Link
+              key={tab.key}
+              href={`/exams/${examSlug}${tab.path}`}
+              aria-current={active ? "page" : undefined}
+              className={`relative flex h-11 shrink-0 items-center px-3 text-sm font-medium transition-colors ${
+                active ? "text-[hsl(var(--foreground))]" : "text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
+              }`}
+            >
+              {tab.label}
+              {active && <span className="absolute inset-x-3 bottom-0 h-[2.5px] rounded-t bg-[hsl(var(--accent))]" />}
+            </Link>
+          );
+        })}
+      </div>
     </nav>
   );
 }

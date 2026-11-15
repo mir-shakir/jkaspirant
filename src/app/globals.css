@@ -19,6 +19,8 @@
     --warm: 33 92% 46%;
     --success: 152 52% 29%;
     --ink: 220 35% 13%;
+    --focus: 220 35% 13%;
+    --focus-fg: 40 33% 96%;
   }
 
   .dark {
@@ -33,6 +35,8 @@
     --warm: 36 92% 60%;
     --success: 150 45% 55%;
     --ink: 40 30% 93%;
+    --focus: 14 42% 17%;
+    --focus-fg: 40 30% 94%;
   }
 
   * {
@@ -92,8 +96,9 @@
 }
 
 @layer components {
+  /* One reading column everywhere: feels like an app on phones, calm on desktop. */
   .page-shell {
-    @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+    @apply mx-auto w-full max-w-3xl px-4 sm:px-6;
   }
 
   .font-display {
@@ -108,87 +113,164 @@
   .surface-card {
     background: hsl(var(--panel));
     border: 1px solid hsl(var(--line));
-    @apply rounded-xl;
+    @apply rounded-2xl;
   }
 
   .surface-soft {
     background: hsl(var(--panel-soft));
+    @apply rounded-2xl;
+  }
+
+  /* Grouped list: the one pattern for "things you can tap". */
+  .group-list {
+    background: hsl(var(--panel));
     border: 1px solid hsl(var(--line));
-    @apply rounded-xl;
+    @apply divide-y overflow-hidden rounded-2xl;
+  }
+
+  .row {
+    @apply flex min-h-[60px] w-full items-center gap-3 px-4 py-3 text-left transition-colors;
+  }
+  a.row:hover,
+  button.row:hover {
+    background: hsl(var(--panel-soft) / 0.55);
+  }
+  a.row:active,
+  button.row:active {
+    background: hsl(var(--panel-soft));
   }
 
   .section-kicker {
     color: hsl(var(--accent-strong));
     font-family: var(--font-mono), ui-monospace, monospace;
-    @apply text-[11px] font-medium uppercase tracking-[0.18em];
+    @apply text-[11px] font-medium uppercase tracking-[0.16em];
   }
   .dark .section-kicker {
     color: hsl(var(--accent));
   }
 
-  /* newspaper double rule */
-  .rule-double {
-    border-top: 3px double hsl(var(--foreground) / 0.8);
-  }
-
-  .stamp {
-    font-family: var(--font-mono), ui-monospace, monospace;
-    @apply inline-flex items-center rounded-[4px] border-[1.5px] px-1.5 py-[1px] text-[10px] font-semibold uppercase tracking-[0.14em];
-    border-color: hsl(var(--accent));
-    color: hsl(var(--accent));
-    transform: rotate(-3deg);
-  }
-
   .tag {
     font-family: var(--font-mono), ui-monospace, monospace;
-    @apply inline-flex items-center rounded px-1.5 py-0.5 text-[10.5px] font-medium uppercase tracking-[0.1em];
+    @apply inline-flex items-center rounded px-1.5 py-0.5 text-[10.5px] font-medium uppercase tracking-[0.08em];
     background: hsl(var(--panel-soft));
     color: hsl(var(--muted));
   }
+  .tag-new {
+    background: hsl(var(--accent) / 0.12);
+    color: hsl(var(--accent));
+  }
 
+  .btn {
+    @apply inline-flex h-12 items-center justify-center gap-2 rounded-xl px-5 text-[15px] font-semibold transition active:scale-[0.985];
+  }
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition active:scale-[0.98];
+    @apply btn text-white;
     background: hsl(var(--accent-strong));
   }
   .btn-primary:hover {
     background: hsl(var(--accent));
   }
+  .btn-primary:disabled {
+    @apply cursor-not-allowed opacity-45;
+  }
+  .btn-secondary {
+    @apply btn border;
+    background: hsl(var(--panel));
+    color: hsl(var(--foreground));
+  }
+  .btn-secondary:hover {
+    border-color: hsl(var(--foreground) / 0.35);
+  }
 
-  .pill-link {
-    @apply inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 text-sm font-medium transition;
+  .chip {
+    @apply inline-flex h-9 shrink-0 items-center rounded-full border px-3.5 text-[13.5px] font-medium transition;
+    background: hsl(var(--panel));
+    color: hsl(var(--muted));
+  }
+  .chip[aria-pressed="true"],
+  .chip[aria-current="page"] {
+    background: hsl(var(--foreground));
+    border-color: hsl(var(--foreground));
+    color: hsl(var(--background));
+  }
+
+  .text-link {
+    @apply inline-flex min-h-[44px] items-center text-sm font-semibold;
+    color: hsl(var(--accent));
+  }
+  .text-link:hover {
+    @apply underline underline-offset-4;
+  }
+
+  .field {
+    @apply h-12 w-full rounded-xl border px-3.5 text-base;
     background: hsl(var(--panel));
     border-color: hsl(var(--line));
     color: hsl(var(--foreground));
   }
-  .pill-link:hover {
-    border-color: hsl(var(--foreground) / 0.35);
-  }
-
-  .pill-link-muted {
-    @apply inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium;
-    background: hsl(var(--panel-soft));
-    color: hsl(var(--foreground));
-  }
-
-  .field {
-    @apply w-full rounded-lg border px-3 py-2.5 text-base;
-    background: hsl(var(--background));
-    border-color: hsl(var(--line));
-    color: hsl(var(--foreground));
-  }
-  .field:focus {
+  .field:focus,
+  .field:focus-visible {
     border-color: hsl(var(--accent));
+    box-shadow: 0 0 0 3px hsl(var(--accent) / 0.15);
+  }
+
+  /* Legacy alias, still used by the paused bundles pages. */
+  .pill-link {
+    @apply inline-flex min-h-[44px] items-center gap-2 rounded-xl border px-4 text-sm font-medium;
+    background: hsl(var(--panel));
+    color: hsl(var(--foreground));
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Article body for updates (HTML written by us or stored in the database). */
+  .notice-body {
+    @apply text-[15.5px] leading-7;
+  }
+  .notice-body p {
+    @apply mt-3;
+  }
+  .notice-body h2 {
+    font-family: var(--font-sans), system-ui, sans-serif;
+    @apply mt-7 text-[13px] font-semibold uppercase tracking-[0.08em];
+    color: hsl(var(--muted));
+  }
+  .notice-body h3 {
+    @apply mt-5 text-lg;
+  }
+  .notice-body ul {
+    @apply mt-3 space-y-2;
+  }
+  .notice-body li {
+    @apply relative pl-5;
+  }
+  .notice-body li::before {
+    content: "";
+    @apply absolute left-1 top-[0.7em] h-1.5 w-1.5 rounded-full;
+    background: hsl(var(--accent));
+  }
+  .notice-body a {
+    @apply font-semibold underline underline-offset-4;
+    color: hsl(var(--accent));
+  }
+  .notice-body strong {
+    @apply font-semibold;
   }
 }
 
 @layer utilities {
   .reveal {
-    animation: reveal 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation: reveal 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   }
   @keyframes reveal {
     from {
       opacity: 0;
-      transform: translateY(6px);
+      transform: translateY(8px);
     }
     to {
       opacity: 1;
