@@ -17,7 +17,7 @@ interface LeaderboardProps {
   onChange: (on: boolean, name?: string) => Promise<void>;
 }
 
-/** Top shared scores. Names are masked before they are stored, so no full name ever reaches the page. */
+/** Top shared scores. Only the masked name is ever sent to the page; the full name stays in the database. */
 export function Leaderboard({ board, mine, total, onChange }: LeaderboardProps) {
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
@@ -92,11 +92,11 @@ export function Leaderboard({ board, mine, total, onChange }: LeaderboardProps) 
         <div className="mt-3 flex gap-2">
           <input
             type="text"
-            autoComplete="given-name"
-            maxLength={40}
+            autoComplete="name"
+            maxLength={60}
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Your name"
+            placeholder="Your full name"
             aria-label="Your name for the leaderboard"
             className="field min-w-0 flex-1"
           />
@@ -107,7 +107,7 @@ export function Leaderboard({ board, mine, total, onChange }: LeaderboardProps) 
       )}
       {canJoin && (
         <p className="mt-1.5 text-[13px] text-[hsl(var(--muted))]">
-          Add your score of {mine!.score}. Others see <strong className="font-mono-num text-[hsl(var(--foreground))]">{masked ?? "S***"}</strong> only.
+          Add your score of {mine!.score}. Others see <strong className="font-mono-num text-[hsl(var(--foreground))]">{masked ?? "Sh*** Mi***"}</strong> only.
         </p>
       )}
       {error && <p className="mt-1.5 text-[13px] text-[hsl(var(--accent))]">{error}</p>}

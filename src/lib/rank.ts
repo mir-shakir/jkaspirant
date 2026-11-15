@@ -30,6 +30,11 @@ export interface RankModel {
   uncertainty: number;
   /** How much higher sharers score than the average candidate, in sds. */
   selectionTilt: number;
+  /**
+   * How far off the shared scores could still be after that correction, as a
+   * share of `spread`. Higher means shared scores move the estimate less.
+   */
+  sampleDoubt: number;
 }
 
 /** Seats for one reservation category, and our starting guess of its share of candidates. */
@@ -64,8 +69,6 @@ export const BUCKET_WIDTH = 5;
 export const MIN_SHARED_FOR_DATA = 10;
 /** Self-reported scores are noisy: each counts as a fraction of a clean sample. */
 const EFFECTIVE_SAMPLE_FRACTION = 0.25;
-/** Bias we can never remove from a self-selected sample, as a share of spread. */
-const SYSTEMATIC_ERROR = 0.35;
 
 export function computeScore(exam: Marking, correct: number, wrong: number) {
   const raw = correct * exam.marksPerCorrect - wrong * exam.negativePerWrong;
@@ -175,7 +178,7 @@ export function predict(exam: PredictExam, score: number, stats: ShareStats | nu
   let dataWeight = 0;
   if (median !== null && shared >= MIN_SHARED_FOR_DATA) {
     const dataMean = median - model.selectionTilt * sd;
-    const dataVar = (SYSTEMATIC_ERROR * sd) ** 2 + (sd * sd) / (shared * EFFECTIVE_SAMPLE_FRACTION);
+    const dataVar = (model.sampleDoubt * sd) ** 2 + (sd * sd) / (shared * EFFECTIVE_SAMPLE_FRACTION);
     // Precision-weighted blend of the two sources.
     dataWeight = (1 / dataVar) / (1 / priorVar + 1 / dataVar);
     mean = (1 - dataWeight) * priorMean + dataWeight * dataMean;
@@ -268,16 +271,27 @@ export function shownRange(mid: number, floor: number, appeared: number) {
 // Built at runtime because the project's TypeScript target predates the "u" flag.
 const NOT_LETTER = new RegExp("[^\\p{L}]", "gu");
 
-/** "Shakir Ahmad Mir" -> "S*** A***". Only this masked form is ever stored or shown. */
+/** "Shakir Ahmad Mir" -> "Sh*** Ah*** Mi***": first two letters of up to three names. */
 export function maskName(name: string) {
-  const words = name
+  const words = cleanName(name).split(" ").filter(Boolean).slice(0, 3);
+  if (words.length === 0) return null;
+  return words
+    .map((w) => {
+      const letters = Array.from(w);
+      return `${letters[0].toUpperCase()}${(letters[1] ?? "").toLowerCase()}***`;
+    })
+    .join(" ");
+}
+
+/** Letters and single spaces only, trimmed to a sensible length. */
+export function cleanName(name: string) {
+  return name
     .normalize("NFKC")
     .split(/\s+/)
     .map((w) => w.replace(NOT_LETTER, ""))
     .filter(Boolean)
-    .slice(0, 2);
-  if (words.length === 0) return null;
-  return words.map((w) => `${Array.from(w)[0].toUpperCase()}***`).join(" ");
+    .join(" ")
+    .slice(0, 60);
 }
 
 /** Round a rank the way a person would say it: 37 -> 35, 1,943 -> 1,900. */

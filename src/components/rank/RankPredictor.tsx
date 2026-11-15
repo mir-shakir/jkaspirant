@@ -20,6 +20,7 @@ export interface RankPredictorExam extends PredictExam {
   name: string;
   registered: number;
   categories: string[];
+  answerKeyReleased?: boolean;
 }
 
 /** The score on record for this phone. `local` means the server has not saved it (yet). */
@@ -277,17 +278,17 @@ export function RankPredictor({ exam }: { exam: RankPredictorExam }) {
                   <input
                     id="name"
                     type="text"
-                    autoComplete="given-name"
-                    maxLength={40}
+                    autoComplete="name"
+                    maxLength={60}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Your name"
+                    placeholder="Your full name"
                     aria-label="Your name"
                     className="field mt-1"
                   />
                   <p className="mt-1.5 text-[13px] text-[hsl(var(--muted))]">
-                    Your name stays hidden. Others see{" "}
-                    <strong className="font-mono-num text-[hsl(var(--foreground))]">{masked ?? "S***"}</strong> only.
+                    Enter your full name. Others see only{" "}
+                    <strong className="font-mono-num text-[hsl(var(--foreground))]">{masked ?? "Sh*** Mi***"}</strong>.
                   </p>
                 </>
               )}
@@ -324,6 +325,11 @@ export function RankPredictor({ exam }: { exam: RankPredictorExam }) {
             )}
           </div>
           {note && <p className="text-[13px] leading-5 text-[hsl(var(--muted))]">{note}</p>}
+          {exam.answerKeyReleased && mine.canCorrect && !note && (
+            <p className="text-[13px] leading-5 text-[hsl(var(--muted))]">
+              The answer key is out. If your count has changed, tap Correct to update it once.
+            </p>
+          )}
           <Result exam={exam} prediction={prediction} stats={effectiveStats} mine={mine} />
         </>
       )}

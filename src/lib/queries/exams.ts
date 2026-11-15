@@ -8,50 +8,56 @@ import type {
 } from "@/lib/types/database";
 import { isLiveExam, liveExams, liveExamSlugs } from "@/config/exams";
 
-/** Keep only confirmed facts: config overrides the database for anything shown. */
-function present(row: Exam): Exam {
-  const live = liveExams[row.slug];
+/**
+ * The exam list comes from src/config/exams.ts. A database row, when one exists,
+ * only supplies the id that syllabus / papers / cut-offs hang off. Only confirmed
+ * facts from the config are shown.
+ */
+function present(slug: string, row?: Partial<Exam>): Exam {
+  const live = liveExams[slug];
+  const now = new Date(0).toISOString();
   return {
-    ...row,
+    id: row?.id ?? `config:${slug}`,
+    slug,
     title: live.title,
     department: live.board,
     vacancy_count: live.posts ?? null,
     description: null,
     pay_scale: null,
     eligibility: null,
+    is_active: true,
     seo_title: null,
     seo_description: null,
     seo_keywords: null,
+    og_image_url: row?.og_image_url ?? null,
+    focus_keyword: null,
+    created_at: row?.created_at ?? now,
+    updated_at: row?.updated_at ?? now,
   };
 }
 
-export async function getAllExams(): Promise<Exam[]> {
+async function dbRows(): Promise<Map<string, Exam>> {
   try {
     const supabase = createServerClient();
-    const { data, error } = await supabase.from("exams").select("*").eq("is_active", true).in("slug", liveExamSlugs);
-    if (error) return [];
-    return ((data as Exam[]) || [])
-      .map(present)
-      .sort((a, b) => liveExamSlugs.indexOf(a.slug) - liveExamSlugs.indexOf(b.slug));
+    const { data } = await supabase.from("exams").select("*").in("slug", liveExamSlugs);
+    return new Map(((data as Exam[]) || []).map((row) => [row.slug, row]));
   } catch {
-    return [];
+    return new Map();
   }
+}
+
+export async function getAllExams(): Promise<Exam[]> {
+  const rows = await dbRows();
+  return liveExamSlugs.map((slug) => present(slug, rows.get(slug)));
 }
 
 export async function getExamBySlug(slug: string): Promise<Exam | null> {
   if (!isLiveExam(slug)) return null;
-  try {
-    const supabase = createServerClient();
-    const { data, error } = await supabase.from("exams").select("*").eq("slug", slug).eq("is_active", true).single();
-    if (error || !data) return null;
-    return present(data as Exam);
-  } catch {
-    return null;
-  }
+  return present(slug, (await dbRows()).get(slug));
 }
 
 export async function getExamSlugs(): Promise<string[]> {
-  return (await getAllExams()).map((exam) => exam.slug);
+  return liveExamSlugs;
 }
 
 export interface ExamSections {
@@ -63,6 +69,7 @@ export interface ExamSections {
 
 /** How much content each section of an exam has, so empty sections can be hidden. */
 export async function getExamSections(examId: string): Promise<ExamSections> {
+  if (examId.startsWith("config:")) return { syllabus: 0, papers: 0, cutoffs: 0, dates: 0 };
   const [syllabus, papers, cutoffs, dates] = await Promise.all([
     getSyllabusSections(examId),
     getPapers(examId),
