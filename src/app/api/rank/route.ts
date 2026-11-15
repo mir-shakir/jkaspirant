@@ -15,38 +15,88 @@ function hashIp(req: NextRequest) {
   return createHash("sha256").update(`${salt}:${ip}`).digest("hex").slice(0, 32);
 }
 
-async function getStats(examKey: string, score: number, category: string, idx: number) {
-  const supabase = createServerClient();
+type Db = ReturnType<typeof createServerClient>;
+
+/** Short, non-sensitive error reference so failures can be diagnosed from the browser. */
+function errRef(e: unknown) {
+  if (e && typeof e === "object") {
+    const o = e as { code?: string; message?: string };
+    if (o.code) return o.code;
+    if (o.message) return o.message.slice(0, 80);
+  }
+  return "unknown";
+}
+
+function envRef() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return "missing-supabase-url";
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return "missing-service-role-key";
+  return null;
+}
+
+async function getStats(supabase: Db, examKey: string, score: number, category: string, idx: number): Promise<RankStats> {
   const { data, error } = await supabase.rpc("rank_stats", {
     p_exam: examKey,
     p_score: score,
     p_category: category,
     p_cutoff_index: idx,
   });
-  if (error) throw error;
-  const s = data as RankStats;
+  if (!error && data) {
+    const s = data as RankStats;
+    return { ...s, cutoffScore: s.cutoffScore === null ? null : Number(s.cutoffScore) };
+  }
+  console.error("rank_stats rpc failed, using fallback", error);
+  return getStatsFallback(supabase, examKey, score, category, idx);
+}
+
+/** Same numbers as rank_stats(), computed with plain table queries. */
+async function getStatsFallback(supabase: Db, examKey: string, score: number, category: string, idx: number): Promise<RankStats> {
+  const base = () => supabase.from("score_submissions").select("id", { count: "exact", head: true }).eq("exam_key", examKey);
+  const [t, a, ct, ca, cut, all] = await Promise.all([
+    base(),
+    base().gt("score", score),
+    base().eq("category", category),
+    base().eq("category", category).gt("score", score),
+    supabase.from("score_submissions").select("score").eq("exam_key", examKey).order("score", { ascending: false }).range(idx, idx),
+    supabase.from("score_submissions").select("score").eq("exam_key", examKey).limit(50000),
+  ]);
+  const firstError = [t, a, ct, ca, cut, all].find((r) => r.error)?.error;
+  if (firstError) throw firstError;
+
+  const buckets = new Map<number, number>();
+  for (const row of (all.data ?? []) as { score: number }[]) {
+    const b = Math.floor(Number(row.score) / 5) * 5;
+    buckets.set(b, (buckets.get(b) ?? 0) + 1);
+  }
   return {
-    ...s,
-    cutoffScore: s.cutoffScore === null ? null : Number(s.cutoffScore),
+    total: t.count ?? 0,
+    above: a.count ?? 0,
+    catTotal: ct.count ?? 0,
+    catAbove: ca.count ?? 0,
+    cutoffScore: cut.data?.[0] ? Number((cut.data[0] as { score: number }).score) : null,
+    histogram: Array.from(buckets, ([bucket, c]) => ({ bucket, count: c })).sort((x, y) => x.bucket - y.bucket),
   };
 }
 
 export async function GET(req: NextRequest) {
   const exam = getRankExamByKey(req.nextUrl.searchParams.get("exam") || "");
   if (!exam) return NextResponse.json({ error: "Unknown exam" }, { status: 404 });
+  const missing = envRef();
+  if (missing) return NextResponse.json({ total: 0, histogram: [], ref: missing });
   try {
     const supabase = createServerClient();
-    const { count } = await supabase
+    const { count, error } = await supabase
       .from("score_submissions")
       .select("id", { count: "exact", head: true })
       .eq("exam_key", exam.examKey);
-    const stats = await getStats(exam.examKey, 0, "OM", cutoffIndex(exam, count ?? 0));
+    if (error) throw error;
+    const stats = await getStats(supabase, exam.examKey, 0, "OM", cutoffIndex(exam, count ?? 0));
     return NextResponse.json(
-      { total: stats.total, histogram: stats.histogram },
+      { total: stats.total, histogram: stats.histogram, ok: true },
       { headers: { "cache-control": "public, s-maxage=60, stale-while-revalidate=300" } }
     );
-  } catch {
-    return NextResponse.json({ total: 0, histogram: [] });
+  } catch (e) {
+    console.error("rank api GET", e);
+    return NextResponse.json({ total: 0, histogram: [], ref: errRef(e) });
   }
 }
 
@@ -74,6 +124,11 @@ export async function POST(req: NextRequest) {
   const deviceId = String(body.deviceId || "");
   if (!/^[a-zA-Z0-9-]{16,64}$/.test(deviceId)) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+  }
+
+  const missing = envRef();
+  if (missing) {
+    return NextResponse.json({ error: `Rank server not configured (ref: ${missing})` }, { status: 503 });
   }
 
   const share = body.share !== false;
@@ -110,11 +165,12 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const { count: total } = await supabase
+    const { count: total, error: countError } = await supabase
       .from("score_submissions")
       .select("id", { count: "exact", head: true })
       .eq("exam_key", exam.examKey);
-    const stats = await getStats(exam.examKey, score, category, cutoffIndex(exam, total ?? 0));
+    if (countError) throw countError;
+    const stats = await getStats(supabase, exam.examKey, score, category, cutoffIndex(exam, total ?? 0));
     const estimate = estimateRank(exam, score, stats);
 
     return NextResponse.json({
@@ -126,7 +182,7 @@ export async function POST(req: NextRequest) {
   } catch (e) {
     console.error("rank api", e);
     return NextResponse.json(
-      { error: "Couldn't reach the rank server. Your score is shown below." },
+      { error: `Couldn't get your rank right now. Your score above is correct. (ref: ${errRef(e)})` },
       { status: 503 }
     );
   }
