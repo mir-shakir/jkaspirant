@@ -35,6 +35,14 @@ export interface RankModel {
    * share of `spread`. Higher means shared scores move the estimate less.
    */
   sampleDoubt: number;
+  /**
+   * How many times more likely a top candidate is to have shared a score here
+   * than an average candidate. With enough shared scores, this turns "how many
+   * high scores have we seen" into an estimate of the real cut-off.
+   */
+  topBoost: number;
+  /** Shared scores at or above this are treated as fake when estimating. */
+  ignoreScoresFrom: number;
 }
 
 /** Seats for one reservation category, and our starting guess of its share of candidates. */
@@ -127,6 +135,46 @@ export function histogramMedian(histogram: ShareStats["histogram"]) {
   return null;
 }
 
+/** Shared scores needed before the cut-off is read from the top of the list. */
+export const MIN_SHARED_FOR_TAIL = 100;
+/** Weight on shared scores is n / (n + this). */
+const TAIL_PRIOR_STRENGTH = 300;
+/** The estimate never claims to know the cut-off better than this many marks. */
+const MIN_UNCERTAINTY = 3;
+
+/** The k-th highest shared score, interpolating inside its 5-mark bucket. */
+function kthHighest(histogram: ShareStats["histogram"], k: number) {
+  const sorted = [...histogram].sort((x, y) => y.bucket - x.bucket);
+  let seen = 0;
+  for (const h of sorted) {
+    if (seen + h.count >= k) return h.bucket + BUCKET_WIDTH - ((k - seen) / h.count) * BUCKET_WIDTH;
+    seen += h.count;
+  }
+  return sorted.length ? sorted[sorted.length - 1].bucket : null;
+}
+
+/**
+ * Estimate the open-merit cut-off from the top of the shared scores.
+ *
+ * If we have reached a fraction f of the candidates who will make the open
+ * list, then about f x openSeats of our shared scores sit above the cut-off,
+ * so the cut-off is near our (f x openSeats)-th highest score. f is not known:
+ * we assume top candidates are `topBoost` times over-represented here, and
+ * take half and double that as the low and high cases.
+ */
+export function cutoffFromTopScores(exam: PredictExam, stats: ShareStats) {
+  const clean = stats.histogram.filter((h) => h.bucket < exam.model.ignoreScoresFrom);
+  const n = clean.reduce((sum, h) => sum + h.count, 0);
+  if (n === 0) return null;
+  const reach = (boost: number) => Math.min(0.9, (boost * n) / exam.appeared);
+  const at = (boost: number) => kthHighest(clean, Math.max(1, exam.openSeats * reach(boost)));
+  const mid = at(exam.model.topBoost);
+  const high = at(exam.model.topBoost / 2); // reached fewer of them: cut-off is higher up our list
+  const low = at(exam.model.topBoost * 2);
+  if (mid === null || high === null || low === null) return null;
+  return { low, mid, high };
+}
+
 export type Verdict = "strong" | "likely" | "edge" | "unlikely";
 export type Confidence = "early" | "improving" | "solid";
 
@@ -170,19 +218,32 @@ export function predict(exam: PredictExam, score: number, stats: ShareStats | nu
   const priorMean = model.anchorScore - zAnchor * sd;
   const priorVar = model.uncertainty ** 2;
 
-  // Data: where the shared scores say the centre is, after undoing selection bias.
   const shared = stats?.total ?? 0;
-  const median = stats ? histogramMedian(stats.histogram) : null;
   let mean = priorMean;
   let variance = priorVar;
   let dataWeight = 0;
-  if (median !== null && shared >= MIN_SHARED_FOR_DATA) {
-    const dataMean = median - model.selectionTilt * sd;
-    const dataVar = (model.sampleDoubt * sd) ** 2 + (sd * sd) / (shared * EFFECTIVE_SAMPLE_FRACTION);
-    // Precision-weighted blend of the two sources.
-    dataWeight = (1 / dataVar) / (1 / priorVar + 1 / dataVar);
-    mean = (1 - dataWeight) * priorMean + dataWeight * dataMean;
-    variance = 1 / (1 / priorVar + 1 / dataVar);
+
+  const tail = stats && shared >= MIN_SHARED_FOR_TAIL ? cutoffFromTopScores(exam, stats) : null;
+  if (tail) {
+    // Enough scores to read the cut-off off the top of the shared scores. Its
+    // weight grows with the number of scores; past patterns keep a say because
+    // we can only estimate what share of top candidates we have reached.
+    dataWeight = shared / (shared + TAIL_PRIOR_STRENGTH);
+    const anchor = (1 - dataWeight) * model.anchorScore + dataWeight * tail.mid;
+    const tailSd = (tail.high - tail.low) / 4;
+    mean = anchor - normInv(1 - openSeats / appeared) * sd;
+    variance = Math.max(MIN_UNCERTAINTY ** 2, ((1 - dataWeight) * model.uncertainty) ** 2 + (dataWeight * tailSd) ** 2);
+  } else {
+    // Few scores: only nudge the centre, after undoing selection bias.
+    const median = stats ? histogramMedian(stats.histogram) : null;
+    if (median !== null && shared >= MIN_SHARED_FOR_DATA) {
+      const dataMean = median - model.selectionTilt * sd;
+      const dataVar = (model.sampleDoubt * sd) ** 2 + (sd * sd) / (shared * EFFECTIVE_SAMPLE_FRACTION);
+      // Precision-weighted blend of the two sources.
+      dataWeight = (1 / dataVar) / (1 / priorVar + 1 / dataVar);
+      mean = (1 - dataWeight) * priorMean + dataWeight * dataMean;
+      variance = 1 / (1 / priorVar + 1 / dataVar);
+    }
   }
   const tau = Math.sqrt(variance);
 

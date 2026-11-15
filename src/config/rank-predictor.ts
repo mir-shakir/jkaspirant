@@ -67,14 +67,15 @@ export const rankExams: RankExamConfig[] = [
     // `gap` is how many marks lower the category tends to score on average,
     // judged from how far past JKSSB category cut-offs sit below open merit.
     // Both are estimates: replace them when real figures are available.
+    // Last tuned 15 Nov 2026 from 469 saved scores (category mix and medians).
     reserved: {
-      SC: { posts: 48, share: 0.07, gap: 8 },
-      "ST-1": { posts: 60, share: 0.07, gap: 9 },
-      "ST-2": { posts: 60, share: 0.07, gap: 6 },
-      OBC: { posts: 48, share: 0.08, gap: 3 },
-      "ALC/IB": { posts: 24, share: 0.03, gap: 5 },
-      RBA: { posts: 60, share: 0.14, gap: 3 },
-      EWS: { posts: 60, share: 0.12, gap: 2 },
+      SC: { posts: 48, share: 0.07, gap: 9 },
+      "ST-1": { posts: 60, share: 0.08, gap: 8 },
+      "ST-2": { posts: 60, share: 0.07, gap: 4 },
+      OBC: { posts: 48, share: 0.07, gap: 1 },
+      "ALC/IB": { posts: 24, share: 0.04, gap: 6 },
+      RBA: { posts: 60, share: 0.16, gap: 1 },
+      EWS: { posts: 60, share: 0.08, gap: 4 },
     },
     model: {
       // Coaching estimates put the open-merit cut-off at 84–89, i.e. the score
@@ -93,6 +94,14 @@ export const rankExams: RankExamConfig[] = [
       // 2.75 / 0.7; relax further as the number of saved scores grows.
       selectionTilt: 2.25,
       sampleDoubt: 0.6,
+      // With 100+ saved scores the cut-off is read from the top of the list.
+      // 469 scores in, 60 of them at 90 or above: far too many for a cut-off
+      // in the mid 80s unless we had reached a third of all top candidates.
+      // Assuming top candidates are about 40x over-represented here puts the
+      // open-merit cut-off in the low 90s. Lower this if results come in softer.
+      topBoost: 40,
+      // 115+ entries so far are 120/0-style fakes.
+      ignoreScoresFrom: 115,
     },
     leaderboardMaxScore: 112,
     answerKeyReleased: true,
