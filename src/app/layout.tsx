@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { Analytics } from "@/components/Analytics";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -61,6 +62,7 @@ export default function RootLayout({
             <MobileBottomNav />
           </div>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );

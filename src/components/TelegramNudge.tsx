@@ -11,6 +11,7 @@ export function TelegramNudge({ className = "" }: { className?: string }) {
       href={siteConfig.telegramUrl}
       target="_blank"
       rel="noopener noreferrer"
+      data-event="telegram_join_click"
       className={`flex min-h-[60px] items-center gap-3 rounded-2xl bg-[hsl(var(--panel-soft))] px-4 py-3 transition hover:brightness-[0.98] ${className}`}
     >
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#229ED9] text-white" aria-hidden>

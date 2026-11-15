@@ -7,6 +7,8 @@ export const siteConfig = {
   // Partner channel (run by a friend of the owner): study material and updates.
   telegramUrl: process.env.NEXT_PUBLIC_TELEGRAM_URL || "https://t.me/JkExamSpark_jkssb",
   telegramName: "JKExamSPARK (JKSSB)",
+  // Google Analytics 4 measurement ID (public by nature). Set NEXT_PUBLIC_GA_ID to "off" to disable.
+  gaId: process.env.NEXT_PUBLIC_GA_ID === "off" ? "" : process.env.NEXT_PUBLIC_GA_ID || "G-FCTHK220S8",
   creator: "JK Aspirant",
   keywords: [
     "JKSSB",

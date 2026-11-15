@@ -24,7 +24,7 @@ export function Footer() {
             </Link>
           ))}
           {siteConfig.telegramUrl && (
-            <a href={siteConfig.telegramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[40px] items-center text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]">
+            <a href={siteConfig.telegramUrl} target="_blank" rel="noopener noreferrer" data-event="telegram_join_click" data-event-label="footer" className="inline-flex min-h-[40px] items-center text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]">
               Telegram ↗
             </a>
           )}
@@ -37,7 +37,7 @@ export function Footer() {
         </nav>
 
         <p className="mt-5 text-[12px] text-[hsl(var(--muted))]">
-          © {new Date().getFullYear()} JK Aspirant. Not affiliated with JKSSB or JKPSC.
+          © {new Date().getFullYear()} JK Aspirant. Not affiliated with JKSSB or JKPSC. We use Google Analytics to count visits.
         </p>
       </div>
     </footer>

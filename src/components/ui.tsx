@@ -44,7 +44,7 @@ export function Row({ href, title, sub, leading, meta, external }: RowProps) {
   );
   if (external || /^https?:/.test(href)) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className="row">
+      <a href={href} target="_blank" rel="noopener noreferrer" className="row" data-event={href.endsWith(".pdf") ? "pdf_open" : "outbound_row_click"} data-event-label={href}>
         {inner}
       </a>
     );
