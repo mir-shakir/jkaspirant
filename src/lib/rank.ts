@@ -116,8 +116,10 @@ export type Confidence = "early" | "improving" | "solid";
 
 export interface Prediction {
   score: number;
-  /** Best case, most likely, worst case. Always low <= mid <= high. */
+  /** Honest uncertainty band: best case, most likely, worst case. Drives the verdict. */
   rank: { low: number; mid: number; high: number };
+  /** The tight range shown to the user, centred on the most likely rank. */
+  shown: { low: number; high: number };
   /** Share of candidates expected to score higher, in percent. */
   topPercent: number;
   /** Estimated score of the candidate at rank = posts. */
@@ -177,6 +179,7 @@ export function predict(exam: PredictExam, score: number, stats: ShareStats | nu
   return {
     score,
     rank: { low, mid, high },
+    shown: shownRange(mid, floor, appeared),
     topPercent: Math.max(0.01, Math.round(((mid - 1) / appeared) * 10000) / 100),
     cutoff: { low: round1(cutoffMid - tau), mid: round1(cutoffMid), high: round1(cutoffMid + tau) },
     verdict,
@@ -184,6 +187,33 @@ export function predict(exam: PredictExam, score: number, stats: ShareStats | nu
     dataWeight,
     shared,
   };
+}
+
+/**
+ * The range people see: about 100 ranks wide near the top, where it matters,
+ * and about 2% of the rank further down so it never claims silly precision.
+ */
+export function shownRange(mid: number, floor: number, appeared: number) {
+  const width = mid <= 5000 ? 100 : Math.max(100, Math.round((mid * 0.02) / 100) * 100);
+  const step = width > 100 ? 100 : 10;
+  const low = Math.max(1, floor, Math.round((mid - width / 2) / step) * step);
+  const high = Math.min(appeared, low === 1 ? width : low + width);
+  return { low, high };
+}
+
+// Built at runtime because the project's TypeScript target predates the "u" flag.
+const NOT_LETTER = new RegExp("[^\\p{L}]", "gu");
+
+/** "Shakir Ahmad Mir" -> "S*** A***". Only this masked form is ever stored or shown. */
+export function maskName(name: string) {
+  const words = name
+    .normalize("NFKC")
+    .split(/\s+/)
+    .map((w) => w.replace(NOT_LETTER, ""))
+    .filter(Boolean)
+    .slice(0, 2);
+  if (words.length === 0) return null;
+  return words.map((w) => `${Array.from(w)[0].toUpperCase()}***`).join(" ");
 }
 
 /** Round a rank the way a person would say it: 37 -> 35, 1,943 -> 1,900. */

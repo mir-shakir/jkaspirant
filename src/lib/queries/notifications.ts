@@ -1,6 +1,7 @@
 import { createServerClient } from "@/lib/supabase/server";
 import type { Notification } from "@/lib/types/database";
 import { contentNotifications, type ContentNotification } from "@/content/notifications";
+import { isLiveExam } from "@/config/exams";
 
 // Updates come from two places: the Supabase `notifications` table and the
 // file-backed list in src/content/notifications.ts. Database rows win on slug.
@@ -33,8 +34,12 @@ function fromContent(item: ContentNotification): NotificationWithExam {
   };
 }
 
-function merge(dbRows: NotificationWithExam[]): NotificationWithExam[] {
-  const seen = new Set(dbRows.map((n) => n.slug));
+/** Updates tied to an exam we don't cover right now are hidden. */
+const visible = (n: NotificationWithExam) => !n.exam || isLiveExam(n.exam.slug);
+
+function merge(allRows: NotificationWithExam[]): NotificationWithExam[] {
+  const dbRows = allRows.filter(visible);
+  const seen = new Set(allRows.map((n) => n.slug));
   const extra = contentNotifications.filter((n) => !seen.has(n.slug)).map(fromContent);
   return [...dbRows, ...extra].sort((a, b) => (b.published_at ?? "").localeCompare(a.published_at ?? ""));
 }
@@ -70,7 +75,7 @@ export async function getNotificationBySlug(slug: string): Promise<NotificationW
       .eq("slug", slug)
       .eq("is_published", true)
       .maybeSingle();
-    if (data) return data as NotificationWithExam;
+    if (data) return visible(data as NotificationWithExam) ? (data as NotificationWithExam) : null;
   } catch {}
   const item = contentNotifications.find((n) => n.slug === slug);
   return item ? fromContent(item) : null;

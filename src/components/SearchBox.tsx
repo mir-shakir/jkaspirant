@@ -40,7 +40,7 @@ export function SearchBox({ items, suggestions }: { items: SearchItem[]; suggest
           autoFocus
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Try “FAA syllabus” or “constable”"
+          placeholder="Try “FAA” or “sub inspector”"
           aria-label="Search the site"
           className="field h-[52px] pl-11"
         />

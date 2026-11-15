@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   BUCKET_WIDTH,
   computeScore,
+  maskName,
   niceRank,
   predict,
   validateCounts,
@@ -12,12 +13,32 @@ import {
   type ShareStats,
   type Verdict,
 } from "@/lib/rank";
+import { Leaderboard, type Board } from "./Leaderboard";
 
 export interface RankPredictorExam extends PredictExam {
   examKey: string;
   name: string;
   registered: number;
   categories: string[];
+}
+
+/** The score on record for this phone. `local` means the server has not saved it (yet). */
+export interface Mine {
+  correct: number;
+  wrong: number;
+  category: string;
+  score: number;
+  name: string | null;
+  onBoard: boolean;
+  canCorrect: boolean;
+  key: string | null;
+  local?: boolean;
+}
+
+interface PublicData {
+  total: number;
+  histogram: ShareStats["histogram"];
+  board: Board;
 }
 
 const fmt = (n: number) => n.toLocaleString("en-IN");
@@ -48,130 +69,266 @@ function getDeviceId() {
 
 export function RankPredictor({ exam }: { exam: RankPredictorExam }) {
   const draftKey = `jka:rank:${exam.examKey}`;
+  const [pub, setPub] = useState<PublicData | null>(null);
+  const [mine, setMine] = useState<Mine | null>(null);
+  const [stats, setStats] = useState<ShareStats | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [note, setNote] = useState<string | null>(null);
+
   const [correct, setCorrect] = useState("");
   const [wrong, setWrong] = useState("");
   const [category, setCategory] = useState("");
-  const [share, setShare] = useState(true);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [baseline, setBaseline] = useState<ShareStats | null>(null);
-  const [result, setResult] = useState<{ prediction: Prediction; stats: ShareStats | null; category: string; correct: number; wrong: number } | null>(null);
+  const [joinBoard, setJoinBoard] = useState(false);
+  const [name, setName] = useState("");
+  const scrollToResult = useRef(false);
 
-  // Restore the last entry, and load what others have shared so far.
-  useEffect(() => {
-    try {
-      const saved = JSON.parse(storage()?.getItem(draftKey) || "null");
-      if (saved) {
-        setCorrect(String(saved.correct ?? ""));
-        setWrong(String(saved.wrong ?? ""));
-        setCategory(saved.category ?? "");
-      }
-    } catch {}
+  const remember = useCallback(
+    (m: Mine) => {
+      try {
+        storage()?.setItem(draftKey, JSON.stringify({ correct: m.correct, wrong: m.wrong, category: m.category, score: m.score }));
+      } catch {}
+    },
+    [draftKey]
+  );
+
+  const loadPublic = useCallback(() => {
     fetch(`/api/rank?exam=${encodeURIComponent(exam.examKey)}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
-        if (d && Array.isArray(d.histogram)) {
-          setBaseline({ total: d.total ?? 0, above: 0, catTotal: 0, catAbove: 0, histogram: d.histogram });
+        if (d && Array.isArray(d.histogram)) setPub({ total: d.total ?? 0, histogram: d.histogram, board: d.board ?? { ready: false, entries: [] } });
+      })
+      .catch(() => {});
+  }, [exam.examKey]);
+
+  const send = useCallback(
+    async (payload: Record<string, unknown>) => {
+      const res = await fetch("/api/rank", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ exam: exam.examKey, deviceId: getDeviceId(), ...payload }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Something went wrong");
+      return data;
+    },
+    [exam.examKey]
+  );
+
+  // On open: show the score this phone saved earlier, so the rank survives a refresh.
+  useEffect(() => {
+    let local: { correct: number; wrong: number; category: string; score: number } | null = null;
+    try {
+      local = JSON.parse(storage()?.getItem(draftKey) || "null");
+    } catch {}
+    if (local && typeof local.score === "number") {
+      setMine({ ...local, name: null, onBoard: false, canCorrect: true, key: null, local: true });
+    }
+    loadPublic();
+
+    const deviceId = storage()?.getItem("jka:device");
+    fetch(`/api/rank?exam=${encodeURIComponent(exam.examKey)}&me=1`, { headers: deviceId ? { "x-device-id": deviceId } : {} })
+      .then((r) => (r.ok ? r.json() : null))
+      .then(async (d) => {
+        if (d?.mine) {
+          setMine(d.mine);
+          setStats(d.stats ?? null);
+          remember(d.mine);
+        } else if (local) {
+          // Entered earlier but never reached the server: try once more, quietly.
+          try {
+            const again = await send({ correct: local.correct, wrong: local.wrong, category: local.category });
+            if (again.mine) setMine(again.mine);
+            if (again.stats) setStats(again.stats);
+          } catch {}
         }
       })
       .catch(() => {});
-  }, [draftKey, exam.examKey]);
+
+    const timer = setInterval(() => {
+      if (document.visibilityState === "visible") loadPublic();
+    }, 30000);
+    return () => clearInterval(timer);
+  }, [draftKey, exam.examKey, loadPublic, remember, send]);
+
+  useEffect(() => {
+    if (scrollToResult.current && mine && !editing) {
+      scrollToResult.current = false;
+      document.getElementById("rank-result")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [mine, editing]);
 
   const c = correct === "" ? NaN : Number(correct);
   const w = wrong === "" ? 0 : Number(wrong);
   const validation = correct === "" ? null : validateCounts(exam, c, w);
   const score = correct !== "" && !validation ? computeScore(exam, c, w) : null;
+  const boardReady = pub?.board.ready ?? false;
+  const masked = maskName(name);
+
+  // Stats for the saved score. Until the server answers, estimate "above" from the public chart.
+  const effectiveStats = useMemo<ShareStats | null>(() => {
+    if (stats) return stats;
+    if (!pub || !mine) return null;
+    const myBucket = Math.floor(mine.score / BUCKET_WIDTH) * BUCKET_WIDTH;
+    const above = pub.histogram.filter((h) => h.bucket > myBucket).reduce((sum, h) => sum + h.count, 0);
+    return { total: pub.total, above, catTotal: 0, catAbove: 0, histogram: pub.histogram };
+  }, [stats, pub, mine]);
+
+  const prediction = useMemo(() => (mine ? predict(exam, mine.score, effectiveStats) : null), [exam, mine, effectiveStats]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (score === null) return;
-    if (!category) {
-      setError("Choose your category to continue");
-      return;
-    }
+    if (!category) return setError("Choose your category to continue");
+    if (joinBoard && !masked) return setError("Enter your name for the leaderboard, or untick it");
     setError(null);
+    setNote(null);
     setBusy(true);
-    try {
-      storage()?.setItem(draftKey, JSON.stringify({ correct: c, wrong: w, category }));
-    } catch {}
 
-    // The estimate never depends on the network: if the request fails we fall
-    // back to what we loaded earlier, or to past patterns alone.
-    let stats: ShareStats | null = null;
+    const localMine: Mine = { correct: c, wrong: w, category, score, name: null, onBoard: false, canCorrect: true, key: null, local: true };
     try {
-      const res = await fetch("/api/rank", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ exam: exam.examKey, correct: c, wrong: w, category, share, deviceId: getDeviceId() }),
-      });
-      const data = await res.json();
-      if (res.ok && data.stats) stats = data.stats as ShareStats;
-    } catch {}
-    if (!stats && baseline) {
-      const myBucket = Math.floor(score / BUCKET_WIDTH) * BUCKET_WIDTH;
-      const above = baseline.histogram.filter((h) => h.bucket > myBucket).reduce((sum, h) => sum + h.count, 0);
-      stats = { ...baseline, above };
+      const data = await send({ correct: c, wrong: w, category, ...(joinBoard && masked ? { name, board: true } : {}) });
+      if (data.locked && data.mine) setNote("This phone has already used its one correction, so your saved score is shown.");
+      setMine(data.mine ?? localMine);
+      setStats(data.stats ?? null);
+      if (data.board) setPub((prev) => (prev ? { ...prev, board: data.board, total: data.stats?.total ?? prev.total } : prev));
+      remember(data.mine ?? localMine);
+    } catch {
+      // Still give the estimate; it just isn't counted yet.
+      setMine(localMine);
+      setStats(null);
+      remember(localMine);
+      setNote("We couldn't save your score just now, so it isn't counted yet. Reopen this page later and we'll try again.");
     }
-
-    setResult({ prediction: predict(exam, score, stats), stats, category, correct: c, wrong: w });
     setBusy(false);
-    requestAnimationFrame(() =>
-      document.getElementById("rank-result")?.scrollIntoView({ behavior: "smooth", block: "start" })
-    );
+    setEditing(false);
+    scrollToResult.current = true;
   }
+
+  function startCorrection() {
+    if (!mine) return;
+    setCorrect(String(mine.correct));
+    setWrong(String(mine.wrong));
+    setCategory(mine.category);
+    setJoinBoard(false);
+    setError(null);
+    setEditing(true);
+  }
+
+  async function setBoard(on: boolean, joinName?: string) {
+    const data = await send({ action: "board", on, ...(joinName ? { name: joinName } : {}) });
+    if (data.mine) setMine(data.mine);
+    if (data.board) setPub((prev) => (prev ? { ...prev, board: data.board } : prev));
+  }
+
+  const showForm = !mine || editing;
 
   return (
     <div className="space-y-5">
-      <form onSubmit={submit} className="surface-card p-4 sm:p-5">
-        <div className="grid grid-cols-2 gap-3">
-          <NumberField id="correct" label="Correct answers" value={correct} onChange={setCorrect} max={exam.totalQuestions} />
-          <NumberField id="wrong" label="Wrong answers" value={wrong} onChange={setWrong} max={exam.totalQuestions} />
-        </div>
+      {showForm && (
+        <form onSubmit={submit} className="surface-card p-4 sm:p-5">
+          {editing && <p className="mb-3 text-[14px] font-medium">Correct your answers. You can do this once.</p>}
+          <div className="grid grid-cols-2 gap-3">
+            <NumberField id="correct" label="Correct answers" value={correct} onChange={setCorrect} max={exam.totalQuestions} />
+            <NumberField id="wrong" label="Wrong answers" value={wrong} onChange={setWrong} max={exam.totalQuestions} />
+          </div>
 
-        <p className="mt-2.5 flex items-center justify-between gap-3 text-[13px] text-[hsl(var(--muted))]" aria-live="polite">
-          {validation ? (
-            <span className="text-[hsl(var(--accent))]">{validation}</span>
+          <p className="mt-2.5 flex items-center justify-between gap-3 text-[13px] text-[hsl(var(--muted))]" aria-live="polite">
+            {validation ? (
+              <span className="text-[hsl(var(--accent))]">{validation}</span>
+            ) : (
+              <span>
+                +{exam.marksPerCorrect} right · −{exam.negativePerWrong} wrong · {exam.totalQuestions} questions
+              </span>
+            )}
+            {score !== null && (
+              <span className="shrink-0 font-mono-num text-[hsl(var(--foreground))]">
+                Score <strong className="text-[15px]">{score}</strong>
+              </span>
+            )}
+          </p>
+
+          <label htmlFor="category" className="mb-1.5 mt-4 block text-[13px] font-medium">
+            Category
+          </label>
+          <select id="category" className="field" value={category} onChange={(e) => setCategory(e.target.value)}>
+            <option value="">Select your category</option>
+            {exam.categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+
+          {boardReady && !editing && (
+            <div className="mt-4">
+              <label className="flex min-h-[44px] cursor-pointer items-center gap-2.5 text-[14.5px]">
+                <input
+                  type="checkbox"
+                  checked={joinBoard}
+                  onChange={(e) => setJoinBoard(e.target.checked)}
+                  className="h-[18px] w-[18px] accent-[hsl(var(--accent-strong))]"
+                />
+                Put me on the leaderboard
+              </label>
+              {joinBoard && (
+                <>
+                  <input
+                    id="name"
+                    type="text"
+                    autoComplete="given-name"
+                    maxLength={40}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Your name"
+                    aria-label="Your name"
+                    className="field mt-1"
+                  />
+                  <p className="mt-1.5 text-[13px] text-[hsl(var(--muted))]">
+                    Your name stays hidden. Others see{" "}
+                    <strong className="font-mono-num text-[hsl(var(--foreground))]">{masked ?? "S***"}</strong> only.
+                  </p>
+                </>
+              )}
+            </div>
+          )}
+
+          <button type="submit" disabled={score === null || busy} className="btn-primary mt-5 w-full">
+            {busy ? "Working it out…" : editing ? "Save correction" : "Predict my rank"}
+          </button>
+          {error && <p className="mt-2 text-center text-[13px] text-[hsl(var(--accent))]">{error}</p>}
+          {editing ? (
+            <button type="button" onClick={() => setEditing(false)} className="mt-1 flex min-h-[44px] w-full items-center justify-center text-[14px] font-medium text-[hsl(var(--muted))]">
+              Cancel
+            </button>
           ) : (
-            <span>
-              +{exam.marksPerCorrect} right · −{exam.negativePerWrong} wrong · {exam.totalQuestions} questions
-            </span>
+            <p className="mt-3 text-center text-[12.5px] leading-5 text-[hsl(var(--muted))]">
+              One score per phone, so count carefully. Saved without your phone number or roll number.
+            </p>
           )}
-          {score !== null && (
-            <span className="shrink-0 font-mono-num text-[hsl(var(--foreground))]">
-              Score <strong className="text-[15px]">{score}</strong>
-            </span>
-          )}
-        </p>
+        </form>
+      )}
 
-        <label htmlFor="category" className="mb-1.5 mt-4 block text-[13px] font-medium">
-          Category
-        </label>
-        <select id="category" className="field" value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option value="">Select your category</option>
-          {exam.categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
+      {mine && prediction && !editing && (
+        <>
+          <div className="flex min-h-[44px] items-center justify-between gap-3 rounded-2xl bg-[hsl(var(--panel-soft))] px-4 py-2">
+            <p className="font-mono-num text-[13px]">
+              <span className="text-[hsl(var(--muted))]">Your answers </span>
+              {mine.correct} right · {mine.wrong} wrong · {mine.category}
+            </p>
+            {mine.canCorrect && (
+              <button type="button" onClick={startCorrection} className="text-link shrink-0 text-[13px]">
+                Correct
+              </button>
+            )}
+          </div>
+          {note && <p className="text-[13px] leading-5 text-[hsl(var(--muted))]">{note}</p>}
+          <Result exam={exam} prediction={prediction} stats={effectiveStats} mine={mine} />
+        </>
+      )}
 
-        <button type="submit" disabled={score === null || busy} className="btn-primary mt-5 w-full">
-          {busy ? "Working it out…" : "Predict my rank"}
-        </button>
-        {error && <p className="mt-2 text-center text-[13px] text-[hsl(var(--accent))]">{error}</p>}
-
-        <label className="mt-3 flex min-h-[32px] items-center justify-center gap-2 text-[13px] text-[hsl(var(--muted))]">
-          <input
-            type="checkbox"
-            checked={share}
-            onChange={(e) => setShare(e.target.checked)}
-            className="h-4 w-4 accent-[hsl(var(--accent-strong))]"
-          />
-          Add my score anonymously to improve everyone&apos;s estimate
-        </label>
-      </form>
-
-      {result && <Result exam={exam} {...result} />}
+      {boardReady && pub && <Leaderboard board={pub.board} mine={mine} total={pub.total} onChange={setBoard} />}
     </div>
   );
 }
@@ -236,32 +393,10 @@ const confidenceCopy = {
   solid: { bars: 3, label: "Backed by shared scores" },
 } as const;
 
-function rankRange(p: Prediction) {
-  const low = niceRank(p.rank.low);
-  const high = niceRank(p.rank.high);
-  if (high <= 10) return `Top ${Math.max(high, 3)}`;
-  if (low === high) return `Around ${fmt(low)}`;
-  return `${fmt(low)} – ${fmt(high)}`;
-}
-
-function Result({
-  exam,
-  prediction: p,
-  stats,
-  category,
-  correct,
-  wrong,
-}: {
-  exam: RankPredictorExam;
-  prediction: Prediction;
-  stats: ShareStats | null;
-  category: string;
-  correct: number;
-  wrong: number;
-}) {
+function Result({ exam, prediction: p, stats, mine }: { exam: RankPredictorExam; prediction: Prediction; stats: ShareStats | null; mine: Mine }) {
   const verdict = verdictCopy[p.verdict];
   const conf = confidenceCopy[p.confidence];
-  const reserved = category !== "OM" && (p.verdict === "edge" || p.verdict === "unlikely");
+  const reserved = mine.category !== "OM" && (p.verdict === "edge" || p.verdict === "unlikely");
   const pageUrl = typeof window !== "undefined" ? window.location.href.split("#")[0] : "";
   const shareText = `I checked my expected rank for JKSSB ${exam.name}. Check yours: ${pageUrl}`;
 
@@ -276,7 +411,9 @@ function Result({
             </p>
           </div>
 
-          <p className="mt-2 font-display text-[44px] font-semibold leading-none tracking-tight sm:text-[52px]">{rankRange(p)}</p>
+          <p className="mt-2 font-display text-[44px] font-semibold leading-none tracking-tight sm:text-[52px]">
+            {fmt(p.shown.low)} – {fmt(p.shown.high)}
+          </p>
 
           <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[15px] leading-6">
             <span className={`rounded-full px-2.5 py-0.5 text-[13px] font-semibold ${verdict.tone}`}>{verdict.label}</span>
@@ -284,8 +421,8 @@ function Result({
           </p>
           {reserved && (
             <p className="mt-2 text-[13.5px] leading-5 text-[hsl(var(--muted))]">
-              {category} has its own reserved posts and a lower cut-off, so your real chance is better than the overall rank
-              suggests.
+              {mine.category} has its own reserved posts and a lower cut-off, so your real chance is better than the overall
+              rank suggests.
             </p>
           )}
 
@@ -319,9 +456,8 @@ function Result({
       >
         Share with your batchmates on WhatsApp
       </a>
-      <p className="mt-2 text-center text-[12.5px] text-[hsl(var(--muted))]">More scores means a sharper estimate for everyone.</p>
 
-      <Details exam={exam} prediction={p} stats={stats} category={category} correct={correct} wrong={wrong} />
+      <Details exam={exam} prediction={p} stats={stats} mine={mine} />
     </section>
   );
 }
@@ -330,8 +466,8 @@ function Result({
 function Runway({ exam, prediction: p }: { exam: RankPredictorExam; prediction: Prediction }) {
   const pos = (rank: number) => (Math.log(Math.max(1, rank)) / Math.log(exam.appeared)) * 100;
   const line = pos(exam.posts);
-  const left = pos(p.rank.low);
-  const width = Math.max(2.5, pos(p.rank.high) - left);
+  const left = Math.min(pos(p.shown.low), 97);
+  const width = Math.min(Math.max(3, pos(p.shown.high) - left), 100 - left);
   const inside = p.rank.mid <= exam.posts;
 
   return (
@@ -340,7 +476,7 @@ function Runway({ exam, prediction: p }: { exam: RankPredictorExam; prediction: 
         <div className="absolute inset-y-0 left-0 rounded-l-full bg-[hsl(var(--success)/0.28)]" style={{ width: `${line}%` }} />
         <div
           className={`absolute -inset-y-[3px] rounded-full ${inside ? "bg-[hsl(var(--success))]" : "bg-[hsl(var(--accent))]"}`}
-          style={{ left: `${Math.min(left, 97.5)}%`, width: `${Math.min(width, 100 - Math.min(left, 97.5))}%` }}
+          style={{ left: `${left}%`, width: `${width}%` }}
         />
         <div className="absolute -inset-y-2 w-[2px] bg-[hsl(var(--foreground))]" style={{ left: `${line}%` }} />
       </div>
@@ -355,21 +491,7 @@ function Runway({ exam, prediction: p }: { exam: RankPredictorExam; prediction: 
   );
 }
 
-function Details({
-  exam,
-  prediction: p,
-  stats,
-  category,
-  correct,
-  wrong,
-}: {
-  exam: RankPredictorExam;
-  prediction: Prediction;
-  stats: ShareStats | null;
-  category: string;
-  correct: number;
-  wrong: number;
-}) {
+function Details({ exam, prediction: p, stats, mine }: { exam: RankPredictorExam; prediction: Prediction; stats: ShareStats | null; mine: Mine }) {
   const myBucket = Math.floor(p.score / BUCKET_WIDTH) * BUCKET_WIDTH;
   const histogram = useMemo(() => {
     const raw = stats?.histogram ?? [];
@@ -382,11 +504,11 @@ function Details({
     return out;
   }, [stats]);
   const maxCount = Math.max(1, ...histogram.map((h) => h.count));
-  const blank = exam.totalQuestions - correct - wrong;
+  const blank = exam.totalQuestions - mine.correct - mine.wrong;
   const showShared = stats !== null && stats.total >= 10;
 
   return (
-    <details className="group mt-6 border-t">
+    <details className="group mt-4 border-y">
       <summary className="flex min-h-[52px] cursor-pointer list-none items-center justify-between text-[15px] font-medium [&::-webkit-details-marker]:hidden">
         See the details
         <svg viewBox="0 0 20 20" className="h-4 w-4 text-[hsl(var(--muted))] transition-transform group-open:rotate-180" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -396,12 +518,17 @@ function Details({
 
       <dl className="divide-y border-t text-[14.5px]">
         <Line label="Score">
-          {correct} × {exam.marksPerCorrect} − {wrong} × {exam.negativePerWrong} = <strong>{p.score}</strong>
-          <span className="text-[hsl(var(--muted))]"> · {blank} left blank</span>
+          {mine.correct} × {exam.marksPerCorrect} − {mine.wrong} × {exam.negativePerWrong} = <strong>{p.score}</strong>
+          <span className="text-[hsl(var(--muted))]"> · {blank} blank</span>
         </Line>
         <Line label="Most likely rank">
           about <strong>{fmt(niceRank(p.rank.mid))}</strong>
           <span className="text-[hsl(var(--muted))]"> · top {p.topPercent}%</span>
+        </Line>
+        <Line label="Could be anywhere from">
+          <strong>
+            {fmt(niceRank(p.rank.low))} – {fmt(niceRank(p.rank.high))}
+          </strong>
         </Line>
         <Line label={`Score likely needed for top ${fmt(exam.posts)}`}>
           <strong>
@@ -414,7 +541,7 @@ function Details({
             {stats.catTotal >= 5 && (
               <span className="text-[hsl(var(--muted))]">
                 {" "}
-                · #{fmt(stats.catAbove + 1)} of {fmt(stats.catTotal)} in {category}
+                · #{fmt(stats.catAbove + 1)} of {fmt(stats.catTotal)} in {mine.category}
               </span>
             )}
           </Line>
@@ -441,12 +568,12 @@ function Details({
         </div>
       )}
 
-      <div className="mt-5 rounded-xl bg-[hsl(var(--panel-soft)/0.6)] p-4 text-[13.5px] leading-6 text-[hsl(var(--muted))]">
+      <div className="my-5 rounded-xl bg-[hsl(var(--panel-soft)/0.6)] p-4 text-[13.5px] leading-6 text-[hsl(var(--muted))]">
         <p className="font-semibold text-[hsl(var(--foreground))]">How we estimate this</p>
         <p className="mt-1">
           We start from how scores have been spread in past JKSSB papers and the cut-off range experts expect for this one.
-          As aspirants share scores, we check whether this paper ran easier or harder and adjust. People who did well share
-          more often, so we correct for that too.
+          As aspirants share scores, we check whether this paper ran easier or harder and adjust. The range on top is our
+          best guess; the wider range above is how far it could move until the official answer key is out.
         </p>
         <p className="mt-2">
           Assumes about {lakh(exam.appeared)} candidates appeared ({fmt(exam.registered)} registered). This is an estimate,
@@ -460,8 +587,8 @@ function Details({
 function Line({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-baseline justify-between gap-4 py-3">
-      <dt className="shrink-0 text-[hsl(var(--muted))]">{label}</dt>
-      <dd className="text-right font-mono-num text-[13.5px]">{children}</dd>
+      <dt className="text-[hsl(var(--muted))]">{label}</dt>
+      <dd className="shrink-0 text-right font-mono-num text-[13.5px]">{children}</dd>
     </div>
   );
 }

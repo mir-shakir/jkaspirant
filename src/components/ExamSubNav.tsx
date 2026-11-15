@@ -1,8 +1,12 @@
 import Link from "next/link";
 
+type TabKey = "overview" | "syllabus" | "previous-papers" | "cut-offs" | "important-dates";
+
 interface ExamSubNavProps {
   examSlug: string;
-  activeTab: "overview" | "syllabus" | "previous-papers" | "cut-offs" | "important-dates";
+  activeTab: TabKey;
+  /** Tabs to show. Sections with nothing in them are left out. */
+  available: TabKey[];
 }
 
 const tabs = [
@@ -14,14 +18,16 @@ const tabs = [
 ] as const;
 
 /** Tabs for one exam. Sticks under the header so switching never needs a scroll. */
-export function ExamSubNav({ examSlug, activeTab }: ExamSubNavProps) {
+export function ExamSubNav({ examSlug, activeTab, available }: ExamSubNavProps) {
+  const shown = tabs.filter((tab) => tab.key === activeTab || available.includes(tab.key));
+  if (shown.length <= 1) return null;
   return (
     <nav
       aria-label="Exam sections"
       className="sticky top-14 z-40 -mx-4 mt-4 border-b bg-[hsl(var(--background)/0.95)] backdrop-blur-md sm:-mx-6"
     >
       <div className="no-scrollbar flex gap-1 overflow-x-auto px-4 sm:px-6">
-        {tabs.map((tab) => {
+        {shown.map((tab) => {
           const active = activeTab === tab.key;
           return (
             <Link

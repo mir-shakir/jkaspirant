@@ -27,6 +27,8 @@ export interface RankExamConfig {
    * cut-off and uncertainty to ~1 so predictions lock on to it.
    */
   model: RankModel;
+  /** Scores above this are kept off the public leaderboard (obvious fakes). */
+  leaderboardMaxScore: number;
   answerKeyReleased: boolean;
   /** Pattern confirmed against the official notification */
   patternVerified: boolean;
@@ -61,6 +63,7 @@ export const rankExams: RankExamConfig[] = [
       uncertainty: 5,
       selectionTilt: 1,
     },
+    leaderboardMaxScore: 112,
     answerKeyReleased: false,
     patternVerified: false,
     isOpen: true,

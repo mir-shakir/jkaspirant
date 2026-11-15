@@ -50,26 +50,17 @@ export const contentNotifications: ContentNotification[] = [
     exam: { slug: "finance-accounts-assistant", title: "Finance Accounts Assistant" },
   },
   {
-    slug: "jkssb-police-si-constable-exam-dates-2026",
-    title: "JKSSB Police SI exam on 29 November, Constable exams through December",
+    slug: "jkssb-sub-inspector-exam-date-2026",
+    title: "JK Police Sub-Inspector exam on 29 November",
     category: "notification",
     published_at: "2026-11-15T17:00:00+05:30",
     summary:
-      "Written exams for Sub-Inspector and Constable posts in the Home Department run from 29 November to 30 December 2026. Admit cards come about 7 days before each exam.",
+      "JKSSB has scheduled the JK Police Sub-Inspector written exam for 29 November 2026. Admit cards are expected about 7 days before.",
     body: `
-<p>As per the JKSSB advance notice dated 1 August 2026, written exams for Home Department posts are scheduled as below. Dates can change, so confirm on the official site before you travel.</p>
-<h2>Exam dates</h2>
-<ul>
-  <li><strong>29 November 2026:</strong> Sub-Inspector (Notification 02 of 2024)</li>
-  <li><strong>13 December 2026:</strong> Constable (Executive) (Notification 12 of 2025)</li>
-  <li><strong>20 December 2026:</strong> Constable (Armed / IRP / SDRF) (Notification 14 of 2025)</li>
-  <li><strong>23 December 2026:</strong> Sub-Inspector (Telecommunication) (Notification 11 of 2025)</li>
-  <li><strong>27 December 2026:</strong> Constable (Telecommunication) (Notification 15 of 2025)</li>
-  <li><strong>30 December 2026:</strong> Constable (Photographer) (Notification 15 of 2025)</li>
-</ul>
-<h2>Admit cards</h2>
-<p>JKSSB has said admit cards will be available about 7 days before each exam date. For the Sub-Inspector exam that means around 22 November.</p>`,
+<p>As per the JKSSB advance notice dated 1 August 2026, the written exam for <strong>Sub-Inspector (Notification 02 of 2024)</strong> is scheduled for <strong>Sunday, 29 November 2026</strong>.</p>
+<h2>Admit card</h2>
+<p>JKSSB has said admit cards will be available about 7 days before the exam, so around 22 November. Dates can change, so confirm on the official site before you travel.</p>`,
     source_url: JKSSB_WHATS_NEW,
-    exam: { slug: "sub-inspector", title: "Sub Inspector" },
+    exam: { slug: "sub-inspector", title: "JK Police Sub-Inspector" },
   },
 ];

@@ -11,20 +11,17 @@ export interface CalendarEvent {
   /** Short qualifier shown under the title */
   note?: string;
   tentative?: boolean;
+  /** Exam this belongs to (a key of liveExams) */
+  examSlug?: string;
   href?: string;
 }
 
-const POLICE_UPDATE = "/notifications/jkssb-police-si-constable-exam-dates-2026";
+const SI_UPDATE = "/notifications/jkssb-sub-inspector-exam-date-2026";
 
 export const calendarEvents: CalendarEvent[] = [
-  { date: "2026-11-15", title: "Accounts Assistant (Finance) exam", board: "JKSSB", kind: "exam", note: "600 posts", href: "/notifications/jkssb-faa-exam-held-answer-key-awaited-2026" },
-  { date: "2026-11-22", title: "Sub-Inspector admit card", board: "JKSSB", kind: "admit_card", note: "About 7 days before the exam", tentative: true, href: POLICE_UPDATE },
-  { date: "2026-11-29", title: "Sub-Inspector exam", board: "JKSSB", kind: "exam", note: "Notification 02 of 2024", href: POLICE_UPDATE },
-  { date: "2026-12-13", title: "Constable (Executive) exam", board: "JKSSB", kind: "exam", note: "Notification 12 of 2025", href: POLICE_UPDATE },
-  { date: "2026-12-20", title: "Constable (Armed / IRP / SDRF) exam", board: "JKSSB", kind: "exam", note: "Notification 14 of 2025", href: POLICE_UPDATE },
-  { date: "2026-12-23", title: "Sub-Inspector (Telecom) exam", board: "JKSSB", kind: "exam", note: "Notification 11 of 2025", href: POLICE_UPDATE },
-  { date: "2026-12-27", title: "Constable (Telecom) exam", board: "JKSSB", kind: "exam", note: "Notification 15 of 2025", href: POLICE_UPDATE },
-  { date: "2026-12-30", title: "Constable (Photographer) exam", board: "JKSSB", kind: "exam", note: "Notification 15 of 2025", href: POLICE_UPDATE },
+  { date: "2026-11-15", title: "Accounts Assistant (Finance) exam", board: "JKSSB", kind: "exam", examSlug: "finance-accounts-assistant", href: "/notifications/jkssb-faa-exam-held-answer-key-awaited-2026" },
+  { date: "2026-11-22", title: "Sub-Inspector admit card", board: "JKSSB", kind: "admit_card", examSlug: "sub-inspector", tentative: true, href: SI_UPDATE },
+  { date: "2026-11-29", title: "Sub-Inspector exam", board: "JKSSB", kind: "exam", examSlug: "sub-inspector", href: SI_UPDATE },
 ];
 
 /** Today's date in IST as YYYY-MM-DD. */
@@ -40,6 +37,10 @@ export function upcomingEvents(limit?: number) {
   const today = todayIST();
   const list = calendarEvents.filter((e) => e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
   return limit ? list.slice(0, limit) : list;
+}
+
+export function nextEventForExam(examSlug: string) {
+  return upcomingEvents().find((e) => e.examSlug === examSlug) ?? null;
 }
 
 export function relativeDay(date: string) {

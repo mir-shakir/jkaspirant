@@ -3,12 +3,13 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { EmptyState, GroupList, PageHeader, Row } from "@/components/ui";
 import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getAllExams } from "@/lib/queries/exams";
+import { liveExams } from "@/config/exams";
 
 export const revalidate = 1800;
 
 export const metadata: Metadata = buildMetadata({
-  title: "Exams — JKSSB & JKPSC Syllabus, Papers and Cut-offs",
-  description: "Pick your JKSSB or JKPSC exam to see its syllabus, previous papers, cut-offs and important dates.",
+  title: "Exams — JKSSB Updates, Dates and Tools",
+  description: "The JKSSB exams JK Aspirant is covering right now, with the latest updates, dates and tools for each.",
   canonicalPath: "/exams",
 });
 
@@ -20,7 +21,7 @@ export default async function ExamsPage() {
     <div className="page-shell py-4 sm:py-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(breadcrumbItems)) }} />
       <Breadcrumb items={breadcrumbItems} />
-      <PageHeader title="Exams" lede="Pick yours. Syllabus, papers, cut-offs and dates are inside." />
+      <PageHeader title="Exams" lede="The exams we are covering right now. More are added as they come up." />
 
       <div className="mt-5">
         {exams.length > 0 ? (
@@ -30,7 +31,7 @@ export default async function ExamsPage() {
                 key={exam.id}
                 href={`/exams/${exam.slug}`}
                 title={exam.title}
-                sub={exam.department || undefined}
+                sub={liveExams[exam.slug]?.status}
                 meta={exam.vacancy_count ? `${exam.vacancy_count.toLocaleString("en-IN")} posts` : undefined}
               />
             ))}
@@ -41,7 +42,6 @@ export default async function ExamsPage() {
       </div>
 
       <GroupList className="mt-6">
-        <Row href="/resources" title="All previous papers" sub="Every paper we have, across exams" />
         <Row href="/calendar" title="Exam calendar" sub="Upcoming exam and admit card dates" />
       </GroupList>
     </div>
