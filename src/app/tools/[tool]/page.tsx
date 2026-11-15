@@ -94,6 +94,8 @@ export default function RankToolPage({ params }: PageProps) {
             marksPerCorrect: exam.marksPerCorrect,
             negativePerWrong: exam.negativePerWrong,
             posts: exam.posts,
+            openSeats: exam.openSeats,
+            reserved: exam.reserved,
             registered: exam.registered,
             appeared: exam.appeared,
             categories: exam.categories,

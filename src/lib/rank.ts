@@ -32,10 +32,23 @@ export interface RankModel {
   selectionTilt: number;
 }
 
+/** Seats for one reservation category, and our starting guess of its share of candidates. */
+export interface CategorySeats {
+  posts: number;
+  /** Rough share of all candidates in this category (0..1). Refined by the mix of shared scores. */
+  share: number;
+  /** How many marks lower this category scores on average than candidates overall. */
+  gap: number;
+}
+
 export interface PredictExam extends Marking {
   posts: number;
   appeared: number;
   model: RankModel;
+  /** Open-merit seats: filled by overall rank, whatever the candidate's category. */
+  openSeats: number;
+  /** Reserved categories. Anything not listed here (e.g. "OM") competes for open seats only. */
+  reserved: Record<string, CategorySeats>;
 }
 
 export interface ShareStats {
@@ -122,8 +135,22 @@ export interface Prediction {
   shown: { low: number; high: number };
   /** Share of candidates expected to score higher, in percent. */
   topPercent: number;
-  /** Estimated score of the candidate at rank = posts. */
+  /** Estimated open-merit cut-off: score of the candidate at rank = openSeats. */
   cutoff: { low: number; mid: number; high: number };
+  /** Seats the overall rank is measured against (open merit). */
+  openSeats: number;
+  /**
+   * For reserved-category candidates: rank among their own category after the
+   * open-merit list has been filled, against that category's seats.
+   */
+  category: null | {
+    name: string;
+    seats: number;
+    rank: { low: number; mid: number; high: number };
+    cutoff: { low: number; high: number };
+  };
+  /** Which list the most likely rank lands in. */
+  seat: "open" | "category" | null;
   verdict: Verdict;
   confidence: Confidence;
   /** 0..1, how much shared scores (vs past patterns) drive the estimate. */
@@ -131,8 +158,8 @@ export interface Prediction {
   shared: number;
 }
 
-export function predict(exam: PredictExam, score: number, stats: ShareStats | null): Prediction {
-  const { model, appeared, posts } = exam;
+export function predict(exam: PredictExam, score: number, stats: ShareStats | null, categoryName = "OM"): Prediction {
+  const { model, appeared, openSeats } = exam;
   const sd = model.spread;
 
   // Prior: place the bell curve so that `anchorRank` lands on `anchorScore`.
@@ -164,15 +191,49 @@ export function predict(exam: PredictExam, score: number, stats: ShareStats | nu
   const low = Math.min(mid, clamp(rankAt(mean - tau)));
   const high = Math.max(mid, clamp(rankAt(mean + tau)));
 
-  const zPosts = normInv(1 - posts / appeared);
-  const cutoffMid = mean + zPosts * sd;
   const round1 = (x: number) => Math.round(x * 2) / 2;
+  const scoreAtRank = (rank: number) => mean + normInv(1 - Math.min(rank, appeared - 1) / appeared) * sd;
+  const cutoffMid = scoreAtRank(openSeats);
 
+  // Reserved categories. The top `openSeats` overall take open-merit seats
+  // whatever their category, so they don't use up reserved seats. Whoever is
+  // left competes inside their own category for its seats.
+  const res = exam.reserved[categoryName];
+  let category: Prediction["category"] = null;
+  if (res) {
+    // Share of candidates in this category: our starting guess, pulled towards
+    // the mix seen in shared scores as they accumulate.
+    const PRIOR_STRENGTH = 200;
+    const share = stats ? (res.share * PRIOR_STRENGTH + stats.catTotal) / (PRIOR_STRENGTH + stats.total) : res.share;
+    // Candidates of this category expected above a score, for a given paper difficulty.
+    const aheadInCategory = (x: number, centre: number) => share * appeared * (1 - normCdf((x - (centre - res.gap)) / sd));
+    // Rank inside the category once those who made the open-merit list are set aside.
+    const catRank = (centre: number) => {
+      const openCut = centre + normInv(1 - openSeats / appeared) * sd;
+      return Math.max(1, Math.round(1 + aheadInCategory(score, centre) - aheadInCategory(Math.max(score, openCut), centre)));
+    };
+    // Score of the last candidate to get a category seat.
+    const catCutoff = (centre: number) => {
+      const openCut = centre + normInv(1 - openSeats / appeared) * sd;
+      const tail = (res.posts + aheadInCategory(openCut, centre)) / (share * appeared);
+      return centre - res.gap + normInv(1 - Math.min(tail, 0.999)) * sd;
+    };
+    const ranks = [catRank(mean - tau), catRank(mean), catRank(mean + tau)];
+    category = {
+      name: categoryName,
+      seats: res.posts,
+      rank: { low: Math.min(...ranks), mid: ranks[1], high: Math.max(...ranks) },
+      cutoff: { low: round1(catCutoff(mean - tau)), high: round1(catCutoff(mean + tau)) },
+    };
+  }
+
+  const qualifies = (overall: number, cat: number | undefined) => overall <= openSeats || (cat !== undefined && category !== null && cat <= category.seats);
   let verdict: Verdict;
-  if (high <= posts) verdict = "strong";
-  else if (mid <= posts) verdict = "likely";
-  else if (low <= posts) verdict = "edge";
+  if (qualifies(high, category?.rank.high)) verdict = "strong";
+  else if (qualifies(mid, category?.rank.mid)) verdict = "likely";
+  else if (qualifies(low, category?.rank.low)) verdict = "edge";
   else verdict = "unlikely";
+  const seat: Prediction["seat"] = mid <= openSeats ? "open" : category && category.rank.mid <= category.seats ? "category" : null;
 
   const confidence: Confidence = dataWeight < 0.1 ? "early" : dataWeight < 0.3 ? "improving" : "solid";
 
@@ -182,6 +243,9 @@ export function predict(exam: PredictExam, score: number, stats: ShareStats | nu
     shown: shownRange(mid, floor, appeared),
     topPercent: Math.max(0.01, Math.round(((mid - 1) / appeared) * 10000) / 100),
     cutoff: { low: round1(cutoffMid - tau), mid: round1(cutoffMid), high: round1(cutoffMid + tau) },
+    openSeats,
+    category,
+    seat,
     verdict,
     confidence,
     dataWeight,
