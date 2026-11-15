@@ -26,16 +26,12 @@ export default async function SearchPage() {
 
   const items: SearchItem[] = [
     ...tools,
-    ...exams.flatMap((exam) => {
-      const keywords = `${exam.department ?? ""} ${exam.slug.replace(/-/g, " ")}`;
-      return [
-        { title: exam.title, href: `/exams/${exam.slug}`, kind: "Exam", keywords },
-        { title: `${exam.title} syllabus`, href: `/exams/${exam.slug}/syllabus`, kind: "Syllabus", keywords },
-        { title: `${exam.title} previous papers`, href: `/exams/${exam.slug}/previous-papers`, kind: "Papers", keywords: `${keywords} question paper pdf` },
-        { title: `${exam.title} cut-offs`, href: `/exams/${exam.slug}/cut-offs`, kind: "Cut-offs", keywords: `${keywords} cutoff cut off` },
-        { title: `${exam.title} dates`, href: `/exams/${exam.slug}/important-dates`, kind: "Dates", keywords },
-      ];
-    }),
+    ...exams.map((exam) => ({
+      title: exam.title,
+      href: `/exams/${exam.slug}`,
+      kind: "Exam",
+      keywords: `${exam.department ?? ""} ${exam.slug.replace(/-/g, " ")} faa si jkpsi police`,
+    })),
     ...notifications.map((n) => ({ title: n.title, href: `/notifications/${n.slug}`, kind: "Update", keywords: `${n.category ?? ""} ${n.exam?.title ?? ""}` })),
     { title: "Exam calendar", href: "/calendar", kind: "Calendar", keywords: "dates schedule admit card" },
   ];

@@ -50,12 +50,16 @@ export default function RankToolPage({ params }: PageProps) {
       a: `+${exam.marksPerCorrect} for each correct answer and −${exam.negativePerWrong} for each wrong answer. Unattempted questions carry no marks. The paper has ${exam.totalQuestions} questions.`,
     },
     {
-      q: "How can you predict a rank before the result?",
-      a: `We start from how scores have been spread in past JKSSB papers and the cut-off range expected for this one. As aspirants share their scores we check whether this paper ran easier or harder and adjust. The answer is always a range, and it narrows as more people share.`,
+      q: "Can I change my score?",
+      a: "Each phone can save one score and correct it once, so count carefully. You can update it once more when the official answer key is out.",
     },
     {
-      q: "Is my data stored?",
-      a: "Only your answer counts, score and category. No name, phone or roll number. You can untick sharing and still get your estimate.",
+      q: "How can you predict a rank before the result?",
+      a: `We start from how scores have been spread in past JKSSB papers and the cut-off range expected for this one. As aspirants share their scores we check whether this paper ran easier or harder and adjust. It is an estimate and it gets sharper as more people share.`,
+    },
+    {
+      q: "What do you save about me?",
+      a: "Your answer counts, score and category, linked to this phone so you can see your rank again later and so each person counts once. No phone number or roll number. If you join the leaderboard we save only a masked name like S***, never your full name.",
     },
   ];
 

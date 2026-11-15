@@ -7,6 +7,7 @@ import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getNotificationBySlug, getNotificationSlugs } from "@/lib/queries/notifications";
 import { getRankExamForExamSlug } from "@/config/rank-predictor";
 import { siteConfig } from "@/config/site";
+import { liveExams } from "@/config/exams";
 
 export const revalidate = 3600;
 
@@ -81,7 +82,7 @@ export default async function NotificationDetailPage({ params }: PageProps) {
             <Row href={`/tools/${rankTool.toolSlug}`} title={`Predict your ${rankTool.name} rank`} sub="Score and expected rank in under a minute" />
           )}
           {notification.exam && (
-            <Row href={`/exams/${notification.exam.slug}`} title={notification.exam.title} sub="Syllabus, papers, cut-offs, dates" />
+            <Row href={`/exams/${notification.exam.slug}`} title={liveExams[notification.exam.slug]?.title ?? notification.exam.title} sub="All updates and dates for this exam" />
           )}
         </GroupList>
       )}

@@ -5,6 +5,7 @@ import { TelegramLink } from "@/components/TelegramLink";
 import { EmptyState, GroupList, PageHeader, Row, Section } from "@/components/ui";
 import { buildMetadata } from "@/lib/seo";
 import { getAllExams } from "@/lib/queries/exams";
+import { liveExams } from "@/config/exams";
 import { getLatestNotifications } from "@/lib/queries/notifications";
 import { spotlight } from "@/config/spotlight";
 import { upcomingEvents } from "@/content/calendar";
@@ -15,7 +16,7 @@ export const revalidate = 1800; // ISR: revalidate every 30 minutes
 export const metadata = buildMetadata({
   title: "JK Aspirant — JKSSB & JKPSC Updates, Exam Dates & Rank Predictor",
   description:
-    "Latest JKSSB and JKPSC updates, upcoming exam dates, rank predictor, syllabus and previous papers. Fast, clean, no ads.",
+    "Latest JKSSB updates, upcoming exam dates and a rank predictor for J&K aspirants. Fast, clean, no ads.",
   canonicalPath: "/",
 });
 
@@ -66,14 +67,14 @@ export default async function HomePage() {
       </Section>
 
       {exams.length > 0 && (
-        <Section title="Your exam" action={{ href: "/exams", label: "All exams" }} id="your-exam">
+        <Section title="Exams" id="your-exam">
           <GroupList>
             {exams.slice(0, 5).map((exam) => (
               <Row
                 key={exam.id}
                 href={`/exams/${exam.slug}`}
                 title={exam.title}
-                sub="Syllabus, papers, cut-offs, dates"
+                sub={liveExams[exam.slug]?.status}
                 meta={exam.vacancy_count ? `${exam.vacancy_count.toLocaleString("en-IN")} posts` : undefined}
               />
             ))}

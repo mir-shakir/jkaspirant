@@ -5,10 +5,10 @@ import { ExamHeader, examBreadcrumbs } from "@/components/ExamHeader";
 import { UpdateRow } from "@/components/UpdateRow";
 import { GroupList, Row, Section } from "@/components/ui";
 import { buildMetadata, buildExamJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
-import { getCutoffs, getExamBySlug, getExamDates, getExamSlugs, getPapers, getSyllabusSections } from "@/lib/queries/exams";
+import { getCutoffs, getExamBySlug, getExamSlugs, getExamSections } from "@/lib/queries/exams";
 import { getNotificationsForExam } from "@/lib/queries/notifications";
 import { getRankExamForExamSlug } from "@/config/rank-predictor";
-import { todayIST, relativeDay } from "@/content/calendar";
+import { nextEventForExam, relativeDay } from "@/content/calendar";
 
 interface PageProps {
   params: { slug: string };
@@ -23,9 +23,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const exam = await getExamBySlug(params.slug);
   if (!exam) return {};
   return buildMetadata({
-    title: exam.seo_title || `${exam.title} — Syllabus, Papers, Cut-offs & Dates`,
+    title: exam.seo_title || `${exam.title} — Latest Updates & Exam Dates`,
     description:
-      exam.seo_description || `Everything for ${exam.title}: syllabus, previous papers, cut-offs, important dates and the latest updates.`,
+      exam.seo_description || `${exam.title}: latest updates, exam dates and tools for J&K aspirants.`,
     canonicalPath: `/exams/${exam.slug}`,
     keywords: exam.seo_keywords || undefined,
     ogImage: exam.og_image_url || undefined,
@@ -38,18 +38,16 @@ export default async function ExamOverviewPage({ params }: PageProps) {
   const exam = await getExamBySlug(params.slug);
   if (!exam) notFound();
 
-  const [papers, syllabusSections, dates, cutoffs, updates] = await Promise.all([
-    getPapers(exam.id),
-    getSyllabusSections(exam.id),
-    getExamDates(exam.id),
+  const [sections, cutoffs, updates] = await Promise.all([
+    getExamSections(exam.id),
     getCutoffs(exam.id),
     getNotificationsForExam(exam.slug, 3),
   ]);
 
   const rankTool = getRankExamForExamSlug(exam.slug);
-  const today = todayIST();
-  const nextDate = dates.find((d) => d.event_date && d.event_date >= today);
+  const nextEvent = nextEventForExam(exam.slug);
   const latestCutoffYear = cutoffs.length > 0 ? Math.max(...cutoffs.map((c) => c.year)) : null;
+  const hasPrepare = sections.syllabus + sections.papers + sections.cutoffs + sections.dates > 0;
 
   return (
     <div className="page-shell py-4 sm:py-8">
@@ -72,43 +70,36 @@ export default async function ExamOverviewPage({ params }: PageProps) {
         </Link>
       )}
 
-      {nextDate && (
+      {nextEvent && (
         <p className="mt-5 flex items-center justify-between gap-3 rounded-2xl bg-[hsl(var(--panel-soft))] px-4 py-3.5 text-[14.5px]">
           <span>
             <span className="text-[hsl(var(--muted))]">Next: </span>
-            <strong className="font-semibold">{nextDate.event_name}</strong>
+            <strong className="font-semibold">{nextEvent.title}</strong>
+            {nextEvent.tentative && <span className="text-[hsl(var(--muted))]"> (expected)</span>}
           </span>
-          <span className="shrink-0 font-mono-num text-[13px] font-semibold text-[hsl(var(--accent))]">{relativeDay(nextDate.event_date!)}</span>
+          <span className="shrink-0 font-mono-num text-[13px] font-semibold text-[hsl(var(--accent))]">{relativeDay(nextEvent.date)}</span>
         </p>
       )}
 
-      <Section title="Prepare" className="!mt-6">
-        <GroupList>
-          <Row
-            href={`/exams/${exam.slug}/syllabus`}
-            title="Syllabus"
-            sub={syllabusSections.length > 0 ? `${plural(syllabusSections.length, "section")} with topics and marks` : "Not added yet"}
-          />
-          <Row
-            href={`/exams/${exam.slug}/previous-papers`}
-            title="Previous papers"
-            sub={papers.length > 0 ? `${plural(papers.length, "paper")} to download` : "Not added yet"}
-          />
-          <Row
-            href={`/exams/${exam.slug}/cut-offs`}
-            title="Cut-offs"
-            sub={latestCutoffYear ? `Category-wise, latest ${latestCutoffYear}` : "Added when results are declared"}
-          />
-          <Row
-            href={`/exams/${exam.slug}/important-dates`}
-            title="Important dates"
-            sub={dates.length > 0 ? plural(dates.length, "date") : "None announced yet"}
-          />
-        </GroupList>
-      </Section>
+      {hasPrepare && (
+        <Section title="Prepare" className="!mt-6">
+          <GroupList>
+            {sections.syllabus > 0 && (
+              <Row href={`/exams/${exam.slug}/syllabus`} title="Syllabus" sub={`${plural(sections.syllabus, "section")} with topics and marks`} />
+            )}
+            {sections.papers > 0 && (
+              <Row href={`/exams/${exam.slug}/previous-papers`} title="Previous papers" sub={`${plural(sections.papers, "paper")} to download`} />
+            )}
+            {sections.cutoffs > 0 && (
+              <Row href={`/exams/${exam.slug}/cut-offs`} title="Cut-offs" sub={`Category-wise, latest ${latestCutoffYear}`} />
+            )}
+            {sections.dates > 0 && <Row href={`/exams/${exam.slug}/important-dates`} title="Important dates" sub={plural(sections.dates, "date")} />}
+          </GroupList>
+        </Section>
+      )}
 
       {updates.length > 0 && (
-        <Section title="Latest on this exam" action={{ href: "/notifications", label: "All updates" }}>
+        <Section title="Latest" action={{ href: "/notifications", label: "All updates" }} className={hasPrepare ? "" : "!mt-6"}>
           <GroupList>
             {updates.map((n) => (
               <UpdateRow key={n.id} update={n} />
@@ -117,25 +108,6 @@ export default async function ExamOverviewPage({ params }: PageProps) {
         </Section>
       )}
 
-      {(exam.pay_scale || exam.eligibility || exam.description) && (
-        <Section title="About this post">
-          <dl className="divide-y border-y text-[14.5px] leading-6">
-            {exam.pay_scale && (
-              <div className="flex justify-between gap-6 py-3">
-                <dt className="shrink-0 text-[hsl(var(--muted))]">Pay</dt>
-                <dd className="text-right">{exam.pay_scale}</dd>
-              </div>
-            )}
-            {exam.eligibility && (
-              <div className="py-3">
-                <dt className="text-[hsl(var(--muted))]">Who can apply</dt>
-                <dd className="mt-1">{exam.eligibility}</dd>
-              </div>
-            )}
-          </dl>
-          {exam.description && <p className="mt-3 text-[14.5px] leading-6 text-[hsl(var(--muted))]">{exam.description}</p>}
-        </Section>
-      )}
     </div>
   );
 }

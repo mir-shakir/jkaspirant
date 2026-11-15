@@ -5,7 +5,6 @@ const links = [
   { href: "/notifications", label: "Updates" },
   { href: "/exams", label: "Exams" },
   { href: "/calendar", label: "Calendar" },
-  { href: "/resources", label: "Papers" },
   { href: "/tools", label: "Tools" },
 ];
 
