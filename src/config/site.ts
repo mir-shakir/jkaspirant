@@ -4,7 +4,9 @@ export const siteConfig = {
     "Your one-stop resource for JKSSB and JKPSC exam notifications, syllabi, previous papers, cut-offs, and important dates.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://jkaspirant.in",
   ogImage: "/og-default.png",
-  telegramUrl: process.env.NEXT_PUBLIC_TELEGRAM_URL || "",
+  // Partner channel (run by a friend of the owner): study material and updates.
+  telegramUrl: process.env.NEXT_PUBLIC_TELEGRAM_URL || "https://t.me/JkExamSpark_jkssb",
+  telegramName: "JKExamSPARK (JKSSB)",
   creator: "JK Aspirant",
   keywords: [
     "JKSSB",

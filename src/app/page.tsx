@@ -1,7 +1,7 @@
 import { FocusCard } from "@/components/FocusCard";
 import { EventRow } from "@/components/EventRow";
 import { UpdateRow } from "@/components/UpdateRow";
-import { TelegramLink } from "@/components/TelegramLink";
+import { TelegramNudge } from "@/components/TelegramNudge";
 import { EmptyState, GroupList, PageHeader, Row, Section } from "@/components/ui";
 import { buildMetadata } from "@/lib/seo";
 import { getAllExams } from "@/lib/queries/exams";
@@ -82,15 +82,7 @@ export default async function HomePage() {
         </Section>
       )}
 
-      {siteConfig.telegramUrl && (
-        <section className="mt-9 flex items-center justify-between gap-4 rounded-2xl bg-[hsl(var(--panel-soft))] p-4">
-          <p className="text-[14.5px] leading-snug">
-            <strong className="font-semibold">Get updates the minute they&apos;re out.</strong>
-            <span className="block text-[13px] text-[hsl(var(--muted))]">Official notices only. No spam.</span>
-          </p>
-          <TelegramLink compact className="inline-flex h-10 shrink-0 px-4" label="Join Telegram" />
-        </section>
-      )}
+      <TelegramNudge className="mt-9" />
     </div>
   );
 }

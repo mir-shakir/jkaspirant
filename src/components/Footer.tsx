@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TelegramLink } from "./TelegramLink";
+import { siteConfig } from "@/config/site";
 
 const links = [
   { href: "/notifications", label: "Updates" },
@@ -16,7 +16,6 @@ export function Footer() {
         <p className="mt-1.5 max-w-sm text-[13.5px] leading-6 text-[hsl(var(--muted))]">
           Exam updates and tools for J&amp;K aspirants. No ads. Every update links to the official notice.
         </p>
-        <TelegramLink className="mt-4" />
 
         <nav aria-label="Footer" className="mt-5 flex flex-wrap gap-x-5 gap-y-1">
           {links.map((l) => (
@@ -24,6 +23,11 @@ export function Footer() {
               {l.label}
             </Link>
           ))}
+          {siteConfig.telegramUrl && (
+            <a href={siteConfig.telegramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[40px] items-center text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]">
+              Telegram ↗
+            </a>
+          )}
           <a href="https://jkssb.nic.in" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[40px] items-center text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]">
             JKSSB ↗
           </a>
