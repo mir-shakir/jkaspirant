@@ -21,6 +21,7 @@ const SI_UPDATE = "/notifications/jkssb-sub-inspector-exam-date-2026";
 
 export const calendarEvents: CalendarEvent[] = [
   { date: "2026-11-15", title: "Accounts Assistant (Finance) exam", board: "JKSSB", kind: "exam", examSlug: "finance-accounts-assistant", href: "/notifications/jkssb-faa-exam-held-answer-key-awaited-2026" },
+  { date: "2026-11-16", title: "FAA answer key objections open", board: "JKSSB", kind: "deadline", note: "Three working days, in person", examSlug: "finance-accounts-assistant", href: "/notifications/jkssb-faa-provisional-answer-key-2026" },
   { date: "2026-11-22", title: "Sub-Inspector admit card", board: "JKSSB", kind: "admit_card", examSlug: "sub-inspector", tentative: true, href: SI_UPDATE },
   { date: "2026-11-29", title: "Sub-Inspector exam", board: "JKSSB", kind: "exam", examSlug: "sub-inspector", href: SI_UPDATE },
   { date: "2026-12-13", title: "Constable (Executive) exam", board: "JKSSB", kind: "exam", examSlug: "police-constable", href: CONSTABLE_UPDATE },

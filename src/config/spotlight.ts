@@ -18,14 +18,14 @@ export interface Spotlight {
 
 export const spotlight: Spotlight | null = {
   exam: "JKSSB FAA 2026",
-  headline: "Exam done. Answer key awaited.",
-  detail: "Held 15 Nov · 600 posts · 1.61 lakh registered",
+  headline: "Answer key is out.",
+  detail: "Provisional key, all four series · objections from 16 Nov",
   stages: [
     { label: "Exam", status: "done" },
-    { label: "Answer key", status: "current" },
-    { label: "Objections", status: "upcoming" },
+    { label: "Answer key", status: "done" },
+    { label: "Objections", status: "current" },
     { label: "Result", status: "upcoming" },
   ],
   primaryCta: { href: "/tools/jkssb-faa-rank-predictor", label: "Predict my rank" },
-  secondaryCta: { href: "/notifications/jkssb-faa-exam-held-answer-key-awaited-2026", label: "What happens next" },
+  secondaryCta: { href: "/notifications/jkssb-faa-provisional-answer-key-2026", label: "Answer key & objections" },
 };

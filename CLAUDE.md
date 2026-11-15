@@ -83,7 +83,7 @@ The site is one narrow reading column (`.page-shell`, max-w-3xl) built from a fe
 - Tailwind CSS only — no CSS modules or styled-components
 - Target **Lighthouse mobile score 90+**
 - No ads, no popups — clean reading experience
-- PDFs go to Supabase Storage, never in `/public` or the repo
+- PDFs go to Supabase Storage, never in `/public` or the repo. One exception, at the owner's request: small official notices we link from an update (e.g. an answer key) may live in `public/notices/` when the session has no Storage access. Papers and study material still go to Storage.
 
 ## Environment Variables
 

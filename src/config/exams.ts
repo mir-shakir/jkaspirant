@@ -24,7 +24,7 @@ export const liveExams: Record<string, LiveExam> = {
     title: "Finance Accounts Assistant",
     board: "JKSSB",
     posts: 600,
-    status: "Exam held 15 Nov · answer key awaited",
+    status: "Answer key out · objections from 16 Nov",
   },
   "sub-inspector": {
     title: "JK Police Sub-Inspector",

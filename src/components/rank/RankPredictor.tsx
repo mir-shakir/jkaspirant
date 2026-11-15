@@ -20,6 +20,7 @@ export interface RankPredictorExam extends PredictExam {
   name: string;
   registered: number;
   categories: string[];
+  answerKeyReleased?: boolean;
 }
 
 /** The score on record for this phone. `local` means the server has not saved it (yet). */
@@ -324,6 +325,11 @@ export function RankPredictor({ exam }: { exam: RankPredictorExam }) {
             )}
           </div>
           {note && <p className="text-[13px] leading-5 text-[hsl(var(--muted))]">{note}</p>}
+          {exam.answerKeyReleased && mine.canCorrect && !note && (
+            <p className="text-[13px] leading-5 text-[hsl(var(--muted))]">
+              The answer key is out. If your count has changed, tap Correct to update it once.
+            </p>
+          )}
           <Result exam={exam} prediction={prediction} stats={effectiveStats} mine={mine} />
         </>
       )}

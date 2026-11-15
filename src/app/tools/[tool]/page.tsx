@@ -82,8 +82,14 @@ export default function RankToolPage({ params }: PageProps) {
       <PageHeader
         kicker={`${exam.board} ${exam.name} ${year}`}
         title="What rank will you get?"
-        lede="Count your right and wrong answers. We'll do the rest."
+        lede={exam.answerKeyReleased ? "Check your answers against the official key, then count your right and wrong." : "Count your right and wrong answers. We'll do the rest."}
       />
+
+      {exam.answerKeyReleased && exam.answerKeyUrl && (
+        <GroupList className="mt-5">
+          <Row href={exam.answerKeyUrl} external title="Official answer key (PDF)" sub="Provisional key for Series A, B, C and D" />
+        </GroupList>
+      )}
 
       <div className="mt-5">
         <RankPredictor
@@ -100,6 +106,7 @@ export default function RankToolPage({ params }: PageProps) {
             appeared: exam.appeared,
             categories: exam.categories,
             model: exam.model,
+            answerKeyReleased: exam.answerKeyReleased,
           }}
         />
       </div>
@@ -108,7 +115,7 @@ export default function RankToolPage({ params }: PageProps) {
         <Row
           href={`/exams/${exam.examSlug}`}
           title={`${exam.name} exam page`}
-          sub={exam.answerKeyReleased ? "Answer key is out" : "Answer key awaited. We'll post it the day it's out."}
+          sub={exam.answerKeyReleased ? "Answer key, objections and what comes next" : "Answer key awaited. We'll post it the day it's out."}
         />
       </GroupList>
       <TelegramLink className="mt-3 w-full justify-center" />
