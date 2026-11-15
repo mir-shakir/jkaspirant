@@ -1,5 +1,6 @@
 // Rank predictor configuration. One entry per exam.
-// Operator sessions update these values (e.g. flip answerKeyReleased) and commit.
+// Operator sessions update these values and commit; no database change needed.
+import type { RankModel } from "@/lib/rank";
 
 export interface RankExamConfig {
   /** URL slug: /tools/<toolSlug> */
@@ -15,9 +16,17 @@ export interface RankExamConfig {
   marksPerCorrect: number;
   negativePerWrong: number;
   posts: number;
-  /** Approximate number of candidates who appeared (for extrapolating rank) */
+  /** Candidates registered (from official / press figures). */
+  registered: number;
+  /** Best estimate of candidates who actually sat the paper. */
   appeared: number;
   categories: string[];
+  /**
+   * The starting assumptions for rank estimates. Tune as better information
+   * arrives; once the official result is out, set anchorScore to the real
+   * cut-off and uncertainty to ~1 so predictions lock on to it.
+   */
+  model: RankModel;
   answerKeyReleased: boolean;
   /** Pattern confirmed against the official notification */
   patternVerified: boolean;
@@ -25,7 +34,7 @@ export interface RankExamConfig {
 }
 
 // J&K reservation categories (vertical). Verify against the exam notification.
-const JK_CATEGORIES = ["OM", "SC", "ST-1", "ST-2", "RBA", "ALC/IOC", "EWS", "OSC", "PSP"];
+const JK_CATEGORIES = ["OM", "SC", "ST-1", "ST-2", "OBC", "RBA", "ALC/IB", "EWS", "PSP"];
 
 export const rankExams: RankExamConfig[] = [
   {
@@ -40,8 +49,18 @@ export const rankExams: RankExamConfig[] = [
     marksPerCorrect: 1,
     negativePerWrong: 0.25,
     posts: 600,
-    appeared: 150000,
+    registered: 161961,
+    appeared: 150000, // no official attendance figure yet
     categories: JK_CATEGORIES,
+    model: {
+      // Coaching estimates put the open-merit cut-off at 84–89. Open merit is
+      // roughly half the posts, so that score sits near overall rank 300.
+      anchorScore: 86.5,
+      anchorRank: 300,
+      spread: 16.5,
+      uncertainty: 5,
+      selectionTilt: 1,
+    },
     answerKeyReleased: false,
     patternVerified: false,
     isOpen: true,
@@ -54,4 +73,8 @@ export function getRankExam(toolSlug: string) {
 
 export function getRankExamByKey(examKey: string) {
   return rankExams.find((e) => e.examKey === examKey) ?? null;
+}
+
+export function getRankExamForExamSlug(examSlug: string) {
+  return rankExams.find((e) => e.examSlug === examSlug && e.isOpen) ?? null;
 }

@@ -1,12 +1,11 @@
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { ToolCard } from "@/components/ToolCard";
+import { GroupList, PageHeader, Row, Section } from "@/components/ui";
 import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
-import { tools } from "@/config/tools";
+import { rankExams } from "@/config/rank-predictor";
 
 export const metadata = buildMetadata({
-  title: "Tools — Score Calculator & Rank Predictor for JKSSB, JKPSC",
-  description:
-    "Free JKSSB and JKPSC tools: score calculator with negative marking, crowd-sourced rank predictor, and eligibility checks.",
+  title: "Tools — Rank Predictor & Score Calculator for JKSSB, JKPSC",
+  description: "Free tools for J&K aspirants: score calculator with negative marking and rank predictor. No sign-up.",
   canonicalPath: "/tools",
   keywords: ["JKSSB rank predictor", "JKSSB score calculator", "JKSSB FAA rank predictor"],
 });
@@ -14,24 +13,29 @@ export const metadata = buildMetadata({
 const breadcrumbItems = [{ name: "Tools", path: "/tools" }];
 
 export default function ToolsPage() {
+  const open = rankExams.filter((e) => e.isOpen);
   return (
-    <div className="page-shell py-6 sm:py-8">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(breadcrumbItems)) }}
-      />
+    <div className="page-shell py-4 sm:py-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(breadcrumbItems)) }} />
       <Breadcrumb items={breadcrumbItems} />
-      <p className="section-kicker">Tools</p>
-      <h1 className="mt-2 text-3xl leading-tight sm:text-4xl">Calculators for J&amp;K aspirants</h1>
-      <p className="mt-2 max-w-xl text-[15px] leading-7 text-[hsl(var(--muted))]">
-        Free, fast, no sign-up. Score calculators follow the official marking scheme; rank estimates
-        come from scores shared by other aspirants.
+      <PageHeader title="Tools" lede="Free, quick, no sign-up." />
+
+      <Section title="Rank predictors" className="!mt-6">
+        <GroupList>
+          {open.map((e) => (
+            <Row
+              key={e.toolSlug}
+              href={`/tools/${e.toolSlug}`}
+              title={`${e.board} ${e.name} ${e.examDate.slice(0, 4)}`}
+              sub="Your score and expected rank in under a minute"
+            />
+          ))}
+        </GroupList>
+      </Section>
+
+      <p className="mt-6 text-[13.5px] leading-6 text-[hsl(var(--muted))]">
+        A predictor opens for each major exam on the day it is held. Coming next: age and eligibility checker.
       </p>
-      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {tools.map((t) => (
-          <ToolCard key={t.title} {...t} />
-        ))}
-      </div>
     </div>
   );
 }

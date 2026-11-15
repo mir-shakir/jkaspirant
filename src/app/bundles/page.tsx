@@ -1,8 +1,7 @@
 import { Metadata } from "next";
 import { BundleCard } from "@/components/BundleCard";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { SearchHero } from "@/components/SearchHero";
-import { SectionHeader } from "@/components/SectionHeader";
+import { PageHeader } from "@/components/ui";
 import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getAllBundles } from "@/lib/queries/bundles";
 
@@ -18,38 +17,12 @@ export const revalidate = 1800;
 export default async function BundlesPage() {
   const bundles = await getAllBundles();
   const breadcrumbItems = [{ name: "Study Packs", path: "/bundles" }];
-  const searchItems = bundles.map((bundle) => ({
-    title: bundle.title,
-    description: bundle.exams?.length
-      ? `Study pack for ${bundle.exams.map((e) => e.title).join(", ")}`
-      : "Exam preparation pack",
-    href: `/bundles/${bundle.slug}`,
-    tag: "Pack",
-  }));
-
   return (
     <div className="page-shell py-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(breadcrumbItems)) }} />
       <Breadcrumb items={breadcrumbItems} />
 
-      <SearchHero
-        kicker="Study packs"
-        title="Ready-made PDF bundles to help you prepare faster."
-        placeholder="Search for a study pack..."
-        items={searchItems}
-        quickLinks={[
-          { label: "Free resources", href: "/resources" },
-          { label: "Exam hubs", href: "/exams" },
-          { label: "Latest updates", href: "/notifications" },
-        ]}
-      />
-
-      <section className="mt-10">
-        <SectionHeader
-          kicker="All packs"
-          title="Study packs available right now"
-        />
-      </section>
+      <PageHeader title="Study packs" lede="Ready-made PDF bundles to help you prepare faster." />
 
       <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {bundles.map((bundle) => (<BundleCard key={bundle.id} bundle={bundle} />))}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { GroupList, Row } from "@/components/ui";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
@@ -9,16 +10,18 @@ export const metadata = buildMetadata({
 
 export default function NotFound() {
   return (
-    <div className="page-shell py-24">
-      <div className="surface-card mx-auto flex max-w-3xl flex-col items-center justify-center px-6 py-12 text-center">
-        <h1 className="text-6xl font-semibold text-[hsl(var(--foreground))]">404</h1>
-        <p className="mt-4 max-w-xl text-lg text-[hsl(var(--muted))]">
-          The page you are looking for does not exist.
-        </p>
-        <Link href="/" className="pill-link mt-6">
-          Go home
-        </Link>
-      </div>
+    <div className="page-shell py-12">
+      <p className="section-kicker">404</p>
+      <h1 className="mt-2 text-[32px] leading-tight">This page isn&apos;t here.</h1>
+      <p className="mt-2 text-[15px] text-[hsl(var(--muted))]">It may have moved. Try one of these instead.</p>
+      <GroupList className="mt-6">
+        <Row href="/notifications" title="Latest updates" />
+        <Row href="/exams" title="Exams" />
+        <Row href="/search" title="Search" />
+      </GroupList>
+      <Link href="/" className="btn-secondary mt-4 w-full">
+        Go to home
+      </Link>
     </div>
   );
 }

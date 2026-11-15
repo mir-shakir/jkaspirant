@@ -13,7 +13,7 @@ The site is **operated by Claude Code sessions**, not by hand-entering data in t
 - **Frontend:** Next.js 14 (App Router), TypeScript, Tailwind CSS
 - **Database:** Supabase (PostgreSQL) with Row Level Security
 - **Storage:** Supabase Storage (PDF papers, OG images)
-- **Hosting:** Vercel with custom .tech domain
+- **Hosting:** Vercel, domain jkaspirant.in
 - **Dark mode:** next-themes
 - **Sitemap:** next-sitemap (runs as postbuild)
 
@@ -47,15 +47,30 @@ Every public page must have: `<title>`, meta description, Open Graph tags, JSON-
 
 ### URL Structure
 ```
+/                                Home: exam in focus, coming up, latest updates (ISR)
+/notifications                   Updates feed (ISR)
+/notifications/[slug]            Update detail (ISR)
+/exams                           Exam list
 /exams/[slug]                    SSG exam overview
 /exams/[slug]/syllabus           SSG
 /exams/[slug]/previous-papers    SSG
 /exams/[slug]/cut-offs           SSG
 /exams/[slug]/important-dates    SSG
-/notifications                   ISR feed
-/notifications/[slug]            ISR detail
+/calendar                        Upcoming exam / admit card dates
+/tools, /tools/[tool]            Rank predictors
+/resources                       All previous papers
+/search                          Client-side search (noindex)
 /admin/*                         Client-side CRM (auth-protected)
 ```
+
+### Design & UX rules
+The site is one narrow reading column (`.page-shell`, max-w-3xl) built from a few parts in `src/components/ui.tsx`. Keep to them:
+- **Anything tappable is a `Row` inside a `GroupList`, a `.btn-primary` / `.btn-secondary`, or a `.chip`.** No tiny inline links, no cards with several links inside. Tap targets are at least 44px tall.
+- **One primary action per screen.** Everything else is a row or secondary.
+- **Show the answer first, details on demand.** Extra detail goes in a collapsed `<details>` (see the rank predictor).
+- **Navigation:** four bottom tabs on phones (Home, Updates, Exams, Tools) in `MobileBottomNav`, the same links in the desktop header, a back link via `Breadcrumb`, and sticky tabs inside an exam (`ExamHeader`). Don't add a hamburger menu.
+- Page titles use `PageHeader`; section titles use `Section`. Serif for headings, mono for dates and numbers.
+- Plain words. No marketing copy, no "kickers" on every section.
 
 ### Database Tables
 `exams`, `notifications`, `papers`, `cutoffs`, `syllabus_sections`, `exam_dates` — all have UUID primary keys. Full schema in `claude-info/inititl-plan.md` section 5.
@@ -89,11 +104,13 @@ Claude Code sessions (scheduled or manual, on the owner's Mac or in the cloud) d
 - **Scratch output** (drafts, downloaded PDFs) goes in `tmp/` (gitignored). PDFs to keep go to Supabase Storage.
 - **Accuracy over speed:** official sources only, link the original notice, never invent dates/numbers. New items are drafts until the owner approves, unless the owner has switched auto-publish on.
 - **Ask the owner** when blocked on accounts, credentials, CAPTCHAs, or anything needing a judgement call — then wait.
-- **Config-driven pages** (edit + commit, no DB needed):
-  - `src/config/spotlight.ts` — homepage "exam in focus" card and stage tracker (move stages as answer key/result come out; set to `null` when nothing is hot).
-  - `src/config/rank-predictor.ts` — one entry per exam rank tool (`/tools/<toolSlug>`). Flip `answerKeyReleased` / `patternVerified` / `isOpen` as things change.
-  - `src/config/tools.ts` — the tools list.
-- Rank predictor data lives in `score_submissions` (migration `006`), written only via `src/app/api/rank/route.ts` (service role). Estimation maths in `src/lib/rank.ts`.
+- **File-backed content** (edit + commit; works from sessions with no database access):
+  - `src/content/notifications.ts` — updates shown alongside rows from the `notifications` table (database wins on a slug clash). Each gets a full detail page.
+  - `src/content/calendar.ts` — dated events for "Coming up" on the homepage and `/calendar`. Past dates drop off the homepage on their own.
+  - `src/config/spotlight.ts` — the homepage "exam in focus" card: headline, one-line detail, stage tracker, buttons. Set to `null` when nothing is hot.
+  - `src/config/rank-predictor.ts` — one entry per exam rank tool (`/tools/<toolSlug>`).
+- **When an exam moves a stage** (answer key, objections, result): update the spotlight headline and stages, add an update in `src/content/notifications.ts` (or the database), adjust `src/content/calendar.ts`, and flip `answerKeyReleased` in the rank config.
+- **Rank predictor.** Scores are stored in `score_submissions` (migration `006`) through `src/app/api/rank/route.ts`, which only returns counts. The estimate is computed in the browser by `predict()` in `src/lib/rank.ts`: it starts from the `model` in the rank config (expected score at a known rank, spread, uncertainty), shifts with shared scores as they arrive, and never shows a rank better than the number of higher scores already shared. Tune `model.anchorScore` as better cut-off information arrives; after the official result, set it to the real cut-off and `uncertainty` to about 1.
 - Paid PDF bundles (Razorpay) are **paused**; don't feature them until traffic exists.
 
 ## Implementation Plans

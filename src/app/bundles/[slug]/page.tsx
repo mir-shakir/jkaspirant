@@ -6,9 +6,7 @@ import Link from "next/link";
 import Script from "next/script";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { BuyButton } from "@/components/BuyButton";
-import { RelatedResources } from "@/components/RelatedResources";
-import { SectionHeader } from "@/components/SectionHeader";
-import { ResourceCard } from "@/components/ResourceCard";
+import { GroupList, Row, Section } from "@/components/ui";
 import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getBundleBySlug, getBundleSlugs } from "@/lib/queries/bundles";
 import { getResourcesForExam } from "@/lib/queries/resources";
@@ -148,29 +146,23 @@ export default async function BundleDetailPage({ params }: PageProps) {
         </div>
 
         {freeRoutes.length > 0 && (
-          <section className="mt-12">
-            <SectionHeader
-              kicker="Also helpful"
-              title="Free resources for this exam"
-            />
-            <div className="mt-6">
-              <RelatedResources items={freeRoutes} />
-            </div>
-          </section>
+          <Section title="Free resources for this exam">
+            <GroupList>
+              {freeRoutes.map((item) => (
+                <Row key={item.href} href={item.href} title={item.title} sub={item.description} />
+              ))}
+            </GroupList>
+          </Section>
         )}
 
         {examResources.length > 0 && (
-          <section className="mt-12">
-            <SectionHeader
-              kicker="More to explore"
-              title="Extra notes & guides"
-            />
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <Section title="Extra notes & guides">
+            <GroupList>
               {examResources.map((resource) => (
-                <ResourceCard key={resource.id} resource={resource} />
+                <Row key={resource.id} href={resource.url} external={resource.is_external} title={resource.title} sub={resource.description || undefined} />
               ))}
-            </div>
-          </section>
+            </GroupList>
+          </Section>
         )}
       </div>
     </>

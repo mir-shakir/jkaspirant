@@ -20,6 +20,7 @@ Add more sources here (JKBOSE, KU, JU, JKP) only after a script exists for them.
 2. Dedupe: skip any item whose `source_url` or slug already exists in the `notifications` table. Do not rely on memory of previous runs.
 3. For each new item, open the PDF/notice and extract: exam/post, notification number, category (`notification | admit_card | answer_key | result`), key dates, vacancies, fee, eligibility summary. Never guess a date or number — if it isn't in the source, leave it out.
 4. Write `tmp/notifications/<slug>.json` (format in `scripts/publish-notification.mjs`). Slug rule: `<board>-<post>-<category>-<year>`, e.g. `jkssb-faa-answer-key-2026`. Body: short plain-language summary, a key-dates list, and "Official notice: <source_url>".
+   No database credentials in this session (e.g. a cloud session)? Add the item to `src/content/notifications.ts` instead, plus any dated events to `src/content/calendar.ts`, and commit after approval. Skip step 5.
 5. Save as drafts: `node --env-file=.env.local scripts/publish-notification.mjs tmp/notifications/<slug>.json`
 6. Approval: list the drafts (title + one line each) to the owner and wait. Only after approval run again with `--publish --telegram`.
    (Once the owner says auto-publish is on, skip the wait for JKSSB/JKPSC items.)
@@ -29,3 +30,4 @@ Add more sources here (JKBOSE, KU, JU, JKP) only after a script exists for them.
 - Official sources and links only. Every item links to the original notice.
 - Never re-announce an item on Telegram (the script handles this; don't bypass it).
 - Big exams (lakh+ candidates): also update the exam hub page (`exams` / `exam_dates` tables) when dates change.
+- When the exam in focus moves a stage, update `src/config/spotlight.ts` and `src/content/calendar.ts` in the same change (see "Operations" in CLAUDE.md).
