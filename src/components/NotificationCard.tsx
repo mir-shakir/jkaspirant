@@ -2,57 +2,57 @@ import Link from "next/link";
 import type { Notification } from "@/lib/types/database";
 
 interface NotificationCardProps {
-  notification: Pick<
-    Notification,
-    "slug" | "title" | "category" | "published_at"
-  >;
+  notification: Pick<Notification, "slug" | "title" | "category" | "published_at">;
 }
 
 const categoryLabels: Record<string, string> = {
   result: "Result",
-  admit_card: "Admit Card",
-  notification: "Notification",
-  answer_key: "Answer Key",
+  admit_card: "Admit card",
+  notification: "Notice",
+  answer_key: "Answer key",
 };
 
+const NEW_WINDOW_MS = 3 * 24 * 60 * 60 * 1000;
+
+/** One row on the notice board. Render inside a bordered list (see UpdatesBoard). */
 export function NotificationCard({ notification }: NotificationCardProps) {
-  const formattedDate = notification.published_at
-    ? new Date(notification.published_at).toLocaleDateString("en-IN", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
-    : null;
+  const date = notification.published_at ? new Date(notification.published_at) : null;
+  const isNew = date ? Date.now() - date.getTime() < NEW_WINDOW_MS : false;
 
   return (
     <Link
       href={`/notifications/${notification.slug}`}
-      className="surface-card flex items-start gap-4 p-5 transition duration-200 hover:-translate-y-1 hover:shadow-[0_20px_56px_rgba(15,23,42,0.1)]"
+      className="group flex gap-4 px-4 py-3.5 transition hover:bg-[hsl(var(--panel-soft)/0.6)] sm:px-5"
     >
-      <div className="mt-1 h-11 w-11 shrink-0 rounded-2xl bg-[hsla(var(--warm),0.14)] text-center text-xs font-semibold leading-[2.75rem] text-[hsl(var(--warm))]">
-        {formattedDate ? formattedDate.split(" ")[0] : "New"}
-      </div>
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-2">
-          {notification.category && (
-            <span className="rounded-full bg-[hsl(var(--panel-soft))] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[hsl(var(--muted))]">
-              {categoryLabels[notification.category] || notification.category}
+      <div className="w-11 shrink-0 pt-0.5 text-center font-mono-num leading-none">
+        {date ? (
+          <>
+            <span className="block text-lg font-semibold">
+              {date.toLocaleDateString("en-IN", { day: "2-digit", timeZone: "Asia/Kolkata" })}
             </span>
+            <span className="mt-1 block text-[10px] uppercase tracking-[0.12em] text-[hsl(var(--muted))]">
+              {date.toLocaleDateString("en-IN", { month: "short", timeZone: "Asia/Kolkata" })}
+            </span>
+          </>
+        ) : (
+          <span className="text-[10px] uppercase text-[hsl(var(--muted))]">—</span>
+        )}
+      </div>
+      <div className="min-w-0 flex-1 border-l pl-4">
+        <div className="flex items-center gap-2">
+          {notification.category && (
+            <span className="tag">{categoryLabels[notification.category] || notification.category}</span>
           )}
-          {formattedDate && (
-            <span className="text-xs text-[hsl(var(--muted))]">{formattedDate}</span>
-          )}
+          {isNew && <span className="stamp">New</span>}
         </div>
-        <p className="mt-3 text-base font-semibold text-[hsl(var(--foreground))]">
+        <p className="mt-1.5 text-[15px] font-medium leading-snug group-hover:text-[hsl(var(--accent))]">
           {notification.title}
         </p>
-        <p className="mt-2 text-sm text-[hsl(var(--muted))]">
-          Read more and start preparing →
-        </p>
-      </div>
-      <div className="hidden self-center rounded-full bg-[hsl(var(--panel-soft))] px-3 py-1.5 text-xs font-semibold text-[hsl(var(--foreground))] sm:block">
-        Open
       </div>
     </Link>
   );
+}
+
+export function UpdatesBoard({ children }: { children: React.ReactNode }) {
+  return <div className="surface-card divide-y overflow-hidden">{children}</div>;
 }

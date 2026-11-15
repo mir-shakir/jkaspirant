@@ -13,6 +13,13 @@ const geistSans = localFont({
   display: "swap",
 });
 
+const newsreader = localFont({
+  src: "./fonts/NewsreaderVF.woff2",
+  variable: "--font-display",
+  display: "swap",
+  weight: "200 800",
+});
+
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-mono",
@@ -21,7 +28,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: `${siteConfig.name} — Exam Resources For JKSSB & JKPSC`,
+    default: `${siteConfig.name} — JKSSB & JKPSC Updates, Tools & Papers`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -45,11 +52,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable}`}>
         <ThemeProvider>
           <div className="flex min-h-screen flex-col">
             <Header />
-            <main className="flex-1 pb-24 lg:pb-0">{children}</main>
+            <main className="flex-1 pb-20 lg:pb-0">{children}</main>
             <Footer />
             <MobileBottomNav />
           </div>

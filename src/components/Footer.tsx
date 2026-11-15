@@ -1,124 +1,70 @@
 import Link from "next/link";
+import { TelegramLink } from "./TelegramLink";
+
+const columns = [
+  {
+    title: "Explore",
+    links: [
+      { href: "/notifications", label: "Latest updates" },
+      { href: "/tools", label: "Rank & score tools" },
+      { href: "/exams", label: "Exam hubs" },
+      { href: "/resources", label: "Previous papers" },
+    ],
+  },
+  {
+    title: "Official sources",
+    links: [
+      { href: "https://jkssb.nic.in", label: "JKSSB ↗", external: true },
+      { href: "https://jkpsc.nic.in", label: "JKPSC ↗", external: true },
+    ],
+  },
+];
 
 export function Footer() {
   return (
-    <footer className="border-t border-[hsl(var(--line))] bg-[hsla(var(--background),0.9)]">
+    <footer className="mt-16 border-t">
       <div className="page-shell py-10">
-        <div className="surface-card grid gap-8 p-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 sm:grid-cols-[1.4fr_1fr_1fr]">
           <div>
-            <h3 className="text-sm font-semibold text-[hsl(var(--foreground))]">
-              JK Aspirant
-            </h3>
-            <p className="mt-2 text-sm leading-6 text-[hsl(var(--muted))]">
-              Made for JKSSB & JKPSC aspirants. Free papers, syllabus, updates,
-              and study packs — everything you need to prepare with confidence.
+            <p className="font-display text-2xl font-semibold">JK Aspirant</p>
+            <p className="mt-2 max-w-sm text-sm leading-6 text-[hsl(var(--muted))]">
+              Fast, clean exam updates and tools for JKSSB &amp; JKPSC aspirants. No ads, no
+              popups. Every update links to the official notice.
             </p>
+            <TelegramLink className="mt-4" />
           </div>
-
-          <div>
-            <h3 className="text-sm font-semibold text-[hsl(var(--foreground))]">
-              Explore
-            </h3>
-            <ul className="mt-2 space-y-2">
-              <li>
-                <Link
-                  href="/exams"
-                  className="text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
-                >
-                  All Exams
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/resources"
-                  className="text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
-                >
-                  Resources & Papers
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/bundles"
-                  className="text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
-                >
-                  Study Packs
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/notifications"
-                  className="text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
-                >
-                  Latest Updates
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold text-[hsl(var(--foreground))]">
-              Quick Start
-            </h3>
-            <ul className="mt-2 space-y-2">
-              <li>
-                <Link
-                  href="/resources"
-                  className="text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
-                >
-                  Download previous papers
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/exams"
-                  className="text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
-                >
-                  Check your exam syllabus
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/bundles"
-                  className="text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
-                >
-                  Get a study pack
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold text-[hsl(var(--foreground))]">
-              Official Sources
-            </h3>
-            <ul className="mt-2 space-y-2">
-              <li>
-                <a
-                  href="https://jkssb.nic.in"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
-                >
-                  JKSSB Official Website ↗
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://jkpsc.nic.in"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
-                >
-                  JKPSC Official Website ↗
-                </a>
-              </li>
-            </ul>
-          </div>
+          {columns.map((col) => (
+            <div key={col.title}>
+              <p className="section-kicker">{col.title}</p>
+              <ul className="mt-3 space-y-2">
+                {col.links.map((l) => (
+                  <li key={l.href}>
+                    {"external" in l ? (
+                      <a
+                        href={l.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
+                      >
+                        {l.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={l.href}
+                        className="text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
+                      >
+                        {l.label}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
-
-        <div className="mt-6 text-center text-xs text-[hsl(var(--muted))]">
-          &copy; {new Date().getFullYear()} JK Aspirant — Made with ❤️ for the aspirants of Jammu & Kashmir.
-        </div>
+        <p className="mt-10 border-t pt-5 font-mono-num text-[11px] uppercase tracking-[0.14em] text-[hsl(var(--muted))]">
+          © {new Date().getFullYear()} JK Aspirant · Not affiliated with JKSSB or JKPSC
+        </p>
       </div>
     </footer>
   );

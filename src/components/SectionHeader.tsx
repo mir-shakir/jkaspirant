@@ -8,31 +8,25 @@ interface SectionHeaderProps {
   linkLabel?: string;
 }
 
-export function SectionHeader({
-  kicker,
-  title,
-  description,
-  href,
-  linkLabel,
-}: SectionHeaderProps) {
+export function SectionHeader({ kicker, title, description, href, linkLabel }: SectionHeaderProps) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-      <div className="max-w-2xl">
-        {kicker && <p className="section-kicker">{kicker}</p>}
-        <h2 className="mt-2 text-xl font-semibold text-[hsl(var(--foreground))] sm:text-2xl">
-          {title}
-        </h2>
-        {description && (
-          <p className="mt-2 text-sm leading-6 text-[hsl(var(--muted))]">
-            {description}
-          </p>
+    <div className="rule-double pt-3">
+      <div className="flex items-end justify-between gap-4">
+        <div className="min-w-0">
+          {kicker && <p className="section-kicker">{kicker}</p>}
+          <h2 className="mt-1 text-[22px] leading-tight sm:text-[26px]">{title}</h2>
+        </div>
+        {href && linkLabel && (
+          <Link
+            href={href}
+            className="shrink-0 pb-1 text-sm font-medium text-[hsl(var(--accent))] hover:underline"
+          >
+            {linkLabel}
+          </Link>
         )}
       </div>
-
-      {href && linkLabel && (
-        <Link href={href} className="pill-link self-start">
-          {linkLabel}
-        </Link>
+      {description && (
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-[hsl(var(--muted))]">{description}</p>
       )}
     </div>
   );
