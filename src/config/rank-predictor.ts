@@ -1,6 +1,6 @@
 // Rank predictor configuration. One entry per exam.
 // Operator sessions update these values and commit; no database change needed.
-import type { RankModel } from "@/lib/rank";
+import type { CategorySeats, RankModel } from "@/lib/rank";
 
 export interface RankExamConfig {
   /** URL slug: /tools/<toolSlug> */
@@ -21,6 +21,10 @@ export interface RankExamConfig {
   /** Best estimate of candidates who actually sat the paper. */
   appeared: number;
   categories: string[];
+  /** Open-merit seats, filled by overall rank whatever the category. */
+  openSeats: number;
+  /** Reserved seats per category, with a rough share of candidates in each. */
+  reserved: Record<string, CategorySeats>;
   /**
    * The starting assumptions for rank estimates. Tune as better information
    * arrives; once the official result is out, set anchorScore to the real
@@ -35,8 +39,8 @@ export interface RankExamConfig {
   isOpen: boolean;
 }
 
-// J&K reservation categories (vertical). Verify against the exam notification.
-const JK_CATEGORIES = ["OM", "SC", "ST-1", "ST-2", "OBC", "RBA", "ALC/IB", "EWS", "PSP"];
+// J&K vertical reservation categories, as in Annexure-A of the FAA notification.
+const JK_CATEGORIES = ["OM", "SC", "ST-1", "ST-2", "OBC", "ALC/IB", "RBA", "EWS"];
 
 export const rankExams: RankExamConfig[] = [
   {
@@ -54,11 +58,27 @@ export const rankExams: RankExamConfig[] = [
     registered: 161961,
     appeared: 150000, // no official attendance figure yet
     categories: JK_CATEGORIES,
+    // Advertisement No. 10 of 2025, Annexure-A: 240 + 48 + 60 + 60 + 48 + 24 + 60 + 60 = 600.
+    openSeats: 240,
+    // `share` is our rough guess of each category's share of candidates (JKSSB
+    // doesn't publish it). It is refined by the category mix of shared scores.
+    // `gap` is how many marks lower the category tends to score on average,
+    // judged from how far past JKSSB category cut-offs sit below open merit.
+    // Both are estimates: replace them when real figures are available.
+    reserved: {
+      SC: { posts: 48, share: 0.07, gap: 8 },
+      "ST-1": { posts: 60, share: 0.07, gap: 9 },
+      "ST-2": { posts: 60, share: 0.07, gap: 6 },
+      OBC: { posts: 48, share: 0.08, gap: 3 },
+      "ALC/IB": { posts: 24, share: 0.03, gap: 5 },
+      RBA: { posts: 60, share: 0.14, gap: 3 },
+      EWS: { posts: 60, share: 0.12, gap: 2 },
+    },
     model: {
-      // Coaching estimates put the open-merit cut-off at 84–89. Open merit is
-      // roughly half the posts, so that score sits near overall rank 300.
+      // Coaching estimates put the open-merit cut-off at 84–89, i.e. the score
+      // of the candidate at overall rank 240 (the last open-merit seat).
       anchorScore: 86.5,
-      anchorRank: 300,
+      anchorRank: 240,
       spread: 16.5,
       uncertainty: 5,
       selectionTilt: 1,

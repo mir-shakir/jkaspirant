@@ -175,7 +175,7 @@ export function RankPredictor({ exam }: { exam: RankPredictorExam }) {
     return { total: pub.total, above, catTotal: 0, catAbove: 0, histogram: pub.histogram };
   }, [stats, pub, mine]);
 
-  const prediction = useMemo(() => (mine ? predict(exam, mine.score, effectiveStats) : null), [exam, mine, effectiveStats]);
+  const prediction = useMemo(() => (mine ? predict(exam, mine.score, effectiveStats, mine.category) : null), [exam, mine, effectiveStats]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -364,28 +364,29 @@ function NumberField({ id, label, value, onChange, max }: { id: string; label: s
   );
 }
 
-const verdictCopy: Record<Verdict, { label: string; tone: string; note: (posts: string) => string }> = {
-  strong: {
-    label: "Strong chance",
-    tone: "bg-[hsl(var(--success)/0.14)] text-[hsl(var(--success))]",
-    note: (p) => `Even on a cautious estimate you are inside the ${p} posts.`,
-  },
-  likely: {
-    label: "Good chance",
-    tone: "bg-[hsl(var(--success)/0.14)] text-[hsl(var(--success))]",
-    note: (p) => `Your most likely rank is inside the ${p} posts.`,
-  },
-  edge: {
-    label: "On the edge",
-    tone: "bg-[hsl(var(--warm)/0.16)] text-[hsl(var(--warm))]",
-    note: (p) => `You are close to the ${p}-post line. The official answer key will decide it.`,
-  },
-  unlikely: {
-    label: "Tough this time",
-    tone: "bg-[hsl(var(--accent)/0.12)] text-[hsl(var(--accent))]",
-    note: (p) => `On what we know so far, your likely rank is beyond the ${p} posts.`,
-  },
+const verdictCopy: Record<Verdict, { label: string; tone: string }> = {
+  strong: { label: "Strong chance", tone: "bg-[hsl(var(--success)/0.14)] text-[hsl(var(--success))]" },
+  likely: { label: "Good chance", tone: "bg-[hsl(var(--success)/0.14)] text-[hsl(var(--success))]" },
+  edge: { label: "On the edge", tone: "bg-[hsl(var(--warm)/0.16)] text-[hsl(var(--warm))]" },
+  unlikely: { label: "Tough this time", tone: "bg-[hsl(var(--accent)/0.12)] text-[hsl(var(--accent))]" },
 };
+
+/** One sentence saying which seats the person is competing for and where they stand. */
+function verdictNote(p: Prediction) {
+  const open = `${fmt(p.openSeats)} open-merit seats`;
+  const cat = p.category;
+  // Reserved candidates inside the open-merit list take an open seat, not a reserved one.
+  if (p.seat === "open" || !cat) {
+    if (p.verdict === "strong") return `Even on a cautious estimate you are inside the ${open}.`;
+    if (p.verdict === "likely") return `Your most likely rank is inside the ${open}.`;
+    if (!cat && p.verdict === "edge") return `You are close to the line for the ${open}. The official answer key will decide it.`;
+    if (!cat) return `On what we know so far, your likely rank is beyond the ${open}.`;
+  }
+  const where = `about rank ${fmt(niceRank(cat!.rank.mid))} in ${cat!.name}, which has ${cat!.seats} seats`;
+  if (p.verdict === "strong" || p.verdict === "likely") return `Outside the ${open}, but ${where}.`;
+  if (p.verdict === "edge") return `You are ${where}. It is close; the official answer key will decide it.`;
+  return `You are ${where}. On what we know so far that is beyond the line.`;
+}
 
 const confidenceCopy = {
   early: { bars: 1, label: "Early estimate" },
@@ -396,9 +397,6 @@ const confidenceCopy = {
 function Result({ exam, prediction: p, stats, mine }: { exam: RankPredictorExam; prediction: Prediction; stats: ShareStats | null; mine: Mine }) {
   const verdict = verdictCopy[p.verdict];
   const conf = confidenceCopy[p.confidence];
-  const reserved = mine.category !== "OM" && (p.verdict === "edge" || p.verdict === "unlikely");
-  const pageUrl = typeof window !== "undefined" ? window.location.href.split("#")[0] : "";
-  const shareText = `I checked my expected rank for JKSSB ${exam.name}. Check yours: ${pageUrl}`;
 
   return (
     <section id="rank-result" className="reveal scroll-mt-20" aria-live="polite">
@@ -417,14 +415,8 @@ function Result({ exam, prediction: p, stats, mine }: { exam: RankPredictorExam;
 
           <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[15px] leading-6">
             <span className={`rounded-full px-2.5 py-0.5 text-[13px] font-semibold ${verdict.tone}`}>{verdict.label}</span>
-            <span>{verdict.note(fmt(exam.posts))}</span>
+            <span>{verdictNote(p)}</span>
           </p>
-          {reserved && (
-            <p className="mt-2 text-[13.5px] leading-5 text-[hsl(var(--muted))]">
-              {mine.category} has its own reserved posts and a lower cut-off, so your real chance is better than the overall
-              rank suggests.
-            </p>
-          )}
 
           <Runway exam={exam} prediction={p} />
         </div>
@@ -448,30 +440,64 @@ function Result({ exam, prediction: p, stats, mine }: { exam: RankPredictorExam;
         </div>
       </div>
 
-      <a
-        href={`https://wa.me/?text=${encodeURIComponent(shareText)}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn mt-3 w-full bg-[#25D366] text-[#06341a] hover:brightness-105"
-      >
-        Share with your batchmates on WhatsApp
-      </a>
+      <ShareRow examName={exam.name} />
 
       <Details exam={exam} prediction={p} stats={stats} mine={mine} />
     </section>
   );
 }
 
+/** One compact line: WhatsApp, Telegram, copy link. */
+function ShareRow({ examName }: { examName: string }) {
+  const [copied, setCopied] = useState(false);
+  const url = typeof window !== "undefined" ? window.location.href.split(/[?#]/)[0] : "";
+  const text = `Check your expected rank for JKSSB ${examName}`;
+  const item = "flex h-10 flex-1 items-center justify-center gap-1.5 rounded-xl border bg-[hsl(var(--panel))] text-[13.5px] font-medium transition hover:border-[hsl(var(--foreground)/0.35)]";
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      // Older in-app browsers: fall back to a hidden field.
+      const field = document.createElement("textarea");
+      field.value = url;
+      document.body.appendChild(field);
+      field.select();
+      document.execCommand("copy");
+      field.remove();
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <div className="mt-3 flex items-center gap-2">
+      <span className="shrink-0 pr-1 text-[13px] text-[hsl(var(--muted))]">Share</span>
+      <a href={`https://wa.me/?text=${encodeURIComponent(`${text}: ${url}`)}`} target="_blank" rel="noopener noreferrer" className={item}>
+        <span className="h-2 w-2 rounded-full bg-[#25D366]" aria-hidden />
+        WhatsApp
+      </a>
+      <a href={`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`} target="_blank" rel="noopener noreferrer" className={item}>
+        <span className="h-2 w-2 rounded-full bg-[#229ED9]" aria-hidden />
+        Telegram
+      </a>
+      <button type="button" onClick={copy} className={item} aria-live="polite">
+        {copied ? "Copied" : "Copy link"}
+      </button>
+    </div>
+  );
+}
+
 /** Rank 1 on the left, everyone on the right, on a log scale so the top is readable. */
 function Runway({ exam, prediction: p }: { exam: RankPredictorExam; prediction: Prediction }) {
   const pos = (rank: number) => (Math.log(Math.max(1, rank)) / Math.log(exam.appeared)) * 100;
-  const line = pos(exam.posts);
+  const line = pos(exam.openSeats);
   const left = Math.min(pos(p.shown.low), 97);
   const width = Math.min(Math.max(3, pos(p.shown.high) - left), 100 - left);
-  const inside = p.rank.mid <= exam.posts;
+  const inside = p.seat !== null;
 
   return (
-    <div className="mt-6" role="img" aria-label={`Your likely rank compared with the ${exam.posts} posts`}>
+    <div className="mt-6" role="img" aria-label={`Your likely rank compared with the ${exam.openSeats} open-merit seats`}>
       <div className="relative h-3 rounded-full bg-[hsl(var(--foreground)/0.1)]">
         <div className="absolute inset-y-0 left-0 rounded-l-full bg-[hsl(var(--success)/0.28)]" style={{ width: `${line}%` }} />
         <div
@@ -483,7 +509,7 @@ function Runway({ exam, prediction: p }: { exam: RankPredictorExam; prediction: 
       <div className="relative mt-2.5 h-4 font-mono-num text-[11px] text-[hsl(var(--muted))]">
         <span className="absolute left-0">Rank 1</span>
         <span className="absolute -translate-x-1/2 font-semibold text-[hsl(var(--foreground))]" style={{ left: `${line}%` }}>
-          {fmt(exam.posts)} posts
+          {fmt(exam.openSeats)} open seats
         </span>
         <span className="absolute right-0">{lakh(exam.appeared)}</span>
       </div>
@@ -530,11 +556,24 @@ function Details({ exam, prediction: p, stats, mine }: { exam: RankPredictorExam
             {fmt(niceRank(p.rank.low))} – {fmt(niceRank(p.rank.high))}
           </strong>
         </Line>
-        <Line label={`Score likely needed for top ${fmt(exam.posts)}`}>
+        <Line label="Likely open-merit cut-off">
           <strong>
             {p.cutoff.low} – {p.cutoff.high}
           </strong>
         </Line>
+        {p.category && (
+          <>
+            <Line label={`Rank in ${p.category.name} (after open merit)`}>
+              about <strong>{fmt(niceRank(p.category.rank.mid))}</strong>
+              <span className="text-[hsl(var(--muted))]"> · {p.category.seats} seats</span>
+            </Line>
+            <Line label={`Likely ${p.category.name} cut-off`}>
+              <strong>
+                {p.category.cutoff.low} – {p.category.cutoff.high}
+              </strong>
+            </Line>
+          </>
+        )}
         {showShared && stats && (
           <Line label="Among shared scores">
             <strong>#{fmt(stats.above + 1)}</strong> of {fmt(stats.total)}
@@ -576,7 +615,9 @@ function Details({ exam, prediction: p, stats, mine }: { exam: RankPredictorExam
           best guess; the wider range above is how far it could move until the official answer key is out.
         </p>
         <p className="mt-2">
-          Assumes about {lakh(exam.appeared)} candidates appeared ({fmt(exam.registered)} registered). This is an estimate,
+          Seats follow the notification: {fmt(exam.openSeats)} open-merit seats go to the top ranks whatever their category;
+          reserved seats are then filled within each category. Category ranks rest on our estimate of how many candidates
+          each category has. Assumes about {lakh(exam.appeared)} candidates appeared ({fmt(exam.registered)} registered). This is an estimate,
           not an official result.
         </p>
       </div>
