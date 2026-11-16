@@ -10,6 +10,7 @@ import { getNotificationsForExam } from "@/lib/queries/notifications";
 import { getRankExamForExamSlug } from "@/config/rank-predictor";
 import { nextEventForExam, relativeDay } from "@/content/calendar";
 import { getExamFacts } from "@/content/exams";
+import { liveExams } from "@/config/exams";
 import { AtAGlance, ExamFactsView } from "@/components/exam/ExamFactsView";
 
 interface PageProps {
@@ -43,7 +44,12 @@ export default async function ExamOverviewPage({ params }: PageProps) {
   const [sections, cutoffs, updates] = await Promise.all([
     getExamSections(exam.id),
     getCutoffs(exam.id),
-    getNotificationsForExam(exam.slug, 3),
+    // Parts of a hub (e.g. Constable Executive) also show the hub's updates.
+    Promise.all(
+      [exam.slug, ...Object.entries(liveExams).filter(([, v]) => v.parts?.includes(exam.slug) || (exam.slug === "sub-inspector-telecom" && v.parts)).map(([s]) => s)].map((s) =>
+        getNotificationsForExam(s, 3)
+      )
+    ).then((lists) => lists.flat().filter((n, i, a) => a.findIndex((m) => m.slug === n.slug) === i).slice(0, 3)),
   ]);
 
   const facts = getExamFacts(exam.slug);
@@ -85,6 +91,22 @@ export default async function ExamOverviewPage({ params }: PageProps) {
       )}
 
       {facts && <AtAGlance facts={facts} />}
+
+      {liveExams[exam.slug]?.parts && (
+        <Section title="Choose your exam" className="!mt-6">
+          <GroupList>
+            {liveExams[exam.slug].parts!.map((slug) => (
+              <Row
+                key={slug}
+                href={`/exams/${slug}`}
+                title={liveExams[slug].title.replace("JK Police ", "")}
+                sub={liveExams[slug].status}
+                meta={liveExams[slug].posts ? `${liveExams[slug].posts!.toLocaleString("en-IN")} posts` : undefined}
+              />
+            ))}
+          </GroupList>
+        </Section>
+      )}
 
       {hasPrepare && (
         <Section title="Prepare" className="!mt-6">

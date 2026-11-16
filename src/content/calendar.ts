@@ -32,12 +32,12 @@ export const calendarEvents: CalendarEvent[] = [
   { date: "2026-11-27", title: "Class-IV (MTS): last date to apply", board: "JKSSB", kind: "deadline", examSlug: "class-iv-mts", href: MTS_UPDATE },
   { date: "2026-11-29", title: "Sub-Inspector exam", board: "JKSSB", kind: "exam", examSlug: "sub-inspector", href: SI_UPDATE },
   { date: "2026-11-30", title: "Junior Engineer (Civil): applications open", board: "JKSSB", kind: "deadline", examSlug: "junior-engineer-civil", href: JE_CIVIL_UPDATE },
-  { date: "2026-12-13", title: "Constable (Executive) exam", board: "JKSSB", kind: "exam", examSlug: "police-constable", href: CONSTABLE_UPDATE },
-  { date: "2026-12-20", title: "Constable (Armed / IRP / SDRF) exam", board: "JKSSB", kind: "exam", examSlug: "police-constable", href: CONSTABLE_UPDATE },
-  { date: "2026-12-23", title: "Sub-Inspector (Telecommunication) exam", board: "JKSSB", kind: "exam", href: CONSTABLE_UPDATE },
-  { date: "2026-12-27", title: "Constable (Telecommunication) exam", board: "JKSSB", kind: "exam", examSlug: "police-constable", href: CONSTABLE_UPDATE },
+  { date: "2026-12-13", title: "Constable (Executive) exam", board: "JKSSB", kind: "exam", examSlug: "constable-executive", href: CONSTABLE_UPDATE },
+  { date: "2026-12-20", title: "Constable (Armed / IRP / SDRF) exam", board: "JKSSB", kind: "exam", examSlug: "constable-armed-irp-sdrf", href: CONSTABLE_UPDATE },
+  { date: "2026-12-23", title: "Sub-Inspector (Telecommunication) exam", board: "JKSSB", kind: "exam", examSlug: "sub-inspector-telecom", href: CONSTABLE_UPDATE },
+  { date: "2026-12-27", title: "Constable (Telecommunication) exam", board: "JKSSB", kind: "exam", examSlug: "constable-telecom-photographer", href: CONSTABLE_UPDATE },
   { date: "2026-12-29", title: "Junior Engineer (Civil): last date to apply", board: "JKSSB", kind: "deadline", examSlug: "junior-engineer-civil", href: JE_CIVIL_UPDATE },
-  { date: "2026-12-30", title: "Constable (Photographer) exam", board: "JKSSB", kind: "exam", href: CONSTABLE_UPDATE },
+  { date: "2026-12-30", title: "Constable (Photographer) exam", board: "JKSSB", kind: "exam", examSlug: "constable-telecom-photographer", href: CONSTABLE_UPDATE },
 ];
 
 /** Today's date in IST as YYYY-MM-DD. */

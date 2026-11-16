@@ -80,7 +80,7 @@ export default async function HomePage() {
       {exams.length > 0 && (
         <Section title="Exams" action={{ href: "/exams", label: "All exams" }} id="your-exam">
           <GroupList>
-            {exams.filter((exam) => !liveExams[exam.slug]?.awaited).map((exam) => (
+            {exams.filter((exam) => !liveExams[exam.slug]?.awaited && !liveExams[exam.slug]?.unlisted).map((exam) => (
               <Row
                 key={exam.id}
                 href={`/exams/${exam.slug}`}

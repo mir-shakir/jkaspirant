@@ -16,8 +16,9 @@ export const metadata: Metadata = buildMetadata({
 export default async function ExamsPage() {
   const exams = await getAllExams();
   const breadcrumbItems = [{ name: "Exams", path: "/exams" }];
-  const dated = exams.filter((exam) => !liveExams[exam.slug]?.awaited);
-  const awaited = exams.filter((exam) => liveExams[exam.slug]?.awaited);
+  const listed = exams.filter((exam) => !liveExams[exam.slug]?.unlisted);
+  const dated = listed.filter((exam) => !liveExams[exam.slug]?.awaited);
+  const awaited = listed.filter((exam) => liveExams[exam.slug]?.awaited);
   const row = (exam: (typeof exams)[number]) => (
     <Row
       key={exam.id}
