@@ -6,7 +6,7 @@ import type { ResultRow } from "@/content/results";
 const fmt = (n: number) => n.toLocaleString("en-IN");
 
 /** Type a roll number or name; results come back as a few rows from the server. */
-export function ResultSearch({ slug, candidates, outOf }: { slug: string; candidates: number; outOf: number }) {
+export function ResultSearch({ slug, candidates, outOf }: { slug: string; candidates: number; outOf?: number }) {
   const [q, setQ] = useState("");
   const [rows, setRows] = useState<ResultRow[] | null>(null);
   const [total, setTotal] = useState(0);
@@ -74,7 +74,7 @@ export function ResultSearch({ slug, candidates, outOf }: { slug: string; candid
               </span>
               <span className="shrink-0 text-right font-mono-num">
                 <span className="block text-[20px] font-semibold leading-none">{marks}</span>
-                <span className="text-[11px] text-[hsl(var(--muted))]">/ {outOf}</span>
+                {outOf ? <span className="text-[11px] text-[hsl(var(--muted))]">/ {outOf}</span> : null}
               </span>
             </li>
           ))}

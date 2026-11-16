@@ -18,7 +18,7 @@ export default function ResultsPage() {
       <PageHeader title="Results" lede="Search a result by roll number or name. No 300-page PDFs." />
       <GroupList className="mt-6">
         {resultSheets.map((s) => (
-          <Row key={s.slug} href={`/results/${s.slug}`} title={`${s.title} result`} sub={`Declared ${s.declared} · ${s.rows.length.toLocaleString("en-IN")} candidates`} />
+          <Row key={s.slug} href={`/results/${s.slug}`} title={`${s.title} result`} sub={`${s.declared ? `Declared ${s.declared}` : `Exam ${s.examDate}`} · ${s.rows.length.toLocaleString("en-IN")} candidates`} />
         ))}
       </GroupList>
     </div>

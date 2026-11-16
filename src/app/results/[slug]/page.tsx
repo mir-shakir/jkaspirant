@@ -21,7 +21,7 @@ export function generateMetadata({ params }: PageProps): Metadata {
   if (!s) return {};
   return buildMetadata({
     title: `${s.title} Result: Search by Roll Number or Name`,
-    description: `Find your ${s.title} marks and rank among ${s.rows.length.toLocaleString("en-IN")} candidates in seconds, without opening the large official PDF. Marks out of ${s.outOf}.`,
+    description: `Find your ${s.title} marks and rank among ${s.rows.length.toLocaleString("en-IN")} candidates in seconds, without opening the large official PDF.${s.outOf ? ` Marks out of ${s.outOf}.` : ""}`,
     canonicalPath: `/results/${s.slug}`,
   });
 }
@@ -55,7 +55,7 @@ export default function ResultPage({ params }: PageProps) {
     <div className="page-shell max-w-xl py-4 sm:py-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(breadcrumbItems)) }} />
       <Breadcrumb items={breadcrumbItems} />
-      <PageHeader kicker={`Result declared ${s.declared}`} title={`${s.title} result`} lede={`Exam held ${s.examDate}. Find your marks and rank without opening the ${fmt(n)}-row PDF.`} />
+      <PageHeader kicker={s.declared ? `Result declared ${s.declared}` : "JKSSB score sheet"} title={`${s.title} result`} lede={`Exam held ${s.examDate}. Find your marks and rank without opening the ${fmt(n)}-row PDF.`} />
 
       <div className="surface-card mt-5 p-4">
         <ResultSearch slug={s.slug} candidates={n} outOf={s.outOf} />
@@ -76,7 +76,7 @@ export default function ResultPage({ params }: PageProps) {
 
       {cut.length > 0 && (
         <p className="mt-3 text-[13.5px] leading-5 text-[hsl(var(--muted))]">
-          Lowest open-merit marks selected: {cut.map(([l, v]) => `${l} ${v}`).join(", ")} (out of {s.outOf}).
+          Lowest open-merit marks selected: {cut.map(([l, v]) => `${l} ${v}`).join(", ")}{s.outOf ? ` (out of ${s.outOf})` : ""}.
         </p>
       )}
 
