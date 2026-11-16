@@ -1,14 +1,15 @@
 import { FocusCard } from "@/components/FocusCard";
-import { EventRow } from "@/components/EventRow";
+import { ExamRail } from "@/components/xp/ExamRail";
+import { Timeline } from "@/components/xp/Timeline";
 import { UpdateRow } from "@/components/UpdateRow";
 import { TelegramNudge } from "@/components/TelegramNudge";
-import { EmptyState, GroupList, PageHeader, Row, Section } from "@/components/ui";
+import { EmptyState, GroupList, PageHeader, Section } from "@/components/ui";
 import { buildMetadata } from "@/lib/seo";
 import { getAllExams } from "@/lib/queries/exams";
 import { liveExams } from "@/config/exams";
 import { getLatestNotifications } from "@/lib/queries/notifications";
 import { spotlight } from "@/config/spotlight";
-import { upcomingEvents } from "@/content/calendar";
+import { examDateFor, upcomingEvents } from "@/content/calendar";
 import { siteConfig } from "@/config/site";
 
 export const revalidate = 1800; // ISR: revalidate every 30 minutes
@@ -24,7 +25,17 @@ export const metadata = buildMetadata({
 // what is happening now, what is coming, and what just changed.
 export default async function HomePage() {
   const [exams, notifications] = await Promise.all([getAllExams(), getLatestNotifications(4)]);
-  const events = upcomingEvents(4);
+  const events = upcomingEvents(7);
+  const tickets = exams
+    .filter((exam) => !liveExams[exam.slug]?.unlisted)
+    .map((exam) => ({
+      slug: exam.slug,
+      title: exam.title,
+      board: exam.department ?? "JKSSB",
+      status: liveExams[exam.slug]?.status,
+      posts: exam.vacancy_count ?? undefined,
+      examDate: examDateFor(exam.slug, liveExams[exam.slug]?.parts),
+    }));
 
   // Site name and logo for search results.
   const websiteJsonLd = [
@@ -55,13 +66,11 @@ export default async function HomePage() {
         <PageHeader kicker="JKSSB · JKPSC" title="Every exam update, the day it happens." />
       )}
 
+      {tickets.length > 0 && <ExamRail tickets={tickets} />}
+
       {events.length > 0 && (
         <Section title="Coming up" action={{ href: "/calendar", label: "Calendar" }} id="coming-up">
-          <GroupList>
-            {events.map((event) => (
-              <EventRow key={`${event.date}-${event.title}`} event={event} />
-            ))}
-          </GroupList>
+          <Timeline events={events} />
         </Section>
       )}
 
@@ -77,21 +86,6 @@ export default async function HomePage() {
         )}
       </Section>
 
-      {exams.length > 0 && (
-        <Section title="Exams" action={{ href: "/exams", label: "All exams" }} id="your-exam">
-          <GroupList>
-            {exams.filter((exam) => !liveExams[exam.slug]?.awaited && !liveExams[exam.slug]?.unlisted).map((exam) => (
-              <Row
-                key={exam.id}
-                href={`/exams/${exam.slug}`}
-                title={exam.title}
-                sub={liveExams[exam.slug]?.status}
-                meta={exam.vacancy_count ? `${exam.vacancy_count.toLocaleString("en-IN")} posts` : undefined}
-              />
-            ))}
-          </GroupList>
-        </Section>
-      )}
 
       <TelegramNudge className="mt-9" />
     </div>
