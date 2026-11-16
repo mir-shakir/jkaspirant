@@ -9,6 +9,8 @@ import { getCutoffs, getExamBySlug, getExamSlugs, getExamSections } from "@/lib/
 import { getNotificationsForExam } from "@/lib/queries/notifications";
 import { getRankExamForExamSlug } from "@/config/rank-predictor";
 import { nextEventForExam, relativeDay } from "@/content/calendar";
+import { getExamFacts } from "@/content/exams";
+import { AtAGlance, ExamFactsView } from "@/components/exam/ExamFactsView";
 
 interface PageProps {
   params: { slug: string };
@@ -44,6 +46,7 @@ export default async function ExamOverviewPage({ params }: PageProps) {
     getNotificationsForExam(exam.slug, 3),
   ]);
 
+  const facts = getExamFacts(exam.slug);
   const rankTool = getRankExamForExamSlug(exam.slug);
   const nextEvent = nextEventForExam(exam.slug);
   const latestCutoffYear = cutoffs.length > 0 ? Math.max(...cutoffs.map((c) => c.year)) : null;
@@ -81,6 +84,8 @@ export default async function ExamOverviewPage({ params }: PageProps) {
         </p>
       )}
 
+      {facts && <AtAGlance facts={facts} />}
+
       {hasPrepare && (
         <Section title="Prepare" className="!mt-6">
           <GroupList>
@@ -99,7 +104,7 @@ export default async function ExamOverviewPage({ params }: PageProps) {
       )}
 
       {updates.length > 0 && (
-        <Section title="Latest" action={{ href: "/notifications", label: "All updates" }} className={hasPrepare ? "" : "!mt-6"}>
+        <Section title="Latest" action={{ href: "/notifications", label: "All updates" }} className={hasPrepare || facts ? "" : "!mt-6"}>
           <GroupList>
             {updates.map((n) => (
               <UpdateRow key={n.id} update={n} />
@@ -107,6 +112,8 @@ export default async function ExamOverviewPage({ params }: PageProps) {
           </GroupList>
         </Section>
       )}
+
+      {facts && <ExamFactsView facts={facts} />}
 
     </div>
   );
