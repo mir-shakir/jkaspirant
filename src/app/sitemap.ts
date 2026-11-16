@@ -46,6 +46,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       return { url: url(`/exams/${e.slug}`), ...(changed.getTime() > 0 ? { lastModified: changed } : {}), changeFrequency: "daily" as const, priority: 0.8 };
     }),
     ...examTabs.flat(),
+    { url: url("/cut-offs"), changeFrequency: "weekly" as const, priority: 0.8 },
     { url: url("/results"), changeFrequency: "weekly" as const, priority: 0.6 },
     ...resultSheets.map((s) => ({ url: url(`/results/${s.slug}`), changeFrequency: "monthly" as const, priority: 0.7 })),
     ...updates.map((n) => ({
