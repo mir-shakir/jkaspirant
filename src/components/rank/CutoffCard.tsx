@@ -1,9 +1,9 @@
 import type { ExpectedCutoff } from "@/lib/rank";
 
 /**
- * Expected cut-off for every category, shown near the top of a rank tool.
- * Server-rendered so search engines can read it, and dated + branded so a
- * screenshot shared elsewhere still says when and where it came from.
+ * Expected cut-off for every category, shown under the calculator, above the
+ * leaderboard. Server-rendered so search engines can read it; dated and
+ * branded so a screenshot shared elsewhere still says when and where.
  */
 export function CutoffCard({
   examLabel,
@@ -18,8 +18,6 @@ export function CutoffCard({
   updatedAt: Date;
   outOf: number;
 }) {
-  const open = cutoffs.find((c) => c.category === "OM");
-  const rest = cutoffs.filter((c) => c.category !== "OM");
   const when = new Intl.DateTimeFormat("en-IN", {
     timeZone: "Asia/Kolkata",
     day: "numeric",
@@ -29,38 +27,34 @@ export function CutoffCard({
   }).format(updatedAt);
 
   return (
-    <section
-      aria-labelledby="expected-cutoff"
-      className="relative overflow-hidden rounded-3xl bg-[hsl(var(--focus))] p-5 text-[hsl(var(--focus-fg))] sm:p-6"
-    >
-      <h2 id="expected-cutoff" className="font-mono-num text-[11px] uppercase tracking-[0.16em] opacity-75">
-        Expected cut-off · {examLabel}
-      </h2>
+    <section id="expected-cutoff" aria-labelledby="expected-cutoff-title" className="surface-card scroll-mt-20 p-4">
+      <div className="flex items-baseline justify-between gap-3">
+        <h2 id="expected-cutoff-title" className="text-[17px] leading-tight">
+          Expected cut-off
+        </h2>
+        <span className="font-mono-num text-[11px] text-[hsl(var(--muted))]">{examLabel}</span>
+      </div>
 
-      {open && (
-        <p className="mt-3 flex items-baseline gap-3">
-          <span className="font-display text-[52px] font-semibold leading-none tracking-tight sm:text-[60px]">{open.cutoff}</span>
-          <span className="text-[14px] leading-5 opacity-80">
-            Open merit (OM)
-            <br />
-            <span className="opacity-75">{open.seats} seats</span>
-          </span>
-        </p>
-      )}
-
-      <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-[hsl(var(--focus-fg)/0.15)] pt-4 sm:grid-cols-4">
-        {rest.map((c) => (
-          <div key={c.category}>
-            <dt className="text-[12.5px] opacity-70">
-              {c.category} <span className="opacity-70">· {c.seats}</span>
-            </dt>
-            <dd className="font-mono-num text-[22px] font-semibold leading-tight text-[hsl(var(--warm))]">{c.cutoff}</dd>
-          </div>
-        ))}
+      <dl className="mt-3 grid grid-cols-4 gap-1.5">
+        {cutoffs.map((c) => {
+          const open = c.category === "OM";
+          return (
+            <div
+              key={c.category}
+              className={`rounded-xl px-2 py-1.5 text-center ${
+                open ? "bg-[hsl(var(--accent)/0.12)] text-[hsl(var(--accent-strong))] dark:text-[hsl(var(--accent))]" : "bg-[hsl(var(--panel-soft))]"
+              }`}
+            >
+              <dt className={`text-[11px] leading-tight ${open ? "font-semibold" : "text-[hsl(var(--muted))]"}`}>{c.category}</dt>
+              <dd className="font-mono-num text-[17px] font-semibold leading-snug">{c.cutoff}</dd>
+            </div>
+          );
+        })}
       </dl>
 
-      <p className="mt-4 text-[12px] leading-[1.45] opacity-65">
-        Marks out of {outOf}. Our estimate, not official, from past JKSSB papers{shared > 0 ? ` and ${shared.toLocaleString("en-IN")} shared scores` : ""} · {when} IST · jkaspirant.in
+      <p className="mt-2.5 text-[11.5px] leading-4 text-[hsl(var(--muted))]">
+        Out of {outOf}. Our estimate, not official · {shared > 0 ? `${shared.toLocaleString("en-IN")} scores · ` : ""}
+        {when} IST · jkaspirant.in
       </p>
     </section>
   );

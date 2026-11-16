@@ -70,7 +70,8 @@ function getDeviceId() {
   return id;
 }
 
-export function RankPredictor({ exam }: { exam: RankPredictorExam }) {
+/** `aboveBoard` is server-rendered content shown between the result and the leaderboard (the expected cut-offs). */
+export function RankPredictor({ exam, aboveBoard }: { exam: RankPredictorExam; aboveBoard?: React.ReactNode }) {
   const draftKey = `jka:rank:${exam.examKey}`;
   const [pub, setPub] = useState<PublicData | null>(null);
   const [mine, setMine] = useState<Mine | null>(null);
@@ -343,6 +344,8 @@ export function RankPredictor({ exam }: { exam: RankPredictorExam }) {
           <Result exam={exam} prediction={prediction} stats={effectiveStats} mine={mine} />
         </>
       )}
+
+      {aboveBoard}
 
       {boardReady && pub && <Leaderboard board={pub.board} mine={mine} total={pub.total} onChange={setBoard} />}
     </div>
