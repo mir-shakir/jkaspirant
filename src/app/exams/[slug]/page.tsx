@@ -1,18 +1,20 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
-import { ExamHeader, examBreadcrumbs } from "@/components/ExamHeader";
+import { examBreadcrumbs } from "@/components/ExamHeader";
 import { UpdateRow } from "@/components/UpdateRow";
 import { GroupList, Row, Section } from "@/components/ui";
 import { buildMetadata, buildExamJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getCutoffs, getExamBySlug, getExamSlugs, getExamSections } from "@/lib/queries/exams";
 import { getNotificationsForExam } from "@/lib/queries/notifications";
 import { getToolForExamSlug } from "@/config/rank-predictor";
-import { nextEventForExam, relativeDay } from "@/content/calendar";
+import { examDateFor, nextEventForExam, relativeDay } from "@/content/calendar";
+import { ExamHero } from "@/components/xp/ExamHero";
+import { JumpNav } from "@/components/xp/JumpNav";
 import { getExamFacts } from "@/content/exams";
 import { examFaqJsonLd, examSeoDescription, examSeoTitle } from "@/content/exams/seo";
 import { liveExams } from "@/config/exams";
-import { AtAGlance, ExamFactsView } from "@/components/exam/ExamFactsView";
+import { ExamFactsView } from "@/components/exam/ExamFactsView";
 
 interface PageProps {
   params: { slug: string };
@@ -60,7 +62,25 @@ export default async function ExamOverviewPage({ params }: PageProps) {
 
   const facts = getExamFacts(exam.slug);
   const rankTool = getToolForExamSlug(exam.slug);
-  const nextEvent = nextEventForExam(exam.slug);
+  const examDate = examDateFor(exam.slug, liveExams[exam.slug]?.parts);
+  // The hero already counts down to the exam; only show the next event if it's something else.
+  const upcomingEvent = nextEventForExam(exam.slug);
+  const nextEvent = upcomingEvent && !(upcomingEvent.kind === "exam" && upcomingEvent.date === examDate) ? upcomingEvent : null;
+  const jumpItems = [
+    ...(liveExams[exam.slug]?.parts ? [{ id: "parts", label: "Exams" }] : []),
+    { id: "latest", label: "Updates" },
+    ...(facts
+      ? [
+          { id: "dates", label: "Dates" },
+          { id: "posts", label: "Posts" },
+          { id: "eligibility", label: "Eligibility" },
+          { id: "pattern", label: "Pattern" },
+          ...(facts.selection?.length || facts.physical || facts.extras.length || facts.weightage ? [{ id: "selection", label: "Selection" }] : []),
+          ...(facts.pastCutoffs ? [{ id: "cut-offs", label: "Cut-offs" }] : []),
+          { id: "documents", label: "Documents" },
+        ]
+      : []),
+  ];
   const latestCutoffYear = cutoffs.length > 0 ? Math.max(...cutoffs.map((c) => c.year)) : null;
   const hasPrepare = sections.syllabus + sections.papers + sections.cutoffs + sections.dates > 0;
 
@@ -69,7 +89,8 @@ export default async function ExamOverviewPage({ params }: PageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildExamJsonLd(exam)) }} />
       {facts && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(examFaqJsonLd(facts)) }} />}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(examBreadcrumbs(exam, "overview"))) }} />
-      <ExamHeader exam={exam} tab="overview" />
+      <ExamHero exam={exam} facts={facts} status={liveExams[exam.slug]?.status} examDate={examDate} />
+      <JumpNav items={jumpItems} />
 
       {rankTool && (
         <Link
@@ -99,10 +120,9 @@ export default async function ExamOverviewPage({ params }: PageProps) {
         </p>
       )}
 
-      {facts && <AtAGlance facts={facts} />}
 
       {liveExams[exam.slug]?.parts && (
-        <Section title="Choose your exam" className="!mt-6">
+        <Section title="Choose your exam" className="!mt-6" id="parts">
           <GroupList>
             {liveExams[exam.slug].parts!.map((slug) => (
               <Row
@@ -135,7 +155,7 @@ export default async function ExamOverviewPage({ params }: PageProps) {
       )}
 
       {updates.length > 0 && (
-        <Section title="Latest" action={{ href: "/notifications", label: "All updates" }} className={hasPrepare || facts ? "" : "!mt-6"}>
+        <Section title="Latest" action={{ href: "/notifications", label: "All updates" }} className={hasPrepare || facts ? "" : "!mt-6"} id="latest">
           <GroupList>
             {updates.map((n) => (
               <UpdateRow key={n.id} update={n} />

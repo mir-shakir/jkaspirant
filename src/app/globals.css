@@ -283,3 +283,66 @@
     }
   }
 }
+
+/* Layout experiment: exam "tickets" (admit-card stubs). */
+@layer components {
+  .ticket {
+    position: relative;
+    background: hsl(var(--panel));
+    border: 1px solid hsl(var(--line));
+    @apply rounded-[20px];
+  }
+  .ticket-stub {
+    position: relative;
+    border-top: 2px dashed hsl(var(--line));
+  }
+  /* The two punched notches where the stub tears off. */
+  .ticket-stub::before,
+  .ticket-stub::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 9999px;
+    background: hsl(var(--background));
+    border: 1px solid hsl(var(--line));
+  }
+  .ticket-stub::before {
+    left: -10px;
+    clip-path: inset(0 0 0 50%);
+  }
+  .ticket-stub::after {
+    right: -10px;
+    clip-path: inset(0 50% 0 0);
+  }
+  .ticket-dark {
+    background: hsl(var(--focus));
+    color: hsl(var(--focus-fg));
+    border-color: transparent;
+  }
+  .ticket-dark .ticket-stub {
+    border-top-color: hsl(var(--focus-fg) / 0.22);
+  }
+  .ticket-dark .ticket-stub::before,
+  .ticket-dark .ticket-stub::after {
+    border-color: transparent;
+  }
+  .rail {
+    @apply -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6;
+    scroll-padding-inline: 1rem;
+    scrollbar-width: none;
+  }
+  @media (min-width: 640px) {
+    .rail {
+      scroll-padding-inline: 1.5rem;
+    }
+  }
+  .rail::-webkit-scrollbar {
+    display: none;
+  }
+}
+/* Jump links land below the sticky header and chip bar. */
+h2[id] {
+  scroll-margin-top: 7.5rem;
+}

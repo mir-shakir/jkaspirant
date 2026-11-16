@@ -67,3 +67,9 @@ export function relativeDay(date: string) {
   if (d === -1) return "Yesterday";
   return `${-d} days ago`;
 }
+
+/** Next upcoming exam date for an exam (or any of its parts), as an ISO date. */
+export function examDateFor(examSlug: string, parts: string[] = []) {
+  const slugs = [examSlug, ...parts];
+  return upcomingEvents().find((e) => e.kind === "exam" && e.examSlug && slugs.includes(e.examSlug))?.date ?? null;
+}
