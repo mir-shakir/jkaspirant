@@ -7,7 +7,7 @@ import { GroupList, Row, Section } from "@/components/ui";
 import { buildMetadata, buildExamJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getCutoffs, getExamBySlug, getExamSlugs, getExamSections } from "@/lib/queries/exams";
 import { getNotificationsForExam } from "@/lib/queries/notifications";
-import { getRankExamForExamSlug } from "@/config/rank-predictor";
+import { getToolForExamSlug } from "@/config/rank-predictor";
 import { nextEventForExam, relativeDay } from "@/content/calendar";
 import { getExamFacts } from "@/content/exams";
 import { examFaqJsonLd, examSeoDescription, examSeoTitle } from "@/content/exams/seo";
@@ -59,7 +59,7 @@ export default async function ExamOverviewPage({ params }: PageProps) {
   ]);
 
   const facts = getExamFacts(exam.slug);
-  const rankTool = getRankExamForExamSlug(exam.slug);
+  const rankTool = getToolForExamSlug(exam.slug);
   const nextEvent = nextEventForExam(exam.slug);
   const latestCutoffYear = cutoffs.length > 0 ? Math.max(...cutoffs.map((c) => c.year)) : null;
   const hasPrepare = sections.syllabus + sections.papers + sections.cutoffs + sections.dates > 0;
@@ -77,8 +77,10 @@ export default async function ExamOverviewPage({ params }: PageProps) {
           className="mt-5 flex items-center justify-between gap-3 rounded-2xl bg-[hsl(var(--focus))] px-4 py-4 text-[hsl(var(--focus-fg))]"
         >
           <span>
-            <span className="block text-[16px] font-semibold">Predict your {rankTool.name} rank</span>
-            <span className="mt-0.5 block text-[13px] opacity-75">Score and expected rank in under a minute</span>
+            <span className="block text-[16px] font-semibold">{rankTool.isOpen ? `Predict your ${rankTool.name} rank` : `${rankTool.name} score calculator`}</span>
+            <span className="mt-0.5 block text-[13px] opacity-75">
+              {rankTool.isOpen ? "Score and expected rank in under a minute" : `With −${rankTool.negativePerWrong} negative marking. Rank prediction opens ${rankTool.opensOn ?? "after the exam"}`}
+            </span>
           </span>
           <svg viewBox="0 0 20 20" className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <path d="M4 10h12m-4.5-4.5L16 10l-4.5 4.5" />

@@ -352,7 +352,7 @@ export function RankPredictor({ exam, aboveBoard }: { exam: RankPredictorExam; a
   );
 }
 
-function NumberField({ id, label, value, onChange, max }: { id: string; label: string; value: string; onChange: (v: string) => void; max: number }) {
+export function NumberField({ id, label, value, onChange, max }: { id: string; label: string; value: string; onChange: (v: string) => void; max: number }) {
   const n = value === "" ? 0 : Number(value);
   const step = (d: number) => onChange(String(Math.min(max, Math.max(0, (Number.isFinite(n) ? n : 0) + d))));
   const stepBtn = "flex h-12 w-11 shrink-0 items-center justify-center text-xl text-[hsl(var(--muted))] active:bg-[hsl(var(--panel-soft))]";

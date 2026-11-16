@@ -38,7 +38,13 @@ export interface RankExamConfig {
   answerKeyUrl?: string;
   /** Pattern confirmed against the official notification */
   patternVerified: boolean;
+  /**
+   * False before the exam: the tool page is a score calculator only and nothing
+   * is saved. Flip to true on exam evening, after tuning `model` and `appeared`.
+   */
   isOpen: boolean;
+  /** Shown while closed, e.g. "29 Nov, after the exam". */
+  opensOn?: string;
 }
 
 // J&K vertical reservation categories, as in Annexure-A of the FAA notification.
@@ -109,6 +115,54 @@ export const rankExams: RankExamConfig[] = [
     patternVerified: false,
     isOpen: true,
   },
+  {
+    toolSlug: "jk-police-sub-inspector-rank-predictor",
+    examKey: "jkp-si-2026",
+    examSlug: "sub-inspector",
+    name: "Sub-Inspector",
+    fullName: "JK Police Sub-Inspector",
+    board: "JKSSB",
+    examDate: "2026-11-29",
+    // Syllabus notice (26.12.2024): 100 questions x 2 marks, 0.5 off per wrong answer.
+    totalQuestions: 100,
+    marksPerCorrect: 2,
+    negativePerWrong: 0.5,
+    posts: 669,
+    // PLACEHOLDER until exam day: no official applicant or attendance figure yet.
+    registered: 0,
+    appeared: 100000,
+    categories: JK_CATEGORIES,
+    // Advertisement 02 of 2024, Annexure-A, Item 07: 267 + 53 + 67 + 67 + 54 + 27 + 67 + 67 = 669.
+    openSeats: 267,
+    // Shares copied from FAA; gaps scaled to a 200-mark paper. Estimates to tune.
+    reserved: {
+      SC: { posts: 53, share: 0.07, gap: 15 },
+      "ST-1": { posts: 67, share: 0.08, gap: 13 },
+      "ST-2": { posts: 67, share: 0.07, gap: 7 },
+      OBC: { posts: 54, share: 0.07, gap: 2 },
+      "ALC/IB": { posts: 27, share: 0.04, gap: 10 },
+      RBA: { posts: 67, share: 0.16, gap: 2 },
+      EWS: { posts: 67, share: 0.08, gap: 7 },
+    },
+    // PLACEHOLDER model: there is no usable past SI cut-off (the 2021-22 exam was
+    // cancelled). Before setting isOpen, set anchorScore from expert/coaching
+    // estimates on exam evening; shared scores take over from 100 entries.
+    model: {
+      anchorScore: 130,
+      anchorRank: 267,
+      spread: 28,
+      uncertainty: 12,
+      selectionTilt: 2.25,
+      sampleDoubt: 0.6,
+      topBoost: 40,
+      ignoreScoresFrom: 192,
+    },
+    leaderboardMaxScore: 190,
+    answerKeyReleased: false,
+    patternVerified: true,
+    isOpen: false,
+    opensOn: "29 Nov, after the exam",
+  },
 ];
 
 export function getRankExam(toolSlug: string) {
@@ -121,4 +175,9 @@ export function getRankExamByKey(examKey: string) {
 
 export function getRankExamForExamSlug(examSlug: string) {
   return rankExams.find((e) => e.examSlug === examSlug && e.isOpen) ?? null;
+}
+
+/** Any tool for the exam, open or not yet open (score calculator only). */
+export function getToolForExamSlug(examSlug: string) {
+  return rankExams.find((e) => e.examSlug === examSlug) ?? null;
 }

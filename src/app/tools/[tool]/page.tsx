@@ -5,6 +5,8 @@ import { RankPredictor } from "@/components/rank/RankPredictor";
 import { CutoffCard } from "@/components/rank/CutoffCard";
 import { expectedCutoffs } from "@/lib/rank";
 import { getCutoffStats } from "@/lib/queries/rank";
+import { ScoreCalculator } from "@/components/rank/ScoreCalculator";
+import { CATEGORIES, getExamFacts } from "@/content/exams";
 import { GroupList, PageHeader, Row } from "@/components/ui";
 import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getRankExam, rankExams } from "@/config/rank-predictor";
@@ -27,6 +29,14 @@ export function generateMetadata({ params }: PageProps): Metadata {
   const exam = getRankExam(params.tool);
   if (!exam) return {};
   const year = exam.examDate.slice(0, 4);
+  if (!exam.isOpen) {
+    return buildMetadata({
+      title: `${exam.fullName} Score Calculator ${year} (−${exam.negativePerWrong} Negative Marking) & Rank Predictor`,
+      description: `Work out your ${exam.name} ${year} score: +${exam.marksPerCorrect} per correct answer, −${exam.negativePerWrong} per wrong answer, out of ${exam.totalQuestions * exam.marksPerCorrect}. Rank prediction for the ${exam.posts} posts opens ${exam.opensOn ?? "after the exam"}.`,
+      canonicalPath: `/tools/${exam.toolSlug}`,
+      keywords: [`${exam.fullName} score calculator`, `${exam.fullName} rank predictor ${year}`, `${exam.fullName} negative marking`],
+    });
+  }
   return buildMetadata({
     title: `${exam.fullName} Expected Cut-off ${year} & Rank Predictor`,
     description: `Expected ${exam.name} ${year} cut-off for every category (OM, SC, ST, OBC, RBA, EWS and more), plus your score and expected rank for the ${exam.posts} posts. Free, no sign-up.`,
@@ -45,6 +55,7 @@ export default async function RankToolPage({ params }: PageProps) {
   if (!exam) notFound();
 
   const year = exam.examDate.slice(0, 4);
+  if (!exam.isOpen) return <CalculatorOnly exam={exam} year={year} />;
   const cutoffData = await getCutoffStats(exam.examKey);
   const cutoffs = cutoffData ? expectedCutoffs(exam, cutoffData.stats, cutoffData.catCounts) : null;
   const breadcrumbItems = [
@@ -136,6 +147,83 @@ export default async function RankToolPage({ params }: PageProps) {
           title={`${exam.name} exam page`}
           sub={exam.answerKeyReleased ? "Answer key, objections and what comes next" : "Answer key awaited. We'll post it the day it's out."}
         />
+      </GroupList>
+
+      <section className="mt-9">
+        <h2 className="text-[21px]">Common questions</h2>
+        <div className="mt-1 divide-y border-b">
+          {faqs.map((f) => (
+            <details key={f.q} className="group">
+              <summary className="flex min-h-[52px] cursor-pointer list-none items-center justify-between gap-3 py-2 text-[15px] font-medium [&::-webkit-details-marker]:hidden">
+                {f.q}
+                <span className="text-xl leading-none text-[hsl(var(--muted))] transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <p className="pb-4 text-[14.5px] leading-6 text-[hsl(var(--muted))]">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+/** Before the exam: score calculator only, nothing saved, rank opens later. */
+function CalculatorOnly({ exam, year }: { exam: NonNullable<ReturnType<typeof getRankExam>>; year: string }) {
+  const facts = getExamFacts(exam.examSlug);
+  const totals = facts?.postTables.find((t) => t.label === "All posts" || t.label === "Total") ?? facts?.postTables[0];
+  const breadcrumbItems = [
+    { name: "Tools", path: "/tools" },
+    { name: `${exam.name} score calculator`, path: `/tools/${exam.toolSlug}` },
+  ];
+  const max = exam.totalQuestions * exam.marksPerCorrect;
+  const faqs = [
+    {
+      q: `How is the ${exam.name} score calculated?`,
+      a: `+${exam.marksPerCorrect} for each correct answer and −${exam.negativePerWrong} for each wrong answer, out of ${max}. Unattempted questions carry no marks. The paper has ${exam.totalQuestions} questions.`,
+    },
+    {
+      q: "When can I check my expected rank?",
+      a: `Rank prediction opens ${exam.opensOn ?? "after the exam"}. Come back with your answer count and you'll see your expected rank among the ${exam.posts} posts, category-wise.`,
+    },
+  ];
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+  };
+  return (
+    <div className="page-shell max-w-xl py-4 sm:py-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(breadcrumbItems)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <Breadcrumb items={breadcrumbItems} />
+      <PageHeader
+        kicker={`${exam.board} ${exam.name} ${year}`}
+        title="Work out your score"
+        lede={`+${exam.marksPerCorrect} per correct answer, −${exam.negativePerWrong} per wrong. Rank prediction opens ${exam.opensOn ?? "after the exam"}.`}
+      />
+      <div className="mt-5">
+        <ScoreCalculator exam={{ totalQuestions: exam.totalQuestions, marksPerCorrect: exam.marksPerCorrect, negativePerWrong: exam.negativePerWrong }} />
+        <p className="mt-2 text-[12.5px] text-[hsl(var(--muted))]">Nothing you enter here is saved.</p>
+      </div>
+
+      {totals && (
+        <section className="surface-card mt-5 p-4" aria-labelledby="seats">
+          <h2 id="seats" className="text-[17px] leading-tight">
+            {exam.posts} posts by category
+          </h2>
+          <dl className="mt-3 grid grid-cols-4 gap-1.5">
+            {CATEGORIES.map((c, i) => (
+              <div key={c} className="rounded-xl bg-[hsl(var(--panel-soft))] px-2 py-1.5 text-center">
+                <dt className="text-[11px] text-[hsl(var(--muted))]">{c}</dt>
+                <dd className="font-mono-num text-[17px] font-semibold leading-snug">{totals.counts[i]}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
+
+      <GroupList className="mt-6">
+        <Row href={`/exams/${exam.examSlug}`} title={`${exam.fullName} exam page`} sub="Pattern, syllabus, selection steps and official notices" />
       </GroupList>
 
       <section className="mt-9">

@@ -13,7 +13,7 @@ export const metadata = buildMetadata({
 const breadcrumbItems = [{ name: "Tools", path: "/tools" }];
 
 export default function ToolsPage() {
-  const open = rankExams.filter((e) => e.isOpen);
+  const open = rankExams;
   return (
     <div className="page-shell py-4 sm:py-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(breadcrumbItems)) }} />
@@ -27,7 +27,7 @@ export default function ToolsPage() {
               key={e.toolSlug}
               href={`/tools/${e.toolSlug}`}
               title={`${e.board} ${e.name} ${e.examDate.slice(0, 4)}`}
-              sub="Your score and expected rank in under a minute"
+              sub={e.isOpen ? "Your score and expected rank in under a minute" : `Score calculator now · rank prediction opens ${e.opensOn ?? "after the exam"}`}
             />
           ))}
         </GroupList>
