@@ -76,7 +76,7 @@ export const liveExams: Record<string, LiveExam> = {
     awaited: true,
   },
   "advt-08-2026": {
-    title: "Staff Nurse, Lab Technician, Pharmacist & more",
+    title: "Junior Pharmacist, Staff Nurse, Lab Assistant & more",
     board: "JKSSB",
     posts: 518,
     status: "Advt 08 of 2026 · form edit open till 20 Nov",
