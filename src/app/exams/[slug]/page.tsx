@@ -10,6 +10,7 @@ import { getNotificationsForExam } from "@/lib/queries/notifications";
 import { getRankExamForExamSlug } from "@/config/rank-predictor";
 import { nextEventForExam, relativeDay } from "@/content/calendar";
 import { getExamFacts } from "@/content/exams";
+import { examFaqJsonLd, examSeoDescription, examSeoTitle } from "@/content/exams/seo";
 import { liveExams } from "@/config/exams";
 import { AtAGlance, ExamFactsView } from "@/components/exam/ExamFactsView";
 
@@ -25,10 +26,15 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const exam = await getExamBySlug(params.slug);
   if (!exam) return {};
+  const facts = getExamFacts(exam.slug);
+  const live = liveExams[exam.slug];
   return buildMetadata({
-    title: exam.seo_title || `${exam.title} — Latest Updates & Exam Dates`,
-    description:
-      exam.seo_description || `${exam.title}: latest updates, exam dates and tools for J&K aspirants.`,
+    title: facts ? examSeoTitle(facts) : live?.parts ? `${exam.title} 2026: Exam Dates, Posts, Syllabus & Cut-offs` : `${exam.title}: Latest Updates & Exam Dates`,
+    description: facts
+      ? examSeoDescription(facts)
+      : live?.parts
+        ? `${exam.title}: ${live.status}. Posts, exam pattern, eligibility and past cut-offs for each exam.`
+        : `${exam.title}: latest updates, exam dates and tools for J&K aspirants.`,
     canonicalPath: `/exams/${exam.slug}`,
     keywords: exam.seo_keywords || undefined,
     ogImage: exam.og_image_url || undefined,
@@ -61,6 +67,7 @@ export default async function ExamOverviewPage({ params }: PageProps) {
   return (
     <div className="page-shell py-4 sm:py-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildExamJsonLd(exam)) }} />
+      {facts && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(examFaqJsonLd(facts)) }} />}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(examBreadcrumbs(exam, "overview"))) }} />
       <ExamHeader exam={exam} tab="overview" />
 
