@@ -15,13 +15,13 @@ The site is **operated by Claude Code sessions**, not by hand-entering data in t
 - **Storage:** Supabase Storage (PDF papers, OG images)
 - **Hosting:** Vercel, domain jkaspirant.in
 - **Dark mode:** next-themes
-- **Sitemap:** next-sitemap (runs as postbuild)
+- **Sitemap:** `src/app/sitemap.ts`, built from live exams, visible updates and rank tools
 
 ## Build & Dev Commands
 
 ```bash
 npm run dev          # Start dev server (localhost:3000)
-npm run build        # Production build (also generates sitemap via postbuild)
+npm run build        # Production build
 npm run lint         # ESLint
 ```
 
@@ -52,14 +52,12 @@ Every public page must have: `<title>`, meta description, Open Graph tags, JSON-
 /notifications/[slug]            Update detail (ISR)
 /exams                           Exam list
 /exams/[slug]                    SSG exam overview
-/exams/[slug]/syllabus           SSG
+/exams/[slug]/syllabus           SSG (404 when the exam has no rows; same for the three tabs below)
 /exams/[slug]/previous-papers    SSG
 /exams/[slug]/cut-offs           SSG
 /exams/[slug]/important-dates    SSG
 /calendar                        Upcoming exam / admit card dates
 /tools, /tools/[tool]            Rank predictors
-/resources                       All previous papers
-/search                          Client-side search (noindex)
 /admin/*                         Client-side CRM (auth-protected)
 ```
 
@@ -120,7 +118,7 @@ Claude Code sessions (scheduled or manual, on the owner's Mac or in the cloud) d
 - **Old address redirect:** `src/middleware.ts` sends pages on `jkaspirants.vercel.app` to the main domain when `REDIRECT_TO_PRIMARY=1`, and carries the visitor's device id across so saved ranks and the one-score rule survive the move. API routes and files are not redirected.
 - **Analytics:** Google Analytics 4 loads from `src/components/Analytics.tsx` (ID in `siteConfig.gaId`, not on `/admin`). Report an action with `track()` from `src/lib/analytics.ts`, or put `data-event="name"` on a link or button. Current events: `rank_predicted`, `score_corrected`, `leaderboard_join`, `leaderboard_leave`, `share`, `telegram_join_click`, `pdf_open`, `rank_details_open`. Never send names, scores or anything identifying.
 - **Telegram:** the site promotes a partner channel (`telegramUrl` / `telegramName` in `src/config/site.ts`) through `TelegramNudge`: one quiet card per page at most, after the main content (home, update pages, rank result) plus a footer link. Don't add more placements or pop-ups.
-- Paid PDF bundles (Razorpay) are **paused**; don't feature them until traffic exists.
+- Paid PDF bundles (Razorpay), `/search` and `/resources` were removed on 16 Nov 2026 (see git history to restore). `next.config.mjs` redirects their old URLs. The admin CRM keeps only the content pages.
 
 ## Implementation Plans
 

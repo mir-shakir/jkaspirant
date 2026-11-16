@@ -29,6 +29,8 @@ export default async function ImportantDatesPage({ params }: PageProps) {
   const exam = await getExamBySlug(params.slug);
   if (!exam) notFound();
   const dates = await getExamDates(exam.id);
+  // Empty sections have no tab and no page.
+  if (dates.length === 0) notFound();
 
   return (
     <div className="page-shell py-4 sm:py-8">

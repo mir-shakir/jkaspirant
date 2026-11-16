@@ -17,7 +17,9 @@ Add more sources here (JKBOSE, KU, JU, JKP) only after a script exists for them.
 
 ## Steps
 1. For each source, run its scraper in `scripts/sources/` (e.g. `node scripts/sources/jkssb.mjs`). If no scraper exists yet, or it fails because the page changed, inspect the page (browser or curl), write/fix the scraper, and commit it. Scrapers print JSON lines: `{title, url, date}`.
-2. Dedupe: skip any item whose `source_url` or slug already exists in the `notifications` table. Do not rely on memory of previous runs.
+2. Dedupe: skip any item whose PDF file name already appears in `src/content/notifications.ts`, or whose `source_url` or slug already exists in the `notifications` table. Do not rely on memory of previous runs.
+   Relevance: only items for exams listed in `src/config/exams.ts`, plus new advertisements, exam schedules and admit cards for big recruitments. Results and lists for posts we don't cover are skipped; mention any notable ones to the owner instead of publishing.
+   JKSSB's "date" is read from the PDF file name and is often the exam date, not the posting date; page order is what tells you what's newest. Scanned PDFs have no text layer: render the pages (PDFKit on macOS) and read them as images.
 3. For each new item, open the PDF/notice and extract: exam/post, notification number, category (`notification | admit_card | answer_key | result`), key dates, vacancies, fee, eligibility summary. Never guess a date or number — if it isn't in the source, leave it out.
 4. Write `tmp/notifications/<slug>.json` (format in `scripts/publish-notification.mjs`). Slug rule: `<board>-<post>-<category>-<year>`, e.g. `jkssb-faa-answer-key-2026`. Body: short plain-language summary, a key-dates list, and "Official notice: <source_url>".
    No database credentials in this session (e.g. a cloud session)? Add the item to `src/content/notifications.ts` instead, plus any dated events to `src/content/calendar.ts`, and commit after approval. Skip step 5.

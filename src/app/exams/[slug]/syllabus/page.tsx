@@ -29,6 +29,8 @@ export default async function SyllabusPage({ params }: PageProps) {
   const exam = await getExamBySlug(params.slug);
   if (!exam) notFound();
   const sections = await getSyllabusSections(exam.id);
+  // Empty sections have no tab and no page.
+  if (sections.length === 0) notFound();
 
   return (
     <div className="page-shell py-4 sm:py-8">

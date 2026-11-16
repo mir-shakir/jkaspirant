@@ -9,6 +9,15 @@ const nextConfig = {
       },
     ],
   },
+  // Paused or retired pages. Bundles may come back; the rest are gone for good.
+  async redirects() {
+    return [
+      { source: "/bundles", destination: "/", permanent: false },
+      { source: "/bundles/:path*", destination: "/", permanent: false },
+      { source: "/search", destination: "/notifications", permanent: true },
+      { source: "/resources", destination: "/exams", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

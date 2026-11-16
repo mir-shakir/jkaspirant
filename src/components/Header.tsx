@@ -3,7 +3,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { mainNav } from "@/config/site";
 
 // Phones navigate with the bottom tab bar, so the header stays quiet there:
-// brand, search, theme. Desktop gets the same four destinations as text links.
+// brand and theme. Desktop gets the same four destinations as text links.
 export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b bg-[hsl(var(--background)/0.9)] backdrop-blur-md">
@@ -26,16 +26,6 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-1">
-          <Link
-            href="/search"
-            aria-label="Search"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[hsl(var(--foreground))] transition hover:bg-[hsl(var(--panel-soft))]"
-          >
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden>
-              <circle cx="11" cy="11" r="6.5" />
-              <path d="m16 16 4.5 4.5" />
-            </svg>
-          </Link>
           <ThemeToggle />
         </div>
       </div>
