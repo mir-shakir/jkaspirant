@@ -93,18 +93,6 @@ export default async function RankToolPage({ params }: PageProps) {
         lede={exam.answerKeyReleased ? "Check your answers against the official key, then count your right and wrong." : "Count your right and wrong answers. We'll do the rest."}
       />
 
-      {cutoffs && cutoffData && (
-        <div className="mt-5">
-          <CutoffCard
-            examLabel={`${exam.board} ${exam.name} ${year}`}
-            cutoffs={cutoffs}
-            shared={cutoffData.stats.total}
-            updatedAt={new Date()}
-            outOf={exam.totalQuestions * exam.marksPerCorrect}
-          />
-        </div>
-      )}
-
       {exam.answerKeyReleased && exam.answerKeyUrl && (
         <GroupList className="mt-5">
           <Row href={exam.answerKeyUrl} external title="Official answer key (PDF)" sub="Provisional key for Series A, B, C and D" />
@@ -128,6 +116,17 @@ export default async function RankToolPage({ params }: PageProps) {
             model: exam.model,
             answerKeyReleased: exam.answerKeyReleased,
           }}
+          aboveBoard={
+            cutoffs && cutoffData ? (
+              <CutoffCard
+                examLabel={`${exam.board} ${exam.name} ${year}`}
+                cutoffs={cutoffs}
+                shared={cutoffData.stats.total}
+                updatedAt={new Date()}
+                outOf={exam.totalQuestions * exam.marksPerCorrect}
+              />
+            ) : null
+          }
         />
       </div>
 
