@@ -1,0 +1,145 @@
+{
+ "slug": "class-iv-mts",
+ "title": "Class-IV (MTS) and Sanitation Worker",
+ "board": "JKSSB",
+ "advert": {
+  "no": "09 of 2026",
+  "date": "1 Sep 2026",
+  "items": null
+ },
+ "postsTotal": 2863,
+ "postsNote": null,
+ "postTables": [
+  {
+   "label": "All posts",
+   "counts": [
+    1178,
+    246,
+    293,
+    286,
+    221,
+    115,
+    271,
+    253
+   ]
+  }
+ ],
+ "postList": [
+  [
+   "UT",
+   105
+  ],
+  [
+   "Division Jammu",
+   1093
+  ],
+  [
+   "Division Kashmir",
+   897
+  ],
+  [
+   "District cadres (20)",
+   768
+  ]
+ ],
+ "mainPosts": null,
+ "pay": "SL-1 (14800-47100)",
+ "cadre": "UT, divisional and district cadres; various departments",
+ "qualification": [
+  [
+   "Class-IV (MTS)",
+   "Minimum Matric, maximum 10+2"
+  ],
+  [
+   "Sanitation Worker",
+   "Minimum 8th pass, maximum 10+2"
+  ]
+ ],
+ "age": {
+  "asOn": "1 Jan 2026",
+  "rows": [
+   [
+    "OM",
+    "40"
+   ],
+   [
+    "SC/ST-1/ST-2/RBA/ALC-IB/EWS/OBC",
+    "43"
+   ],
+   [
+    "PwBD",
+    "42"
+   ]
+  ],
+  "min": null,
+  "note": null
+ },
+ "fee": [
+  [
+   "general",
+   "₹600"
+  ],
+  [
+   "SC/ST-1/ST-2/EWS/PwBD",
+   "₹500"
+  ]
+ ],
+ "dates": [
+  [
+   "Applications opened",
+   "14 Oct 2026 (corrigendum; originally 05.10.2026)"
+  ],
+  [
+   "Last date to apply",
+   "12 Nov 2026 by corrigendum (originally 03.11.2026), extended to 27 Nov 2026"
+  ],
+  [
+   "Exam date",
+   "Not announced yet"
+  ]
+ ],
+ "status": null,
+ "pattern": null,
+ "negativeText": "One-fourth of the marks of the question for each wrong answer",
+ "syllabusNote": "To be notified",
+ "selection": null,
+ "physical": null,
+ "extras": [],
+ "weightage": [
+  [
+   "UT cadre",
+   "Written 85 + 5 no family member in govt service + 5 widow/divorced/orphan girl + 5 casual worker (5+ years)"
+  ],
+  [
+   "Divisional cadre",
+   "Written 80 + 5 home division + the same three 5-mark criteria"
+  ],
+  [
+   "District cadre",
+   "Written 75 + 10 home district + the same three 5-mark criteria"
+  ]
+ ],
+ "pastCutoffs": null,
+ "papers": [
+  {
+   "title": "MTS and other Raj Bhavan posts 2025, Set A (similar level)",
+   "url": "https://jkssb.nic.in/Pdf/SET-A MULTIPE POSTS.pdf"
+  }
+ ],
+ "docs": [
+  {
+   "label": "Advertisement 09 of 2026 (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/ADVT_09OF2026_01092026.pdf"
+  },
+  {
+   "label": "Corrigendum (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Corrigendum_advt_09OF2026_01102026.pdf"
+  },
+  {
+   "label": "Extension notice (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Extension_notice_09OF2026_11112026.pdf"
+  }
+ ],
+ "notes": [],
+ "checked": "2026-11-16"
+}

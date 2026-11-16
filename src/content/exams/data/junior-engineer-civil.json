@@ -1,0 +1,221 @@
+{
+ "slug": "junior-engineer-civil",
+ "title": "Junior Engineer (Civil)",
+ "board": "JKSSB",
+ "advert": {
+  "no": "11 of 2026",
+  "date": "27 Oct 2026",
+  "items": "266 (Jal Shakti), 267 (PWD R&B)"
+ },
+ "postsTotal": 458,
+ "postsNote": null,
+ "postTables": [
+  {
+   "label": "Jal Shakti",
+   "counts": [
+    113,
+    23,
+    28,
+    28,
+    22,
+    11,
+    28,
+    29
+   ]
+  },
+  {
+   "label": "PWD (R&B)",
+   "counts": [
+    71,
+    14,
+    18,
+    18,
+    14,
+    7,
+    17,
+    17
+   ]
+  }
+ ],
+ "postList": null,
+ "mainPosts": null,
+ "pay": "Level-6 (35400-112400)",
+ "cadre": "UT",
+ "qualification": [
+  [
+   "",
+   "3-year diploma in Civil Engineering, or degree in Civil Engineering, or AMIE (Sections A & B)"
+  ]
+ ],
+ "age": {
+  "asOn": "1 Jan 2026",
+  "rows": [
+   [
+    "OM",
+    "40"
+   ],
+   [
+    "SC/ST-1/ST-2/RBA/ALC-IB/EWS/OBC",
+    "43"
+   ],
+   [
+    "PwBD",
+    "42"
+   ]
+  ],
+  "min": null,
+  "note": null
+ },
+ "fee": [
+  [
+   "general",
+   "₹600"
+  ],
+  [
+   "SC/ST-1/ST-2/EWS/PwBD",
+   "₹500"
+  ]
+ ],
+ "dates": [
+  [
+   "Applications open",
+   "30 Nov 2026"
+  ],
+  [
+   "Last date to apply",
+   "29 Dec 2026"
+  ],
+  [
+   "Exam date",
+   "Not announced yet"
+  ]
+ ],
+ "status": null,
+ "pattern": null,
+ "negativeText": "One-fourth of the marks of the question for each wrong answer",
+ "syllabusNote": "To be notified",
+ "selection": [
+  "Written/OMR merit only"
+ ],
+ "physical": null,
+ "extras": [],
+ "weightage": null,
+ "pastCutoffs": {
+  "source": "Final selection list, Advt 03 of 2025 (10.04.2026)",
+  "pdf": "https://jkssb.nic.in/Pdf/Final_Selection_JECivil_10042026.pdf",
+  "outOf": 120,
+  "note": "Main lists only. Disability (PwBD) selections had their own lower cut-offs (down to about 45).",
+  "tables": [
+   {
+    "label": "Jal Shakti",
+    "rows": [
+     [
+      "OM",
+      100.0,
+      null
+     ],
+     [
+      "SC",
+      84.0,
+      null
+     ],
+     [
+      "ST-1",
+      81.25,
+      null
+     ],
+     [
+      "ST-2",
+      87.75,
+      null
+     ],
+     [
+      "OBC",
+      91.75,
+      null
+     ],
+     [
+      "ALC/IB",
+      81.0,
+      null
+     ],
+     [
+      "RBA",
+      96.75,
+      null
+     ],
+     [
+      "EWS",
+      74.75,
+      null
+     ]
+    ]
+   },
+   {
+    "label": "PWD (R&B)",
+    "rows": [
+     [
+      "OM",
+      103.5,
+      null
+     ],
+     [
+      "SC",
+      88.75,
+      null
+     ],
+     [
+      "ST-1",
+      87.75,
+      null
+     ],
+     [
+      "ST-2",
+      94.5,
+      null
+     ],
+     [
+      "OBC",
+      96.5,
+      null
+     ],
+     [
+      "ALC/IB",
+      94.0,
+      null
+     ],
+     [
+      "RBA",
+      101.25,
+      null
+     ],
+     [
+      "EWS",
+      85.5,
+      null
+     ]
+    ]
+   }
+  ]
+ },
+ "papers": [
+  {
+   "title": "JE Civil 2025",
+   "url": "https://jkssb.nic.in/Pdf/Civil_30122025.pdf"
+  },
+  {
+   "title": "JE Civil 2023, Set A",
+   "url": "https://jkssb.nic.in/Pdf/SET-A J.E (CIVIL) 19-11-2023_0001.pdf"
+  }
+ ],
+ "docs": [
+  {
+   "label": "Advertisement 11 of 2026 (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Advertisement_11OF2026_27102026.pdf"
+  }
+ ],
+ "notes": [
+  "Maximum marks of the 2025 paper: 120 (confirmed by the owner)."
+ ],
+ "checked": "2026-11-16"
+}

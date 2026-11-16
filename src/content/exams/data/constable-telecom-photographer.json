@@ -1,0 +1,256 @@
+{
+ "slug": "constable-telecom-photographer",
+ "title": "JK Police Constable (Telecommunication and Photographer)",
+ "board": "JKSSB",
+ "advert": {
+  "no": "15 of 2025",
+  "date": "31 Dec 2025",
+  "items": "325 (Telecom), 326 (Photographer)"
+ },
+ "postsTotal": 182,
+ "postsNote": null,
+ "postTables": [
+  {
+   "label": "Constable (Telecommunication)",
+   "counts": [
+    70,
+    13,
+    18,
+    18,
+    14,
+    7,
+    17,
+    17
+   ]
+  },
+  {
+   "label": "Constable (Photographer)",
+   "counts": [
+    3,
+    0,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1
+   ]
+  }
+ ],
+ "postList": null,
+ "mainPosts": null,
+ "pay": "Level-2 (19900-63200)",
+ "cadre": "UT",
+ "qualification": [
+  [
+   "Telecommunication",
+   "10+2 with Science"
+  ],
+  [
+   "Photographer",
+   "10+2 with Science, plus a 6-month computer course and 2 years' photography/videography experience"
+  ]
+ ],
+ "age": {
+  "asOn": "1 Jan 2025",
+  "rows": [
+   [
+    "all categories",
+    "28"
+   ],
+   [
+    "in-service police",
+    "30"
+   ],
+   [
+    "SPOs and VHGs",
+    "40"
+   ]
+  ],
+  "min": 18,
+  "note": "Ex-servicemen may deduct service period (up to 3 years over the limit)."
+ },
+ "fee": [
+  [
+   "general",
+   "₹700"
+  ],
+  [
+   "SC/ST-1/ST-2/EWS",
+   "₹600"
+  ]
+ ],
+ "dates": [
+  [
+   "Applications opened",
+   "1 Feb 2026"
+  ],
+  [
+   "Last date to apply",
+   "2 Mar 2026 (extended; see notice 27.02.2026)"
+  ],
+  [
+   "Exam (Telecommunication)",
+   "27 Dec 2026"
+  ],
+  [
+   "Exam (Photographer)",
+   "30 Dec 2026"
+  ]
+ ],
+ "status": null,
+ "pattern": {
+  "questions": 100,
+  "marksEach": 1,
+  "total": 100,
+  "negative": 0.25,
+  "durationMin": 120,
+  "sections": [
+   [
+    "General English",
+    15
+   ],
+   [
+    "General Knowledge & current affairs (India)",
+    15
+   ],
+   [
+    "General Knowledge, J&K",
+    5
+   ],
+   [
+    "Numerical & Reasoning Ability",
+    15
+   ],
+   [
+    "Basic Concepts of Computers",
+    10
+   ],
+   [
+    "Technical questions",
+    40
+   ]
+  ],
+  "sectionUnit": "questions"
+ },
+ "negativeText": null,
+ "syllabusNote": null,
+ "selection": [
+  "Written test (merit) + NCC bonus marks",
+  "PST: 6x vacancies per category called, qualifying",
+  "PET: qualifying",
+  "Document verification, medical"
+ ],
+ "physical": [
+  [
+   "PST_male",
+   "Height 5'6\" min; chest 32\" unexpanded, 33.5\" expanded"
+  ],
+  [
+   "PST_female",
+   "Height 5'2\" min"
+  ],
+  [
+   "relaxation",
+   "Height relaxed by 2\" for Gorkha community / Bot tribe"
+  ],
+  [
+   "PET_male",
+   "1600 m in 6.5 min; 20 push-ups"
+  ],
+  [
+   "PET_female",
+   "1000 m in 6.5 min; shot put (4 kg) 14.5 ft in three attempts"
+  ],
+  [
+   "ex_servicemen",
+   "Relaxed by age band (see advertisement Annexure B)"
+  ]
+ ],
+ "extras": [
+  [
+   "NCC bonus",
+   "5% of max marks (C cert), 3% (B), 2% (A), per S.O. 290 of 2021"
+  ]
+ ],
+ "weightage": null,
+ "pastCutoffs": {
+  "source": "Final selection list, Advt 01 of 2024, Item 03 (20.02.2026)",
+  "pdf": "https://jkssb.nic.in/Pdf/Final_Selection_list_Telecommunication_20022026.pdf",
+  "outOf": 100,
+  "note": "502 posts in 2024; 174 now.",
+  "tables": [
+   {
+    "label": "Constable (Telecommunication)",
+    "rows": [
+     [
+      "OM",
+      60.75,
+      48.25
+     ],
+     [
+      "SC",
+      45.0,
+      45.25
+     ],
+     [
+      "ST-1",
+      45.25,
+      48.75
+     ],
+     [
+      "ST-2",
+      52.5,
+      49.25
+     ],
+     [
+      "OBC",
+      48.25,
+      48.25
+     ],
+     [
+      "RBA",
+      58.75,
+      48.25
+     ],
+     [
+      "ALC/IB",
+      49.0,
+      48.0
+     ],
+     [
+      "EWS",
+      40.5,
+      39.75
+     ]
+    ]
+   }
+  ]
+ },
+ "papers": [
+  {
+   "title": "Constable (Telecommunication) 2024, Set A",
+   "url": "https://jkssb.nic.in/Pdf/SET-A CONSTABLE TELECOMMUNICATIONS 08-12-2024.pdf"
+  },
+  {
+   "title": "Constable (Photographer) 2024, Series A",
+   "url": "https://jkssb.nic.in/Pdf/QP Series A Constable (Photography) 22.12.2024.pdf"
+  }
+ ],
+ "docs": [
+  {
+   "label": "Advertisement 15 of 2025 (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Advertisement_15OF2025_31122025.pdf"
+  },
+  {
+   "label": "Syllabus (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Syllabus_Constable_Telecommunication_photographer_21102026.pdf"
+  },
+  {
+   "label": "Exam schedule notice (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/notice_01082026.pdf"
+  }
+ ],
+ "notes": [],
+ "checked": "2026-11-16"
+}

@@ -1,0 +1,121 @@
+{
+ "slug": "advt-08-2026",
+ "title": "Junior Pharmacist, Staff Nurse, Lab Assistant & more (518 posts)",
+ "board": "JKSSB",
+ "advert": {
+  "no": "08 of 2026",
+  "date": "4 Aug 2026",
+  "items": "104-181"
+ },
+ "postsTotal": 518,
+ "postsNote": null,
+ "postTables": [
+  {
+   "label": "All posts",
+   "counts": [
+    221,
+    54,
+    63,
+    52,
+    32,
+    22,
+    38,
+    36
+   ]
+  }
+ ],
+ "postList": [
+  [
+   "Health & Medical Education",
+   421
+  ],
+  [
+   "Higher Education",
+   48
+  ],
+  [
+   "Agriculture Production",
+   46
+  ],
+  [
+   "Labour & Employment",
+   3
+  ]
+ ],
+ "mainPosts": null,
+ "pay": null,
+ "cadre": null,
+ "qualification": null,
+ "age": {
+  "asOn": "1 Jan 2026",
+  "rows": [
+   [
+    "OM",
+    "40"
+   ],
+   [
+    "SC/ST-1/ST-2/RBA/ALC-IB/EWS/OBC",
+    "43"
+   ],
+   [
+    "PwBD",
+    "42"
+   ]
+  ],
+  "min": null,
+  "note": null
+ },
+ "fee": [
+  [
+   "general",
+   "₹600"
+  ],
+  [
+   "SC/ST-1/ST-2/EWS/PwBD",
+   "₹500"
+  ]
+ ],
+ "dates": [
+  [
+   "Applications opened",
+   "10 Sep 2026"
+  ],
+  [
+   "Last date to apply",
+   "24 Oct 2026 (extended from 09.10.2026)"
+  ],
+  [
+   "Form edit window",
+   "16 Nov 2026 – 20 Nov 2026"
+  ],
+  [
+   "Exam date",
+   "Not announced yet"
+  ]
+ ],
+ "status": null,
+ "pattern": null,
+ "negativeText": "One-fourth of the marks of the question for each wrong answer",
+ "syllabusNote": "To be notified",
+ "selection": null,
+ "physical": null,
+ "extras": [],
+ "weightage": null,
+ "pastCutoffs": null,
+ "papers": [
+  {
+   "title": "Junior Laboratory Technician 2025",
+   "url": "https://jkssb.nic.in/Pdf/JUNIOR LABORATORY TECHNICIAN.pdf"
+  }
+ ],
+ "docs": [
+  {
+   "label": "Advertisement 08 of 2026 (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Advertisement_08OF2026_04082026.pdf"
+  }
+ ],
+ "notes": [
+  "Recent results for similar H&ME posts (Junior Staff Nurse 28.06.2026, Staff Nurse Gr-II 12.07.2026) can give cut-off references."
+ ],
+ "checked": "2026-11-16"
+}

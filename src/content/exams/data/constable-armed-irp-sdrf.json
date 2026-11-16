@@ -1,0 +1,298 @@
+{
+ "slug": "constable-armed-irp-sdrf",
+ "title": "JK Police Constable (Armed/IRP and SDRF)",
+ "board": "JKSSB",
+ "advert": {
+  "no": "14 of 2025",
+  "date": "31 Dec 2025",
+  "items": "323-324"
+ },
+ "postsTotal": 487,
+ "postsNote": null,
+ "postTables": [
+  {
+   "label": "Constable (Armed/IRP)",
+   "counts": [
+    169,
+    34,
+    42,
+    42,
+    33,
+    17,
+    42,
+    42
+   ]
+  },
+  {
+   "label": "Constable (SDRF)",
+   "counts": [
+    27,
+    5,
+    7,
+    7,
+    5,
+    3,
+    6,
+    6
+   ]
+  },
+  {
+   "label": "Total",
+   "counts": [
+    196,
+    39,
+    49,
+    49,
+    38,
+    20,
+    48,
+    48
+   ]
+  }
+ ],
+ "postList": null,
+ "mainPosts": null,
+ "pay": "Level-2 (19900-63200)",
+ "cadre": "UT",
+ "qualification": [
+  [
+   "",
+   "Matriculation"
+  ]
+ ],
+ "age": {
+  "asOn": "1 Jan 2025",
+  "rows": [
+   [
+    "all categories",
+    "28"
+   ],
+   [
+    "in-service police",
+    "30"
+   ],
+   [
+    "SPOs and VHGs",
+    "40"
+   ]
+  ],
+  "min": 18,
+  "note": "Ex-servicemen may deduct service period (up to 3 years over the limit)."
+ },
+ "fee": [
+  [
+   "general",
+   "₹700"
+  ],
+  [
+   "SC/ST-1/ST-2/EWS",
+   "₹600"
+  ]
+ ],
+ "dates": [
+  [
+   "Applications opened",
+   "1 Feb 2026"
+  ],
+  [
+   "Last date to apply",
+   "2 Mar 2026 (extended; see notice 27.02.2026)"
+  ],
+  [
+   "Exam date",
+   "20 Dec 2026"
+  ]
+ ],
+ "status": null,
+ "pattern": {
+  "questions": 100,
+  "marksEach": 1,
+  "total": 100,
+  "negative": 0.25,
+  "durationMin": 120,
+  "sections": [
+   [
+    "General English",
+    25
+   ],
+   [
+    "General Knowledge & current affairs (India)",
+    25
+   ],
+   [
+    "General Knowledge, J&K",
+    10
+   ],
+   [
+    "Numerical & Reasoning Ability",
+    25
+   ],
+   [
+    "Basic Concepts of Computers",
+    15
+   ]
+  ],
+  "sectionUnit": "questions"
+ },
+ "negativeText": null,
+ "syllabusNote": null,
+ "selection": [
+  "Written test (merit) + NCC bonus marks",
+  "PST: 6x vacancies per category called, qualifying",
+  "PET: qualifying",
+  "Document verification, medical"
+ ],
+ "physical": [
+  [
+   "PST_male",
+   "Height 5'6\" min; chest 32\" unexpanded, 33.5\" expanded"
+  ],
+  [
+   "PST_female",
+   "Height 5'2\" min"
+  ],
+  [
+   "relaxation",
+   "Height relaxed by 2\" for Gorkha community / Bot tribe"
+  ],
+  [
+   "PET_male",
+   "1600 m in 6.5 min; 20 push-ups"
+  ],
+  [
+   "PET_female",
+   "1000 m in 6.5 min; shot put (4 kg) 14.5 ft in three attempts"
+  ],
+  [
+   "ex_servicemen",
+   "Relaxed by age band (see advertisement Annexure B)"
+  ]
+ ],
+ "extras": [
+  [
+   "NCC bonus",
+   "5% of max marks (C cert), 3% (B), 2% (A), per S.O. 290 of 2021"
+  ]
+ ],
+ "weightage": null,
+ "pastCutoffs": {
+  "source": "Final selection list, Advt 01 of 2024 (20.02.2026)",
+  "pdf": "https://jkssb.nic.in/Pdf/Final_Selection_list_Constable_20022026.pdf",
+  "outOf": 100,
+  "note": "2024 had 1689 Armed/IRP and 100 SDRF posts; 2025 has 421 and 66, so cut-offs may run higher.",
+  "tables": [
+   {
+    "label": "Constable (Armed/IRP)",
+    "rows": [
+     [
+      "OM",
+      62.75,
+      47.75
+     ],
+     [
+      "SC",
+      49.0,
+      47.75
+     ],
+     [
+      "ST-1",
+      43.75,
+      44.5
+     ],
+     [
+      "ST-2",
+      49.75,
+      47.75
+     ],
+     [
+      "OBC",
+      46.0,
+      46.25
+     ],
+     [
+      "RBA",
+      61.0,
+      47.75
+     ],
+     [
+      "ALC/IB",
+      54.0,
+      47.75
+     ],
+     [
+      "EWS",
+      32.5,
+      33.25
+     ]
+    ]
+   },
+   {
+    "label": "Constable (SDRF)",
+    "rows": [
+     [
+      "OM",
+      71.0,
+      54.25
+     ],
+     [
+      "SC",
+      53.75,
+      null
+     ],
+     [
+      "ST-1",
+      49.0,
+      null
+     ],
+     [
+      "ST-2",
+      62.75,
+      56.5
+     ],
+     [
+      "OBC",
+      58.75,
+      null
+     ],
+     [
+      "RBA",
+      69.5,
+      63.75
+     ],
+     [
+      "ALC/IB",
+      60.0,
+      null
+     ],
+     [
+      "EWS",
+      50.25,
+      null
+     ]
+    ]
+   }
+  ]
+ },
+ "papers": [
+  {
+   "title": "Constable (Executive/Armed/IRP/SDRF) 2024, Set A",
+   "url": "https://jkssb.nic.in/Pdf/SET-A CONSTABLE 01-12-2024_0001.pdf"
+  }
+ ],
+ "docs": [
+  {
+   "label": "Advertisement 14 of 2025 (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Advertisement_14OF2025_31122025.pdf"
+  },
+  {
+   "label": "Syllabus (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Syllabus_constable_ARMED_IRP_SDRF_21102026.pdf"
+  },
+  {
+   "label": "Exam schedule notice (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/notice_01082026.pdf"
+  }
+ ],
+ "notes": [],
+ "checked": "2026-11-16"
+}
