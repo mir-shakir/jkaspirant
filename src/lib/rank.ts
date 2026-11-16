@@ -198,7 +198,7 @@ export interface Prediction {
     name: string;
     seats: number;
     rank: { low: number; mid: number; high: number };
-    cutoff: { low: number; high: number };
+    cutoff: { low: number; mid: number; high: number };
   };
   /** Which list the most likely rank lands in. */
   seat: "open" | "category" | null;
@@ -287,7 +287,7 @@ export function predict(exam: PredictExam, score: number, stats: ShareStats | nu
       name: categoryName,
       seats: res.posts,
       rank: { low: Math.min(...ranks), mid: ranks[1], high: Math.max(...ranks) },
-      cutoff: { low: round1(catCutoff(mean - tau)), high: round1(catCutoff(mean + tau)) },
+      cutoff: { low: round1(catCutoff(mean - tau)), mid: round1(catCutoff(mean)), high: round1(catCutoff(mean + tau)) },
     };
   }
 
@@ -315,6 +315,36 @@ export function predict(exam: PredictExam, score: number, stats: ShareStats | nu
     dataWeight,
     shared,
   };
+}
+
+export interface ExpectedCutoff {
+  category: string;
+  seats: number;
+  /** Most likely cut-off, to the nearest half mark. */
+  cutoff: number;
+}
+
+/**
+ * The most likely cut-off for open merit and each reserved category, from the
+ * same model that drives individual predictions. `catCounts` is how many shared
+ * scores each category has (refines its share of candidates). A reserved
+ * cut-off is never shown above open merit: anyone above that line gets an
+ * open seat anyway.
+ */
+export function expectedCutoffs(
+  exam: PredictExam & { categories: string[] },
+  stats: Pick<ShareStats, "total" | "histogram"> | null,
+  catCounts: Record<string, number> = {}
+): ExpectedCutoff[] {
+  const statsFor = (cat: string): ShareStats | null =>
+    stats ? { total: stats.total, histogram: stats.histogram, above: 0, catAbove: 0, catTotal: catCounts[cat] ?? 0 } : null;
+  const open = predict(exam, 0, statsFor("OM"), "OM").cutoff.mid;
+  return exam.categories.map((cat) => {
+    const res = exam.reserved[cat];
+    if (!res) return { category: cat, seats: exam.openSeats, cutoff: open };
+    const p = predict(exam, 0, statsFor(cat), cat);
+    return { category: cat, seats: res.posts, cutoff: Math.min(open, p.category?.cutoff.mid ?? open) };
+  });
 }
 
 /**

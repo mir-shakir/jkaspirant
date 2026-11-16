@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { LOGO_A_PATH, LOGO_NAVY, LOGO_RED } from "@/components/LogoMark";
 
 // Default share image (1200x630), referenced as siteConfig.ogImage.
 export const dynamic = "force-static";
@@ -18,9 +19,12 @@ export function GET() {
           color: "#1c1917",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
+          <svg width="130" height="130" viewBox="0 0 100 100">
+            <path d={LOGO_A_PATH} fill={LOGO_NAVY} />
+            <circle cx="50" cy="43" r="6" fill={LOGO_RED} />
+          </svg>
           <div style={{ fontSize: 104, fontWeight: 700, letterSpacing: -2 }}>JK Aspirant</div>
-          <div style={{ width: 22, height: 22, borderRadius: 11, background: "hsl(8, 68%, 46%)", marginTop: 30 }} />
         </div>
         <div style={{ fontSize: 40, marginTop: 24, color: "#57534e" }}>
           JKSSB &amp; JKPSC updates, exam dates and rank tools

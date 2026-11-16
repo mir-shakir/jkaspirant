@@ -45,10 +45,10 @@ export const liveExams: Record<string, LiveExam> = {
     awaited: true,
   },
   "advt-08-2026": {
-    title: "Advertisement 08 of 2026 (various posts)",
+    title: "Staff Nurse, Lab Technician, Pharmacist & more",
     board: "JKSSB",
     posts: 518,
-    status: "Applications closed · form edit 16–20 Nov",
+    status: "Advt 08 of 2026 · form edit open till 20 Nov",
     awaited: true,
   },
   "junior-engineer-civil": {

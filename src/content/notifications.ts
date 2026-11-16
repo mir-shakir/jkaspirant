@@ -102,21 +102,29 @@ export const contentNotifications: ContentNotification[] = [
   },
   {
     slug: "jkssb-advt-08-2026-edit-option",
-    title: "JKSSB Advertisement 08 of 2026: edit your form from 16 to 20 November",
+    title: "JKSSB Staff Nurse, Lab Technician, Pharmacist & more (518 posts): edit your form by 20 November",
     category: "notification",
     published_at: "2026-11-16T12:00:00+05:30",
     summary:
-      "Candidates who applied under Advertisement 08 of 2026 (518 posts) can edit their application form from 16 to 20 November 2026.",
+      "Applied for Junior Staff Nurse, Lab Technician, Pharmacist or the other 518 posts under JKSSB Advertisement 08 of 2026? You can edit your form from 16 to 20 November 2026.",
     body: `
-<p>JKSSB has opened an <strong>edit option</strong> for candidates who applied for posts under Advertisement Notification No. 08 of 2026 (dated 04.08.2026, Items 104 to 181).</p>
+<p>If you applied for any of the <strong>518 posts</strong> in JKSSB's Advertisement Notification No. 08 of 2026 (dated 04.08.2026), you can now <strong>edit your application form</strong>.</p>
 <ul>
   <li><strong>When:</strong> 16 November 2026 (12:00 AM) to 20 November 2026 (11:59 PM)</li>
   <li><strong>Cannot be changed:</strong> name, date of birth, category, posts applied for, phone number and email</li>
 </ul>
-<p>Applications for this advertisement closed on 24 October 2026. The exam dates have not been announced yet.</p>
+<h2>Which posts this covers</h2>
+<ul>
+  <li><strong>Health and Medical Education, 421 posts:</strong> Junior Staff Nurse, Junior Lab Technician, Junior Pharmacist, Ophthalmic Technician, Junior Theatre Technician, Para Medical Assistant, Health Educator, Sanitary Inspector and more</li>
+  <li><strong>Higher Education, 48 posts:</strong> Junior Laboratory Assistant and others</li>
+  <li><strong>Agriculture Production, 46 posts:</strong> mainly Horticulture Technician Grade-IV</li>
+  <li><strong>Labour and Employment:</strong> 3 posts</li>
+</ul>
+<p>Applications closed on 24 October 2026. Exam dates have not been announced yet.</p>
+<p><a href="${PDF}/Advertisement_08OF2026_04082026.pdf">Full advertisement with every post (PDF)</a></p>
 <p>Notice No. JKSSB-PLAN/6/2025-03, dated 11.11.2026.</p>`,
     source_url: `${PDF}/Edit_option_08OF2026_11112026.pdf`,
-    exam: { slug: "advt-08-2026", title: "Advertisement 08 of 2026 (various posts)" },
+    exam: { slug: "advt-08-2026", title: "Staff Nurse, Lab Technician, Pharmacist & more" },
   },
   {
     slug: "jkssb-junior-engineer-mechanical-notification-2026",
