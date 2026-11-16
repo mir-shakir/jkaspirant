@@ -2,6 +2,9 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { RankPredictor } from "@/components/rank/RankPredictor";
+import { CutoffCard } from "@/components/rank/CutoffCard";
+import { expectedCutoffs } from "@/lib/rank";
+import { getCutoffStats } from "@/lib/queries/rank";
 import { GroupList, PageHeader, Row } from "@/components/ui";
 import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getRankExam, rankExams } from "@/config/rank-predictor";
@@ -16,13 +19,17 @@ export function generateStaticParams() {
 
 export const dynamicParams = false;
 
+// Rebuilt at most every 15 minutes so the expected cut-offs stay fresh while the
+// database sees one read per refresh, however many people open the page.
+export const revalidate = 900;
+
 export function generateMetadata({ params }: PageProps): Metadata {
   const exam = getRankExam(params.tool);
   if (!exam) return {};
   const year = exam.examDate.slice(0, 4);
   return buildMetadata({
-    title: `${exam.fullName} Rank Predictor ${year} — Score & Expected Rank`,
-    description: `Enter your correct and wrong answers to get your ${exam.name} ${year} score and expected rank for the ${exam.posts} posts. Free, no sign-up.`,
+    title: `${exam.fullName} Expected Cut-off ${year} & Rank Predictor`,
+    description: `Expected ${exam.name} ${year} cut-off for every category (OM, SC, ST, OBC, RBA, EWS and more), plus your score and expected rank for the ${exam.posts} posts. Free, no sign-up.`,
     canonicalPath: `/tools/${exam.toolSlug}`,
     keywords: [
       `${exam.board} ${exam.name} rank predictor`,
@@ -33,11 +40,13 @@ export function generateMetadata({ params }: PageProps): Metadata {
   });
 }
 
-export default function RankToolPage({ params }: PageProps) {
+export default async function RankToolPage({ params }: PageProps) {
   const exam = getRankExam(params.tool);
   if (!exam) notFound();
 
   const year = exam.examDate.slice(0, 4);
+  const cutoffData = await getCutoffStats(exam.examKey);
+  const cutoffs = cutoffData ? expectedCutoffs(exam, cutoffData.stats, cutoffData.catCounts) : null;
   const breadcrumbItems = [
     { name: "Tools", path: "/tools" },
     { name: `${exam.name} rank predictor`, path: `/tools/${exam.toolSlug}` },
@@ -83,6 +92,18 @@ export default function RankToolPage({ params }: PageProps) {
         title="What rank will you get?"
         lede={exam.answerKeyReleased ? "Check your answers against the official key, then count your right and wrong." : "Count your right and wrong answers. We'll do the rest."}
       />
+
+      {cutoffs && cutoffData && (
+        <div className="mt-5">
+          <CutoffCard
+            examLabel={`${exam.board} ${exam.name} ${year}`}
+            cutoffs={cutoffs}
+            shared={cutoffData.stats.total}
+            updatedAt={new Date()}
+            outOf={exam.totalQuestions * exam.marksPerCorrect}
+          />
+        </div>
+      )}
 
       {exam.answerKeyReleased && exam.answerKeyUrl && (
         <GroupList className="mt-5">

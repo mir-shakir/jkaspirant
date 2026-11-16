@@ -6,9 +6,9 @@ import { usePathname } from "next/navigation";
 // The four places on the site. Each tab also owns the pages underneath it,
 // so the highlighted tab always answers "where am I?".
 const tabs = [
-  { href: "/", label: "Home", match: ["/calendar", "/search"], icon: "M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5V15h-6v5.5H4a.5.5 0 0 1-.5-.5v-9.5Z" },
+  { href: "/", label: "Home", match: ["/calendar"], icon: "M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5V15h-6v5.5H4a.5.5 0 0 1-.5-.5v-9.5Z" },
   { href: "/notifications", label: "Updates", match: [], icon: "M6 9a6 6 0 1 1 12 0c0 6.5 2.5 8 2.5 8h-17S6 15.5 6 9Zm4.2 11.5a2 2 0 0 0 3.6 0" },
-  { href: "/exams", label: "Exams", match: ["/resources"], icon: "M5 4.5h11.5a2.5 2.5 0 0 1 2.5 2.5v12.5H7.5A2.5 2.5 0 0 1 5 17V4.5Zm0 12.5a2.5 2.5 0 0 1 2.5-2.5H19M9 8.5h6" },
+  { href: "/exams", label: "Exams", match: [], icon: "M5 4.5h11.5a2.5 2.5 0 0 1 2.5 2.5v12.5H7.5A2.5 2.5 0 0 1 5 17V4.5Zm0 12.5a2.5 2.5 0 0 1 2.5-2.5H19M9 8.5h6" },
   { href: "/tools", label: "Tools", match: [], icon: "M5 20V10m7 10V4m7 16v-7" },
 ];
 

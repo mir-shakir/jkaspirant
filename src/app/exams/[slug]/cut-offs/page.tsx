@@ -29,6 +29,8 @@ export default async function CutoffsPage({ params }: PageProps) {
   const exam = await getExamBySlug(params.slug);
   if (!exam) notFound();
   const cutoffs = await getCutoffs(exam.id);
+  // Empty sections have no tab and no page.
+  if (cutoffs.length === 0) notFound();
 
   return (
     <div className="page-shell py-4 sm:py-8">

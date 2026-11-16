@@ -17,7 +17,7 @@ export default function NotFound() {
       <GroupList className="mt-6">
         <Row href="/notifications" title="Latest updates" />
         <Row href="/exams" title="Exams" />
-        <Row href="/search" title="Search" />
+        <Row href="/calendar" title="Exam calendar" />
       </GroupList>
       <Link href="/" className="btn-secondary mt-4 w-full">
         Go to home

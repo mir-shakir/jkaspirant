@@ -19,7 +19,7 @@ export interface Spotlight {
 export const spotlight: Spotlight | null = {
   exam: "JKSSB FAA 2026",
   headline: "Answer key is out.",
-  detail: "Provisional key, all four series · objections from 16 Nov",
+  detail: "Provisional key, all four series · objections 16–18 Nov, in person",
   stages: [
     { label: "Exam", status: "done" },
     { label: "Answer key", status: "done" },

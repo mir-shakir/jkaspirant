@@ -26,13 +26,24 @@ export default async function HomePage() {
   const [exams, notifications] = await Promise.all([getAllExams(), getLatestNotifications(4)]);
   const events = upcomingEvents(4);
 
-  const websiteJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: siteConfig.name,
-    url: siteConfig.url,
-    description: siteConfig.description,
-  };
+  // Site name and logo for search results.
+  const websiteJsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: siteConfig.name,
+      alternateName: ["JKAspirant", "jkaspirant.in"],
+      url: `${siteConfig.url}/`,
+      description: siteConfig.description,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: siteConfig.name,
+      url: `${siteConfig.url}/`,
+      logo: `${siteConfig.url}/logo.png`,
+    },
+  ];
 
   return (
     <div className="page-shell py-4 sm:py-8">
