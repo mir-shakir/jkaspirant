@@ -16,6 +16,7 @@ const nextConfig = {
       { source: "/bundles/:path*", destination: "/", permanent: false },
       { source: "/search", destination: "/notifications", permanent: true },
       { source: "/resources", destination: "/exams", permanent: true },
+      { source: "/feedback", destination: "/contact", permanent: true },
     ];
   },
   async headers() {

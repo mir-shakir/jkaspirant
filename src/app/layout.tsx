@@ -29,7 +29,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: `${siteConfig.name} — JKSSB & JKPSC Updates, Tools & Papers`,
+    default: `${siteConfig.name} — JKSSB Exam Updates, Dates & Rank Tools`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,

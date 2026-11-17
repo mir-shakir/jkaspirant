@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!exam) return {};
   return buildMetadata({
     title: `${exam.title} Previous Papers`,
-    description: `Download previous year question papers for ${exam.title} as PDF, free.`,
+    description: `Download previous year question papers for ${exam.title} as PDF.`,
     canonicalPath: `/exams/${exam.slug}/previous-papers`,
     keywords: [`${exam.title} previous papers`, `${exam.title} question paper pdf`],
   });

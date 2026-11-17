@@ -4,13 +4,11 @@ import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { siteConfig } from "@/config/site";
 
 export const metadata = buildMetadata({
-  title: "About JK Aspirant: Why This Site Exists",
+  title: "About JK Aspirant: Why We Built It and Where Our Information Comes From",
   description:
-    "JK Aspirant turns official JKSSB and JKPSC notices into clear, accurate pages: dates, posts, eligibility, past cut-offs and rank tools. Independent, no ads, every fact linked to its source.",
+    "Official JKSSB notices are hard to find and harder to read. JK Aspirant turns them into clear pages, using official notices only and linking every one so you can check it yourself.",
   canonicalPath: "/about",
 });
-
-const LINKEDIN = "https://www.linkedin.com/in/shakir-majeed-mir";
 
 export default function AboutPage() {
   const breadcrumbItems = [{ name: "About", path: "/about" }];
@@ -18,13 +16,7 @@ export default function AboutPage() {
     "@context": "https://schema.org",
     "@type": "AboutPage",
     url: `${siteConfig.url}/about`,
-    mainEntity: {
-      "@type": "Organization",
-      name: siteConfig.name,
-      url: `${siteConfig.url}/`,
-      logo: `${siteConfig.url}/logo.png`,
-      founder: { "@type": "Person", name: "Shakir", sameAs: [LINKEDIN] },
-    },
+    mainEntity: { "@type": "Organization", name: siteConfig.name, url: `${siteConfig.url}/`, logo: `${siteConfig.url}/logo.png` },
   };
 
   return (
@@ -32,45 +24,49 @@ export default function AboutPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(breadcrumbItems)) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Breadcrumb items={breadcrumbItems} />
-      <PageHeader title="Clear exam information, without the clutter" lede="JK Aspirant is a free site for people preparing for JKSSB and JKPSC exams." />
+      <PageHeader title="Why we built JK Aspirant" />
 
-      <div className="mt-6 space-y-4 text-[15.5px] leading-7">
+      <div className="mt-5 space-y-4 text-[16px] leading-[1.75]">
         <p>
-          Official notices come out as PDFs, often scanned, and are listed only by advertisement number. To find out what a notice means for you, you have to open it, read
-          it and work out which posts it covers. The sites that summarise them are crowded with ads and pop-ups, and their facts are not always right.
+          If you have ever tried to find one date on the JKSSB website, you know how it goes. The site is slow, and every notice is a PDF listed only by its
+          advertisement number. To find out which one is about your post, you open them one by one, often on a weak connection, often to find a scanned page you can
+          barely read.
         </p>
         <p>
-          JK Aspirant reads the official documents and puts what matters in plain words: which posts, how many seats in your category, who can apply, when the exam is,
-          how the paper is marked, and what the cut-off was last time. Every page links the notice it came from.
+          So most of us end up on websites and groups that copy the same notices, surrounded by ads and pop-ups, and not always correctly. When a date or a post count
+          matters this much, that isn&apos;t good enough.
+        </p>
+        <p>
+          We built JK Aspirant to make this simple. We read the official notices and put what you actually need on one clear page: which posts, how many seats in your
+          category, who can apply, when the exam is, how the paper is marked, and what the cut-off was last time.
         </p>
       </div>
 
-      <Section title="How we keep it accurate">
-        <ul className="list-disc space-y-1.5 pl-5 text-[15px] leading-6">
-          <li>Facts come only from official JKSSB and JKPSC notices. If a notice doesn&apos;t say it, we leave it out.</li>
-          <li>Each exam page shows the date it was last checked against the official documents.</li>
-          <li>Estimates, like expected cut-offs and ranks, are always labelled as estimates.</li>
-          <li>If something is wrong, tell us and we&apos;ll fix it. The official notice always wins.</li>
-        </ul>
-        <p className="mt-3 text-[14px] text-[hsl(var(--muted))]">JK Aspirant is independent. It is not affiliated with JKSSB, JKPSC or the Government of Jammu and Kashmir.</p>
+      <Section title="Why you can rely on it">
+        <div className="space-y-4 text-[16px] leading-[1.75]">
+          <p>
+            A site like this is only useful if you can trust it, so we hold ourselves to one rule: <strong>everything comes from official JKSSB notices.</strong> Not
+            from news sites, forwarded messages or guesswork.
+          </p>
+          <ul className="list-disc space-y-2 pl-5">
+            <li>Every update and exam page links the official notice it is based on, so you can check it yourself in one tap.</li>
+            <li>If a notice doesn&apos;t say something, we don&apos;t fill the gap. You&apos;ll see &ldquo;not announced yet&rdquo; instead.</li>
+            <li>Anything that is our estimate, like an expected cut-off or rank, is clearly marked as an estimate.</li>
+            <li>Each exam page shows when it was last checked against the official documents, and we update it when JKSSB issues a change.</li>
+          </ul>
+          <p>
+            If something here ever differs from the official notice, the notice is right, and we want to know so we can fix it.
+          </p>
+        </div>
       </Section>
 
-      <Section title="Who runs it">
-        <p className="text-[15.5px] leading-7">
-          JK Aspirant is built and run by Shakir as an independent project, to give aspirants in J&amp;K a cleaner, more trustworthy place to follow their exams.
-        </p>
-        <GroupList className="mt-3">
-          <Row href={LINKEDIN} external title="Shakir on LinkedIn" sub="Follow or say hello" />
-        </GroupList>
-      </Section>
-
-      <Section title="Help make it better">
+      <Section title="Talk to us">
+        <p className="mb-3 text-[16px] leading-[1.75]">Spotted a mistake, have a question or an idea for the site? Write to us. We read every message.</p>
         <GroupList>
-          <Row href="/feedback?type=wrong_info" title="Report wrong information" sub="A date, number or detail that doesn't match the notice" />
-          <Row href="/feedback?type=feature" title="Suggest a feature" sub="A tool or page that would help you" />
+          <Row href="/contact" title="Contact us" sub="Corrections, questions, suggestions" />
           {siteConfig.telegramUrl && <Row href={siteConfig.telegramUrl} external title="JKSSB updates on Telegram" sub="Exam dates, answer keys and results" />}
         </GroupList>
-        <p className="mt-3 text-[14px] text-[hsl(var(--muted))]">The simplest way to support the site is to share it with someone preparing for an exam.</p>
+        <p className="mt-4 text-[13.5px] text-[hsl(var(--muted))]">JK Aspirant is independent and is not affiliated with JKSSB or the Government of Jammu and Kashmir.</p>
       </Section>
     </div>
   );

@@ -7,7 +7,7 @@ const links = [
   { href: "/calendar", label: "Calendar" },
   { href: "/tools", label: "Tools" },
   { href: "/about", label: "About" },
-  { href: "/feedback", label: "Feedback" },
+  { href: "/contact", label: "Contact" },
   { href: "/privacy", label: "Privacy" },
 ];
 
@@ -17,7 +17,7 @@ export function Footer() {
       <div className="page-shell py-8">
         <p className="font-display text-xl font-semibold">JK Aspirant</p>
         <p className="mt-1.5 max-w-sm text-[13.5px] leading-6 text-[hsl(var(--muted))]">
-          Exam updates and tools for J&amp;K aspirants. No ads. Every update links to the official notice.
+          JKSSB exam updates and tools for J&amp;K aspirants. Every update links to the official notice.
         </p>
 
         <nav aria-label="Footer" className="mt-5 flex flex-wrap gap-x-5 gap-y-1">
@@ -34,13 +34,10 @@ export function Footer() {
           <a href="https://jkssb.nic.in" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[40px] items-center text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]">
             JKSSB ↗
           </a>
-          <a href="https://jkpsc.nic.in" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[40px] items-center text-sm text-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]">
-            JKPSC ↗
-          </a>
         </nav>
 
         <p className="mt-5 text-[12px] text-[hsl(var(--muted))]">
-          © {new Date().getFullYear()} JK Aspirant. Independent; not affiliated with JKSSB or JKPSC. The official notice always wins.
+          © {new Date().getFullYear()} JK Aspirant. Independent; not affiliated with JKSSB. The official notice always wins.
         </p>
       </div>
     </footer>

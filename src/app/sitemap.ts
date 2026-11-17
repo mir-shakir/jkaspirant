@@ -41,7 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: url("/calendar"), lastModified: contentChanged, changeFrequency: "daily", priority: 0.7 },
     { url: url("/about"), changeFrequency: "monthly", priority: 0.4 },
     { url: url("/privacy"), changeFrequency: "yearly", priority: 0.2 },
-    { url: url("/feedback"), changeFrequency: "yearly", priority: 0.3 },
+    { url: url("/contact"), changeFrequency: "yearly", priority: 0.3 },
     { url: url("/tools"), changeFrequency: "weekly", priority: 0.7 },
     ...rankExams.map((t) => ({ url: url(`/tools/${t.toolSlug}`), lastModified: now, changeFrequency: "hourly" as const, priority: 0.9 })),
     ...exams.map((e) => {

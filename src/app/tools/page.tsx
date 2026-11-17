@@ -4,8 +4,8 @@ import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { rankExams } from "@/config/rank-predictor";
 
 export const metadata = buildMetadata({
-  title: "Tools — Rank Predictor & Score Calculator for JKSSB, JKPSC",
-  description: "Free tools for J&K aspirants: score calculator with negative marking and rank predictor. No sign-up.",
+  title: "JKSSB Tools — Rank Predictor, Cut-offs, Result Search, Age Checker",
+  description: "Tools for JKSSB aspirants: rank predictor, previous cut-offs by category, result search by roll number and an age limit checker. No sign-up.",
   canonicalPath: "/tools",
   keywords: ["JKSSB rank predictor", "JKSSB score calculator", "JKSSB FAA rank predictor"],
 });
@@ -18,7 +18,7 @@ export default function ToolsPage() {
     <div className="page-shell py-4 sm:py-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(breadcrumbItems)) }} />
       <Breadcrumb items={breadcrumbItems} />
-      <PageHeader title="Tools" lede="Free, quick, no sign-up." />
+      <PageHeader title="Tools" lede="Quick to use, no sign-up." />
 
       <Section title="Rank predictors" className="!mt-6">
         <GroupList>

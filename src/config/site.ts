@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: "JK Aspirant",
   description:
-    "Your one-stop resource for JKSSB and JKPSC exam notifications, syllabi, previous papers, cut-offs, and important dates.",
+    "Clear JKSSB exam updates from official notices: dates, posts, eligibility, past cut-offs and rank tools.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://jkaspirant.in",
   ogImage: "/og-default.png",
   // Partner channel (run by a friend of the owner): study material and updates.
@@ -12,7 +12,6 @@ export const siteConfig = {
   creator: "JK Aspirant",
   keywords: [
     "JKSSB",
-    "JKPSC",
     "Kashmir jobs",
     "JKSSB notifications",
     "JKSSB syllabus",

@@ -38,9 +38,9 @@ export default function PrivacyPage() {
             again. If you join the leaderboard, your name too; others only ever see its first letters (like Sh*** Mi***). We don&apos;t ask for a phone number, roll number
             or email.
           </Item>
-          <Item title="Feedback">Your message, what it&apos;s about, the page you sent it from and, only if you give it, your email or phone so we can reply.</Item>
+          <Item title="Contact form">Your message, the page you wrote from and, only if you give it, your email or phone so we can reply.</Item>
           <Item title="Abuse protection">
-            A one-way scrambled form of your network address, so one network can&apos;t flood the rank tool or the feedback form. It can&apos;t be turned back into the
+            A one-way scrambled form of your network address, so one network can&apos;t flood the rank tool or the contact form. It can&apos;t be turned back into the
             address.
           </Item>
           <Item title="On your phone only">
@@ -50,21 +50,21 @@ export default function PrivacyPage() {
         </div>
         <p className="mt-3 text-[14px] leading-6 text-[hsl(var(--muted))]">
           We don&apos;t sell or share your data, and we don&apos;t show ads. Searches on the result pages aren&apos;t saved; the names and marks shown there come from
-          JKSSB&apos;s own published score sheets. To have your saved score, leaderboard name or feedback removed, send a request through the feedback form.
+          JKSSB&apos;s own published score sheets. To have your saved score, leaderboard name or a message removed, write to us through the contact form.
         </p>
       </Section>
 
       <Section title="Disclaimer">
         <ul className="list-disc space-y-1.5 pl-5 text-[15px] leading-6">
-          <li>JK Aspirant is an independent site. It is not affiliated with JKSSB, JKPSC or the Government of Jammu and Kashmir.</li>
+          <li>JK Aspirant is an independent site. It is not affiliated with JKSSB or the Government of Jammu and Kashmir.</li>
           <li>We take facts from official notices and link each one, but mistakes can happen and notices change. The official notice always wins; check it before you act.</li>
           <li>Expected cut-offs and ranks are estimates, not predictions of your result.</li>
         </ul>
       </Section>
 
       <GroupList className="mt-8">
-        <Row href="/feedback" title="Questions or removal requests" sub="Use the feedback form" />
-        <Row href="/about" title="About JK Aspirant" sub="Why the site exists and who runs it" />
+        <Row href="/contact" title="Questions or removal requests" sub="Use the contact form" />
+        <Row href="/about" title="About JK Aspirant" sub="Why we built it and where our information comes from" />
       </GroupList>
     </div>
   );

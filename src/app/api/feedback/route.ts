@@ -28,11 +28,11 @@ export async function POST(req: NextRequest) {
   // Bots fill every field; people never see this one. Pretend success.
   if (typeof body.website === "string" && body.website.trim()) return NextResponse.json({ ok: true });
 
-  const kind = String(body.kind || "");
+  // The contact form no longer asks for a type; older clients may still send one.
+  const kind = KINDS.includes(String(body.kind) as (typeof KINDS)[number]) ? String(body.kind) : "other";
   const message = typeof body.message === "string" ? body.message.trim() : "";
   const contact = typeof body.contact === "string" ? body.contact.trim().slice(0, 120) : "";
   const page = typeof body.page === "string" ? body.page.slice(0, 300) : "";
-  if (!KINDS.includes(kind as (typeof KINDS)[number])) return NextResponse.json({ error: "Pick what this is about" }, { status: 400 });
   if (message.length < 5) return NextResponse.json({ error: "Please write a little more" }, { status: 400 });
   if (message.length > 2000) return NextResponse.json({ error: "Please keep it under 2,000 characters" }, { status: 400 });
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY)

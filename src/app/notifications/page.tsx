@@ -8,10 +8,10 @@ import { getAllPublishedNotifications } from "@/lib/queries/notifications";
 export const revalidate = 1800;
 
 export const metadata: Metadata = buildMetadata({
-  title: "Updates — JKSSB & JKPSC Notifications, Admit Cards, Results",
-  description: "Latest JKSSB and JKPSC updates: new notifications, admit cards, answer keys and results, each linked to the official notice.",
+  title: "Updates — JKSSB Notifications, Admit Cards, Answer Keys, Results",
+  description: "Latest JKSSB updates: new notifications, admit cards, answer keys and results, each linked to the official notice.",
   canonicalPath: "/notifications",
-  keywords: ["JKSSB notifications", "JKPSC notifications", "JKSSB results", "JKSSB admit card"],
+  keywords: ["JKSSB notifications", "JKSSB results", "JKSSB admit card", "JKSSB answer key"],
 });
 
 export default async function NotificationsPage() {
@@ -30,7 +30,7 @@ export default async function NotificationsPage() {
             updates={notifications.map((n) => ({ slug: n.slug, title: n.title, category: n.category, published_at: n.published_at }))}
           />
         ) : (
-          <EmptyState>New notices from JKSSB and JKPSC appear here the day they are published.</EmptyState>
+          <EmptyState>New JKSSB notices appear here the day they are published.</EmptyState>
         )}
       </div>
     </div>

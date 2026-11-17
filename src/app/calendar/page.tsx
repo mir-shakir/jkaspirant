@@ -9,8 +9,8 @@ import { siteConfig } from "@/config/site";
 export const revalidate = 1800;
 
 export const metadata: Metadata = buildMetadata({
-  title: "JKSSB & JKPSC Exam Calendar — Upcoming Exam Dates",
-  description: "Upcoming JKSSB and JKPSC exam dates and admit card dates in one list, kept current from official notices.",
+  title: "JKSSB Exam Calendar — Upcoming Exam and Admit Card Dates",
+  description: "Upcoming JKSSB exam dates and admit card dates in one list, kept current from official notices.",
   canonicalPath: "/calendar",
   keywords: ["JKSSB exam calendar", "JKSSB exam date", "JKSSB SI exam date", "JKSSB constable exam date"],
 });
