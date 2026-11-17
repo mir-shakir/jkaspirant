@@ -6,6 +6,9 @@ const links = [
   { href: "/exams", label: "Exams" },
   { href: "/calendar", label: "Calendar" },
   { href: "/tools", label: "Tools" },
+  { href: "/about", label: "About" },
+  { href: "/feedback", label: "Feedback" },
+  { href: "/privacy", label: "Privacy" },
 ];
 
 export function Footer() {
@@ -37,7 +40,7 @@ export function Footer() {
         </nav>
 
         <p className="mt-5 text-[12px] text-[hsl(var(--muted))]">
-          © {new Date().getFullYear()} JK Aspirant. Not affiliated with JKSSB or JKPSC. We use Google Analytics to count visits.
+          © {new Date().getFullYear()} JK Aspirant. Independent; not affiliated with JKSSB or JKPSC. The official notice always wins.
         </p>
       </div>
     </footer>

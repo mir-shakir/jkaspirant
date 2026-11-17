@@ -242,6 +242,11 @@ export function ExamFactsView({ facts }: { facts: ExamFacts }) {
           {facts.papers.map((d) => (
             <Row key={d.url} href={d.url} external title={`Previous paper: ${d.title}`} sub="jkssb.nic.in" />
           ))}
+          <Row
+            href={`/feedback?type=wrong_info&page=${encodeURIComponent(`/exams/${facts.slug}`)}`}
+            title="Report wrong information"
+            sub="A date, number or detail that doesn't match the notice"
+          />
         </GroupList>
         <p className="mt-3 text-[12.5px] text-[hsl(var(--muted))]">
           Checked against the official JKSSB documents on {new Date(facts.checked).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}. If JKSSB issues a change, the notice wins.
