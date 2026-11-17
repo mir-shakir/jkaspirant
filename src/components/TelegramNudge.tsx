@@ -1,10 +1,19 @@
 import { siteConfig } from "@/config/site";
 
 /**
- * A quiet invitation to the partner Telegram channel. One per page at most,
- * placed after the thing the visitor came for, never before it.
+ * A quiet invitation to the site's Telegram updates channel. One per page at
+ * most, placed after the thing the visitor came for, never before it. Plain,
+ * factual wording; the channel name isn't shown.
  */
-export function TelegramNudge({ className = "" }: { className?: string }) {
+export function TelegramNudge({
+  className = "",
+  title = "JKSSB updates on Telegram",
+  sub = "Exam dates, answer keys and results as soon as they're out",
+}: {
+  className?: string;
+  title?: string;
+  sub?: string;
+}) {
   if (!siteConfig.telegramUrl) return null;
   return (
     <a
@@ -20,8 +29,8 @@ export function TelegramNudge({ className = "" }: { className?: string }) {
         </svg>
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-[14.5px] font-semibold leading-snug">Free notes and exam updates on Telegram</span>
-        <span className="mt-0.5 block text-[13px] text-[hsl(var(--muted))]">{siteConfig.telegramName}</span>
+        <span className="block text-[14.5px] font-semibold leading-snug">{title}</span>
+        <span className="mt-0.5 block text-[13px] leading-snug text-[hsl(var(--muted))]">{sub}</span>
       </span>
       <span className="shrink-0 text-[13.5px] font-semibold text-[#229ED9]">Join</span>
     </a>
