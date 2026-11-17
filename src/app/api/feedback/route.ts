@@ -30,13 +30,15 @@ export async function POST(req: NextRequest) {
 
   // The contact form no longer asks for a type; older clients may still send one.
   const kind = KINDS.includes(String(body.kind) as (typeof KINDS)[number]) ? String(body.kind) : "other";
+  const name = typeof body.name === "string" ? body.name.trim().replace(/\s+/g, " ").slice(0, 80) : "";
   const message = typeof body.message === "string" ? body.message.trim() : "";
   const contact = typeof body.contact === "string" ? body.contact.trim().slice(0, 120) : "";
   const page = typeof body.page === "string" ? body.page.slice(0, 300) : "";
+  if (!name) return NextResponse.json({ error: "Please enter your name" }, { status: 400 });
   if (message.length < 5) return NextResponse.json({ error: "Please write a little more" }, { status: 400 });
   if (message.length > 2000) return NextResponse.json({ error: "Please keep it under 2,000 characters" }, { status: 400 });
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY)
-    return NextResponse.json({ error: "Feedback isn't available right now" }, { status: 503 });
+    return NextResponse.json({ error: "Messages can't be sent right now. Please try again later." }, { status: 503 });
 
   const supabase = createServerClient();
   const ipHash = hashIp(req);
@@ -44,7 +46,7 @@ export async function POST(req: NextRequest) {
   const { count } = await supabase.from("feedback").select("id", { count: "exact", head: true }).eq("ip_hash", ipHash).gte("created_at", since);
   if ((count ?? 0) >= MAX_PER_NETWORK_PER_DAY) return NextResponse.json({ error: "Thanks, we've got a lot from you today. Please try again tomorrow." }, { status: 429 });
 
-  const { error } = await supabase.from("feedback").insert({ kind, message, contact: contact || null, page: page || null, ip_hash: ipHash });
+  const { error } = await supabase.from("feedback").insert({ kind, name, message, contact: contact || null, page: page || null, ip_hash: ipHash });
   if (error) {
     console.error("feedback insert", error);
     return NextResponse.json({ error: "Couldn't send. Please try again." }, { status: 503 });

@@ -5,6 +5,7 @@ import { track } from "@/lib/analytics";
 
 /** One message box, an optional way to reply, nothing else. */
 export function ContactForm() {
+  const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [contact, setContact] = useState("");
   const [website, setWebsite] = useState(""); // hidden from people; bots fill it
@@ -20,13 +21,14 @@ export function ContactForm() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    if (!name.trim()) return setError("Please enter your name.");
     if (message.trim().length < 5) return setError("Please write a little more.");
     setState("sending");
     try {
       const r = await fetch("/api/feedback", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ message, contact, page, website }),
+        body: JSON.stringify({ name, message, contact, page, website }),
       });
       const d = await r.json().catch(() => ({}));
       if (!r.ok) {
@@ -45,7 +47,7 @@ export function ContactForm() {
   if (state === "sent")
     return (
       <div className="surface-card p-5">
-        <p className="text-[17px] font-semibold">Thank you, we&apos;ve got your message.</p>
+        <p className="text-[17px] font-semibold">Thank you{name.trim() ? `, ${name.trim().split(" ")[0]}` : ""}. We&apos;ve got your message.</p>
         <p className="mt-1.5 text-[14.5px] text-[hsl(var(--muted))]">
           {contact ? "We'll get back to you if a reply is needed." : "If you'd like a reply next time, leave an email or phone number."}
         </p>
@@ -54,7 +56,12 @@ export function ContactForm() {
 
   return (
     <form onSubmit={submit} className="surface-card p-4 sm:p-5">
-      <label htmlFor="c-message" className="mb-1.5 block text-[13px] font-medium">
+      <label htmlFor="c-name" className="mb-1.5 block text-[13px] font-medium">
+        Name
+      </label>
+      <input id="c-name" type="text" required maxLength={80} value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" className="field" />
+
+      <label htmlFor="c-message" className="mb-1.5 mt-4 block text-[13px] font-medium">
         Message
       </label>
       <textarea

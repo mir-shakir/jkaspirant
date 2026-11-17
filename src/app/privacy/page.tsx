@@ -38,7 +38,7 @@ export default function PrivacyPage() {
             again. If you join the leaderboard, your name too; others only ever see its first letters (like Sh*** Mi***). We don&apos;t ask for a phone number, roll number
             or email.
           </Item>
-          <Item title="Contact form">Your message, the page you wrote from and, only if you give it, your email or phone so we can reply.</Item>
+          <Item title="Contact form">Your name, your message, the page you wrote from and, only if you give it, your email or phone so we can reply.</Item>
           <Item title="Abuse protection">
             A one-way scrambled form of your network address, so one network can&apos;t flood the rank tool or the contact form. It can&apos;t be turned back into the
             address.
