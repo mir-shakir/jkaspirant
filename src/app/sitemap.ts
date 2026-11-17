@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { rankExams } from "@/config/rank-predictor";
+import { resultSheets } from "@/content/results";
 import { getAllExams, getExamSections } from "@/lib/queries/exams";
 import { getAllPublishedNotifications } from "@/lib/queries/notifications";
 
@@ -45,6 +46,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       return { url: url(`/exams/${e.slug}`), ...(changed.getTime() > 0 ? { lastModified: changed } : {}), changeFrequency: "daily" as const, priority: 0.8 };
     }),
     ...examTabs.flat(),
+    { url: url("/tools/age-checker"), changeFrequency: "weekly" as const, priority: 0.7 },
+    { url: url("/cut-offs"), changeFrequency: "weekly" as const, priority: 0.8 },
+    { url: url("/results"), changeFrequency: "weekly" as const, priority: 0.6 },
+    ...resultSheets.map((s) => ({ url: url(`/results/${s.slug}`), changeFrequency: "monthly" as const, priority: 0.7 })),
     ...updates.map((n) => ({
       url: url(`/notifications/${n.slug}`),
       lastModified: new Date(n.updated_at ?? n.published_at ?? now),

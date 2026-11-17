@@ -33,9 +33,15 @@ export default function ToolsPage() {
         </GroupList>
       </Section>
 
-      <p className="mt-6 text-[13.5px] leading-6 text-[hsl(var(--muted))]">
-        A predictor opens for each major exam on the day it is held. Coming next: age and eligibility checker.
-      </p>
+      <Section title="Check and look up">
+        <GroupList>
+          <Row href="/tools/age-checker" title="Age limit checker" sub="Which JKSSB advertisements your age allows" />
+          <Row href="/cut-offs" title="Previous cut-offs" sub="Lowest marks selected, for your category" />
+          <Row href="/results" title="Result search" sub="Find your marks by roll number or name" />
+        </GroupList>
+      </Section>
+
+      <p className="mt-6 text-[13.5px] leading-6 text-[hsl(var(--muted))]">A predictor opens for each major exam on the day it is held.</p>
     </div>
   );
 }
