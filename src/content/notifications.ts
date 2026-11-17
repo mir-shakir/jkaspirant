@@ -91,7 +91,9 @@ export const contentNotifications: ContentNotification[] = [
 <p>Applications for the <strong>Class-IV (MTS) and Sanitation Worker</strong> posts under Advertisement Notification No. 09 of 2026 (dated 01.09.2026) are open again. The last date is now <strong>27 November 2026</strong>, instead of 12 November.</p>
 <h2>At a glance</h2>
 <ul>
-  <li><strong>Posts:</strong> 2,863 (UT, Divisional and District cadre, various departments)</li>
+  <li><strong>Posts:</strong> 2,863 (UT 105, Division Jammu 1,093, Division Kashmir 897, district cadres 768)</li>
+  <li><strong>Pay:</strong> SL-1 (₹14,800–47,100)</li>
+  <li><strong>Qualification:</strong> MTS: Matric to 10+2. Sanitation Worker: 8th pass to 10+2.</li>
   <li><strong>Apply:</strong> online at jkssb.nic.in, until 27 November 2026</li>
   <li><strong>Exam date:</strong> not announced yet</li>
 </ul>
@@ -102,11 +104,11 @@ export const contentNotifications: ContentNotification[] = [
   },
   {
     slug: "jkssb-advt-08-2026-edit-option",
-    title: "JKSSB Staff Nurse, Lab Technician, Pharmacist & more (518 posts): edit your form by 20 November",
+    title: "JKSSB Junior Pharmacist, Staff Nurse, Lab Assistant & more (518 posts): edit your form by 20 November",
     category: "notification",
     published_at: "2026-11-16T12:00:00+05:30",
     summary:
-      "Applied for Junior Staff Nurse, Lab Technician, Pharmacist or the other 518 posts under JKSSB Advertisement 08 of 2026? You can edit your form from 16 to 20 November 2026.",
+      "Applied for Junior Pharmacist (211 posts), Junior Staff Nurse or any of the 518 posts under JKSSB Advertisement 08 of 2026? You can edit your form from 16 to 20 November 2026.",
     body: `
 <p>If you applied for any of the <strong>518 posts</strong> in JKSSB's Advertisement Notification No. 08 of 2026 (dated 04.08.2026), you can now <strong>edit your application form</strong>.</p>
 <ul>
@@ -114,17 +116,22 @@ export const contentNotifications: ContentNotification[] = [
   <li><strong>Cannot be changed:</strong> name, date of birth, category, posts applied for, phone number and email</li>
 </ul>
 <h2>Which posts this covers</h2>
+<p>By department: Health and Medical Education 421, Higher Education 48, Agriculture Production 46, Labour and Employment 3.</p>
 <ul>
-  <li><strong>Health and Medical Education, 421 posts:</strong> Junior Staff Nurse, Junior Lab Technician, Junior Pharmacist, Ophthalmic Technician, Junior Theatre Technician, Para Medical Assistant, Health Educator, Sanitary Inspector and more</li>
-  <li><strong>Higher Education, 48 posts:</strong> Junior Laboratory Assistant and others</li>
-  <li><strong>Agriculture Production, 46 posts:</strong> mainly Horticulture Technician Grade-IV</li>
-  <li><strong>Labour and Employment:</strong> 3 posts</li>
+  <li><strong>Junior Pharmacist:</strong> 211</li>
+  <li><strong>Junior Staff Nurse:</strong> 48</li>
+  <li><strong>Junior Laboratory Assistant:</strong> 48</li>
+  <li><strong>FMPHW:</strong> 46 · <strong>MMPHW:</strong> 19</li>
+  <li><strong>Horticulture Technician Grade-IV:</strong> 45</li>
+  <li><strong>Junior Lab. Technician:</strong> 40</li>
+  <li><strong>Junior Ophthalmic Technician:</strong> 17 · <strong>Health Educator:</strong> 15 · <strong>Sanitary Inspector:</strong> 14 · <strong>Junior Theatre Technician:</strong> 10</li>
+  <li><strong>Others:</strong> Supervisor (3), Senior Canning Attendant (1)</li>
 </ul>
 <p>Applications closed on 24 October 2026. Exam dates have not been announced yet.</p>
 <p><a href="${PDF}/Advertisement_08OF2026_04082026.pdf">Full advertisement with every post (PDF)</a></p>
 <p>Notice No. JKSSB-PLAN/6/2025-03, dated 11.11.2026.</p>`,
     source_url: `${PDF}/Edit_option_08OF2026_11112026.pdf`,
-    exam: { slug: "advt-08-2026", title: "Staff Nurse, Lab Technician, Pharmacist & more" },
+    exam: { slug: "advt-08-2026", title: "Junior Pharmacist, Staff Nurse, Lab Assistant & more" },
   },
   {
     slug: "jkssb-junior-engineer-mechanical-notification-2026",
@@ -216,7 +223,7 @@ export const contentNotifications: ContentNotification[] = [
 <ul>
   <li><strong>13 December 2026:</strong> Constable (Executive), Notification 12 of 2025, Items 273–274</li>
   <li><strong>20 December 2026:</strong> Constable (Armed / IRP / SDRF), Notification 14 of 2025, Items 323–324</li>
-  <li><strong>23 December 2026:</strong> Sub-Inspector (Telecommunication), Notification 11 of 2025, Item 272</li>
+  <li><strong>23 December 2026:</strong> Sub-Inspector (Telecommunication), Notification 11 of 2025, Item 272 (104 posts after the addendum of 31.12.2025)</li>
   <li><strong>27 December 2026:</strong> Constable (Telecommunication), Notification 15 of 2025, Item 325</li>
   <li><strong>30 December 2026:</strong> Constable (Photographer), Notification 15 of 2025, Item 326</li>
 </ul>

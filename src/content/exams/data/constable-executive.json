@@ -1,0 +1,304 @@
+{
+ "slug": "constable-executive",
+ "title": "JK Police Constable (Executive)",
+ "board": "JKSSB",
+ "advert": {
+  "no": "12 of 2025",
+  "date": "24 Dec 2025",
+  "items": "273-274"
+ },
+ "postsTotal": 1815,
+ "postsNote": null,
+ "postTables": [
+  {
+   "label": "Division Jammu",
+   "counts": [
+    375,
+    75,
+    93,
+    93,
+    75,
+    37,
+    93,
+    93
+   ]
+  },
+  {
+   "label": "Division Kashmir",
+   "counts": [
+    353,
+    70,
+    88,
+    88,
+    72,
+    35,
+    88,
+    87
+   ]
+  },
+  {
+   "label": "Total",
+   "counts": [
+    728,
+    145,
+    181,
+    181,
+    147,
+    72,
+    181,
+    180
+   ]
+  }
+ ],
+ "postList": null,
+ "mainPosts": null,
+ "pay": "Level-2 (19900-63200)",
+ "cadre": "Divisional",
+ "qualification": [
+  [
+   "",
+   "Matriculation"
+  ]
+ ],
+ "age": {
+  "asOn": "1 Jan 2025",
+  "rows": [
+   [
+    "all categories",
+    "28"
+   ],
+   [
+    "in-service police",
+    "30"
+   ],
+   [
+    "SPOs and VHGs",
+    "40"
+   ]
+  ],
+  "min": 18,
+  "note": "Ex-servicemen may deduct service period (up to 3 years over the limit)."
+ },
+ "fee": [
+  [
+   "general",
+   "₹700"
+  ],
+  [
+   "SC/ST-1/ST-2/EWS",
+   "₹600"
+  ]
+ ],
+ "dates": [
+  [
+   "Applications opened",
+   "19 Jan 2026"
+  ],
+  [
+   "Last date to apply",
+   "17 Feb 2026 (later extended; see extension notice 17.02.2026)"
+  ],
+  [
+   "Exam date",
+   "13 Dec 2026"
+  ],
+  [
+   "Admit card",
+   "Seven days before the exam"
+  ]
+ ],
+ "status": null,
+ "pattern": {
+  "questions": 100,
+  "marksEach": 1,
+  "total": 100,
+  "negative": 0.25,
+  "durationMin": 120,
+  "sections": [
+   [
+    "General English",
+    25
+   ],
+   [
+    "General Knowledge & current affairs (India)",
+    25
+   ],
+   [
+    "General Knowledge, J&K",
+    10
+   ],
+   [
+    "Numerical & Reasoning Ability",
+    25
+   ],
+   [
+    "Basic Concepts of Computers",
+    15
+   ]
+  ],
+  "sectionUnit": "questions"
+ },
+ "negativeText": null,
+ "syllabusNote": null,
+ "selection": [
+  "Written test (merit) + NCC bonus marks",
+  "PST: 6x vacancies per category called, qualifying",
+  "PET: qualifying",
+  "Document verification, medical"
+ ],
+ "physical": [
+  [
+   "PST_male",
+   "Height 5'6\" min; chest 32\" unexpanded, 33.5\" expanded"
+  ],
+  [
+   "PST_female",
+   "Height 5'2\" min"
+  ],
+  [
+   "relaxation",
+   "Height relaxed by 2\" for Gorkha community / Bot tribe"
+  ],
+  [
+   "PET_male",
+   "1600 m in 6.5 min; 20 push-ups"
+  ],
+  [
+   "PET_female",
+   "1000 m in 6.5 min; shot put (4 kg) 14.5 ft in three attempts"
+  ],
+  [
+   "ex_servicemen",
+   "Relaxed by age band (see advertisement Annexure B)"
+  ]
+ ],
+ "extras": [
+  [
+   "NCC bonus",
+   "5% of max marks (C cert), 3% (B), 2% (A), per S.O. 290 of 2021"
+  ]
+ ],
+ "weightage": null,
+ "pastCutoffs": {
+  "source": "Final selection list, Advt 01 of 2024 (20.02.2026)",
+  "pdf": "https://jkssb.nic.in/Pdf/Final_Selection_list_Constable_20022026.pdf",
+  "outOf": 100,
+  "note": "Lowest total (written + NCC bonus) selected in each category list. Women's and SPO/VHG/ex-servicemen sub-quotas had their own lower cut-offs.",
+  "tables": [
+   {
+    "label": "Division Jammu",
+    "rows": [
+     [
+      "OM",
+      65.25,
+      48.75
+     ],
+     [
+      "SC",
+      53.25,
+      48.5
+     ],
+     [
+      "ST-1",
+      49.5,
+      49.75
+     ],
+     [
+      "ST-2",
+      56.25,
+      55.5
+     ],
+     [
+      "OBC",
+      50.0,
+      50.5
+     ],
+     [
+      "RBA",
+      62.25,
+      48.75
+     ],
+     [
+      "ALC/IB",
+      61.25,
+      52.5
+     ],
+     [
+      "EWS",
+      42.25,
+      43.5
+     ]
+    ]
+   },
+   {
+    "label": "Division Kashmir",
+    "rows": [
+     [
+      "OM",
+      70.25,
+      51.25
+     ],
+     [
+      "SC",
+      47.5,
+      null
+     ],
+     [
+      "ST-1",
+      46.25,
+      47.5
+     ],
+     [
+      "ST-2",
+      51.0,
+      51.25
+     ],
+     [
+      "OBC",
+      54.5,
+      53.75
+     ],
+     [
+      "RBA",
+      68.75,
+      51.25
+     ],
+     [
+      "ALC/IB",
+      52.75,
+      50.75
+     ],
+     [
+      "EWS",
+      31.5,
+      31.5
+     ]
+    ]
+   }
+  ]
+ },
+ "papers": [
+  {
+   "title": "Constable (Executive/Armed/IRP/SDRF) 2024, Set A",
+   "url": "https://jkssb.nic.in/Pdf/SET-A CONSTABLE 01-12-2024_0001.pdf"
+  }
+ ],
+ "docs": [
+  {
+   "label": "Advertisement 12 of 2025 (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Advt_12OF2025_24122025.pdf"
+  },
+  {
+   "label": "Syllabus (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Syllabus_Constable_Executive_21102026.pdf"
+  },
+  {
+   "label": "Exam schedule notice (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/notice_01082026.pdf"
+  }
+ ],
+ "notes": [
+  "Same syllabus as 2024 (pages dated 30/09/2024)."
+ ],
+ "checked": "2026-11-16"
+}

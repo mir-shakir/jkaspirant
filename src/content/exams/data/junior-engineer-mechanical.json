@@ -1,0 +1,105 @@
+{
+ "slug": "junior-engineer-mechanical",
+ "title": "Junior Engineer (Mechanical)",
+ "board": "JKSSB",
+ "advert": {
+  "no": "10 of 2026",
+  "date": "21 Oct 2026",
+  "items": "265"
+ },
+ "postsTotal": 127,
+ "postsNote": null,
+ "postTables": [
+  {
+   "label": "All posts",
+   "counts": [
+    51,
+    10,
+    13,
+    13,
+    10,
+    5,
+    13,
+    12
+   ]
+  }
+ ],
+ "postList": null,
+ "mainPosts": null,
+ "pay": "Level-6 (35400-112400)",
+ "cadre": "UT",
+ "qualification": [
+  [
+   "",
+   "3-year diploma in Mechanical Engineering, or degree in Mechanical Engineering, or AMIE (Sections A & B)"
+  ]
+ ],
+ "age": {
+  "asOn": "1 Jan 2026",
+  "rows": [
+   [
+    "OM",
+    "40"
+   ],
+   [
+    "SC/ST-1/ST-2/RBA/ALC-IB/EWS/OBC",
+    "43"
+   ],
+   [
+    "PwBD",
+    "42"
+   ]
+  ],
+  "min": null,
+  "note": null
+ },
+ "fee": [
+  [
+   "general",
+   "₹600"
+  ],
+  [
+   "SC/ST-1/ST-2/EWS/PwBD",
+   "₹500"
+  ]
+ ],
+ "dates": [
+  [
+   "Applications open",
+   "Postponed (was 16 Nov 2026 to 15 Dec 2026); new dates awaited"
+  ],
+  [
+   "Exam date",
+   "Not announced yet"
+  ]
+ ],
+ "status": null,
+ "pattern": null,
+ "negativeText": "One-fourth of the marks of the question for each wrong answer",
+ "syllabusNote": "To be notified",
+ "selection": [
+  "Written/OMR merit only"
+ ],
+ "physical": null,
+ "extras": [],
+ "weightage": null,
+ "pastCutoffs": null,
+ "papers": [
+  {
+   "title": "JE Mechanical 2023, Set A",
+   "url": "https://jkssb.nic.in/Pdf/SET-A JUNIOR ENGINEER MECHANICAL 01-10-2023_0001.pdf"
+  }
+ ],
+ "docs": [
+  {
+   "label": "Advertisement 10 of 2026 (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Advt_notification_10OF2026_21102026.pdf"
+  },
+  {
+   "label": "Postponement notice (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Notice_10OF2026_15112026.pdf"
+  }
+ ],
+ "notes": [],
+ "checked": "2026-11-16"
+}

@@ -27,7 +27,7 @@ export function GET() {
           <div style={{ fontSize: 104, fontWeight: 700, letterSpacing: -2 }}>JK Aspirant</div>
         </div>
         <div style={{ fontSize: 40, marginTop: 24, color: "#57534e" }}>
-          JKSSB &amp; JKPSC updates, exam dates and rank tools
+          JKSSB exam updates, dates and rank tools
         </div>
         <div style={{ fontSize: 30, marginTop: 56, color: "hsl(8, 68%, 46%)" }}>jkaspirant.in</div>
       </div>

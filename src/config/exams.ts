@@ -17,6 +17,10 @@ export interface LiveExam {
   status: string;
   /** True when the advertisement is out but no exam date has been announced. */
   awaited?: boolean;
+  /** A hub page that groups other exams (shown as rows on its page). */
+  parts?: string[];
+  /** Keep the page but leave it out of exam lists (e.g. a hub whose parts are listed). */
+  unlisted?: boolean;
 }
 
 export const liveExams: Record<string, LiveExam> = {
@@ -32,10 +36,37 @@ export const liveExams: Record<string, LiveExam> = {
     posts: 669,
     status: "Exam on 29 Nov",
   },
+  "sub-inspector-telecom": {
+    title: "JK Police Sub-Inspector (Telecommunication)",
+    board: "JKSSB",
+    posts: 104,
+    status: "Exam on 23 Dec",
+  },
+  "constable-executive": {
+    title: "JK Police Constable (Executive)",
+    board: "JKSSB",
+    posts: 1815,
+    status: "Exam on 13 Dec",
+  },
+  "constable-armed-irp-sdrf": {
+    title: "JK Police Constable (Armed/IRP & SDRF)",
+    board: "JKSSB",
+    posts: 487,
+    status: "Exam on 20 Dec",
+  },
+  "constable-telecom-photographer": {
+    title: "JK Police Constable (Telecom & Photographer)",
+    board: "JKSSB",
+    posts: 182,
+    status: "Exams on 27 and 30 Dec",
+  },
   "police-constable": {
     title: "JK Police Constable",
     board: "JKSSB",
-    status: "Exams on 13, 20 and 27 Dec",
+    posts: 2484,
+    status: "Three exams: 13, 20, 27 and 30 Dec",
+    parts: ["constable-executive", "constable-armed-irp-sdrf", "constable-telecom-photographer"],
+    unlisted: true,
   },
   "class-iv-mts": {
     title: "Class-IV (MTS) & Sanitation Worker",
@@ -45,7 +76,7 @@ export const liveExams: Record<string, LiveExam> = {
     awaited: true,
   },
   "advt-08-2026": {
-    title: "Staff Nurse, Lab Technician, Pharmacist & more",
+    title: "Junior Pharmacist, Staff Nurse, Lab Assistant & more",
     board: "JKSSB",
     posts: 518,
     status: "Advt 08 of 2026 · form edit open till 20 Nov",

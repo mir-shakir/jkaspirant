@@ -7,8 +7,12 @@ import { GroupList, Row, Section } from "@/components/ui";
 import { buildMetadata, buildExamJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getCutoffs, getExamBySlug, getExamSlugs, getExamSections } from "@/lib/queries/exams";
 import { getNotificationsForExam } from "@/lib/queries/notifications";
-import { getRankExamForExamSlug } from "@/config/rank-predictor";
+import { getToolForExamSlug } from "@/config/rank-predictor";
 import { nextEventForExam, relativeDay } from "@/content/calendar";
+import { getExamFacts } from "@/content/exams";
+import { examFaqJsonLd, examSeoDescription, examSeoTitle } from "@/content/exams/seo";
+import { liveExams } from "@/config/exams";
+import { AtAGlance, ExamFactsView } from "@/components/exam/ExamFactsView";
 
 interface PageProps {
   params: { slug: string };
@@ -22,10 +26,15 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const exam = await getExamBySlug(params.slug);
   if (!exam) return {};
+  const facts = getExamFacts(exam.slug);
+  const live = liveExams[exam.slug];
   return buildMetadata({
-    title: exam.seo_title || `${exam.title} — Latest Updates & Exam Dates`,
-    description:
-      exam.seo_description || `${exam.title}: latest updates, exam dates and tools for J&K aspirants.`,
+    title: facts ? examSeoTitle(facts) : live?.parts ? `${exam.title} 2026: Exam Dates, Posts, Syllabus & Cut-offs` : `${exam.title}: Latest Updates & Exam Dates`,
+    description: facts
+      ? examSeoDescription(facts)
+      : live?.parts
+        ? `${exam.title}: ${live.status}. Posts, exam pattern, eligibility and past cut-offs for each exam.`
+        : `${exam.title}: latest updates, exam dates and tools for J&K aspirants.`,
     canonicalPath: `/exams/${exam.slug}`,
     keywords: exam.seo_keywords || undefined,
     ogImage: exam.og_image_url || undefined,
@@ -41,10 +50,16 @@ export default async function ExamOverviewPage({ params }: PageProps) {
   const [sections, cutoffs, updates] = await Promise.all([
     getExamSections(exam.id),
     getCutoffs(exam.id),
-    getNotificationsForExam(exam.slug, 3),
+    // Parts of a hub (e.g. Constable Executive) also show the hub's updates.
+    Promise.all(
+      [exam.slug, ...Object.entries(liveExams).filter(([, v]) => v.parts?.includes(exam.slug) || (exam.slug === "sub-inspector-telecom" && v.parts)).map(([s]) => s)].map((s) =>
+        getNotificationsForExam(s, 3)
+      )
+    ).then((lists) => lists.flat().filter((n, i, a) => a.findIndex((m) => m.slug === n.slug) === i).slice(0, 3)),
   ]);
 
-  const rankTool = getRankExamForExamSlug(exam.slug);
+  const facts = getExamFacts(exam.slug);
+  const rankTool = getToolForExamSlug(exam.slug);
   const nextEvent = nextEventForExam(exam.slug);
   const latestCutoffYear = cutoffs.length > 0 ? Math.max(...cutoffs.map((c) => c.year)) : null;
   const hasPrepare = sections.syllabus + sections.papers + sections.cutoffs + sections.dates > 0;
@@ -52,6 +67,7 @@ export default async function ExamOverviewPage({ params }: PageProps) {
   return (
     <div className="page-shell py-4 sm:py-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildExamJsonLd(exam)) }} />
+      {facts && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(examFaqJsonLd(facts)) }} />}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(examBreadcrumbs(exam, "overview"))) }} />
       <ExamHeader exam={exam} tab="overview" />
 
@@ -61,8 +77,10 @@ export default async function ExamOverviewPage({ params }: PageProps) {
           className="mt-5 flex items-center justify-between gap-3 rounded-2xl bg-[hsl(var(--focus))] px-4 py-4 text-[hsl(var(--focus-fg))]"
         >
           <span>
-            <span className="block text-[16px] font-semibold">Predict your {rankTool.name} rank</span>
-            <span className="mt-0.5 block text-[13px] opacity-75">Score and expected rank in under a minute</span>
+            <span className="block text-[16px] font-semibold">{rankTool.isOpen ? `Predict your ${rankTool.name} rank` : `${rankTool.name} rank predictor 🔒`}</span>
+            <span className="mt-0.5 block text-[13px] opacity-75">
+              {rankTool.isOpen ? "Score and expected rank in under a minute" : `Opens ${rankTool.opensOn ?? "after the exam"}`}
+            </span>
           </span>
           <svg viewBox="0 0 20 20" className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <path d="M4 10h12m-4.5-4.5L16 10l-4.5 4.5" />
@@ -79,6 +97,24 @@ export default async function ExamOverviewPage({ params }: PageProps) {
           </span>
           <span className="shrink-0 font-mono-num text-[13px] font-semibold text-[hsl(var(--accent))]">{relativeDay(nextEvent.date)}</span>
         </p>
+      )}
+
+      {facts && <AtAGlance facts={facts} />}
+
+      {liveExams[exam.slug]?.parts && (
+        <Section title="Choose your exam" className="!mt-6">
+          <GroupList>
+            {liveExams[exam.slug].parts!.map((slug) => (
+              <Row
+                key={slug}
+                href={`/exams/${slug}`}
+                title={liveExams[slug].title.replace("JK Police ", "")}
+                sub={liveExams[slug].status}
+                meta={liveExams[slug].posts ? `${liveExams[slug].posts!.toLocaleString("en-IN")} posts` : undefined}
+              />
+            ))}
+          </GroupList>
+        </Section>
       )}
 
       {hasPrepare && (
@@ -99,7 +135,7 @@ export default async function ExamOverviewPage({ params }: PageProps) {
       )}
 
       {updates.length > 0 && (
-        <Section title="Latest" action={{ href: "/notifications", label: "All updates" }} className={hasPrepare ? "" : "!mt-6"}>
+        <Section title="Latest" action={{ href: "/notifications", label: "All updates" }} className={hasPrepare || facts ? "" : "!mt-6"}>
           <GroupList>
             {updates.map((n) => (
               <UpdateRow key={n.id} update={n} />
@@ -107,6 +143,8 @@ export default async function ExamOverviewPage({ params }: PageProps) {
           </GroupList>
         </Section>
       )}
+
+      {facts && <ExamFactsView facts={facts} />}
 
     </div>
   );

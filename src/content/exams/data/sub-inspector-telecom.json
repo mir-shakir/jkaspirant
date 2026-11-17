@@ -1,0 +1,212 @@
+{
+ "slug": "sub-inspector-telecom",
+ "title": "JK Police Sub-Inspector (Telecommunication)",
+ "board": "JKSSB",
+ "advert": {
+  "no": "11 of 2025",
+  "date": "26 Nov 2025",
+  "items": "272"
+ },
+ "postsTotal": 104,
+ "postsNote": "83 advertised + 21 added by addendum of 31.12.2025 (OM 8, SC 2, ST-1 3, ST-2 2, OBC 1, ALC/IB 1, RBA 2, EWS 2)",
+ "postTables": [
+  {
+   "label": "All posts",
+   "counts": [
+    42,
+    9,
+    11,
+    10,
+    8,
+    4,
+    10,
+    10
+   ]
+  }
+ ],
+ "postList": null,
+ "mainPosts": null,
+ "pay": "Level-6C (35700-113100)",
+ "cadre": "UT",
+ "qualification": [
+  [
+   "",
+   "4-year B.E./B.Tech in CSE, ECE, Telecom, IT, Mechatronics, Data Science, EEE, AI & ML, or Cyber Security (unchanged by the addendum)"
+  ]
+ ],
+ "age": {
+  "asOn": "1 Jan 2025",
+  "rows": [
+   [
+    "all categories",
+    "28"
+   ],
+   [
+    "in-service police",
+    "30"
+   ]
+  ],
+  "min": 18,
+  "note": "No SPO/VHG relaxation for this post. Ex-servicemen may deduct service period (up to 3 years over the limit)."
+ },
+ "fee": [
+  [
+   "general",
+   "₹700"
+  ],
+  [
+   "SC/ST-1/ST-2/EWS",
+   "₹600"
+  ]
+ ],
+ "dates": [
+  [
+   "Applications opened",
+   "15 Dec 2025"
+  ],
+  [
+   "Last date to apply",
+   "13 Jan 2026 (extended; see notice 05.03.2026)"
+  ],
+  [
+   "Exam date",
+   "23 Dec 2026"
+  ]
+ ],
+ "status": null,
+ "pattern": {
+  "questions": 100,
+  "marksEach": 2,
+  "total": 200,
+  "negative": 0.5,
+  "durationMin": 120,
+  "sections": [
+   [
+    "GK & current affairs",
+    20
+   ],
+   [
+    "GK, J&K",
+    10
+   ],
+   [
+    "English & communication",
+    10
+   ],
+   [
+    "Reasoning",
+    10
+   ],
+   [
+    "Basic numeracy",
+    10
+   ],
+   [
+    "Engineering maths & signals",
+    10
+   ],
+   [
+    "Electronic devices, analog circuits, networks",
+    20
+   ],
+   [
+    "Digital electronics & microprocessors",
+    20
+   ],
+   [
+    "Communication systems",
+    20
+   ],
+   [
+    "Computer science & networking",
+    20
+   ],
+   [
+    "Cyber security & legal framework",
+    10
+   ],
+   [
+    "IT systems & e-governance",
+    10
+   ],
+   [
+    "DBMS",
+    10
+   ],
+   [
+    "IoT, embedded, mechatronics",
+    10
+   ],
+   [
+    "AI, data science, automation",
+    10
+   ]
+  ],
+  "sectionUnit": "marks"
+ },
+ "negativeText": null,
+ "syllabusNote": null,
+ "selection": [
+  "Written test (merit) + NCC bonus marks",
+  "PST: 6x vacancies per category called, qualifying",
+  "PET: qualifying",
+  "Document verification, medical"
+ ],
+ "physical": [
+  [
+   "PST_male",
+   "Height 5'6\" min; chest 32\" unexpanded, 33.5\" expanded"
+  ],
+  [
+   "PST_female",
+   "Height 5'2\" min"
+  ],
+  [
+   "relaxation",
+   "Height relaxed by 2\" for Gorkha community / Bot tribe"
+  ],
+  [
+   "PET_male",
+   "1600 m in 6.5 min; 20 push-ups"
+  ],
+  [
+   "PET_female",
+   "1000 m in 6.5 min; shot put (4 kg) 14.5 ft in three attempts"
+  ],
+  [
+   "ex_servicemen",
+   "Relaxed by age band (see advertisement Annexure B)"
+  ]
+ ],
+ "extras": [
+  [
+   "NCC bonus",
+   "5% of max marks (C cert), 3% (B), 2% (A), per S.O. 290 of 2021"
+  ]
+ ],
+ "weightage": null,
+ "pastCutoffs": null,
+ "papers": [],
+ "docs": [
+  {
+   "label": "Advertisement 11 of 2025 (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Advt_11_0f_2025_26112025.pdf"
+  },
+  {
+   "label": "Addendum (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Addendum_SI_Telecom_31122025.pdf"
+  },
+  {
+   "label": "Syllabus (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Syllabus_SITELECOMMUNICATION_10042026.pdf"
+  },
+  {
+   "label": "Exam schedule notice (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/notice_01082026.pdf"
+  }
+ ],
+ "notes": [
+  "Part A general (60 marks), Part B technical (140 marks)."
+ ],
+ "checked": "2026-11-16"
+}

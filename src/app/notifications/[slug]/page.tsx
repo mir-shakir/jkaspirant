@@ -76,16 +76,15 @@ export default async function NotificationDetailPage({ params }: PageProps) {
         </a>
       )}
 
-      {(notification.exam || rankTool) && (
-        <GroupList className="mt-8">
-          {rankTool && (
-            <Row href={`/tools/${rankTool.toolSlug}`} title={`Predict your ${rankTool.name} rank`} sub="Score and expected rank in under a minute" />
-          )}
-          {notification.exam && (
-            <Row href={`/exams/${notification.exam.slug}`} title={liveExams[notification.exam.slug]?.title ?? notification.exam.title} sub="All updates and dates for this exam" />
-          )}
-        </GroupList>
-      )}
+      <GroupList className="mt-8">
+        {rankTool && (
+          <Row href={`/tools/${rankTool.toolSlug}`} title={`Predict your ${rankTool.name} rank`} sub="Score and expected rank in under a minute" />
+        )}
+        {notification.exam && (
+          <Row href={`/exams/${notification.exam.slug}`} title={liveExams[notification.exam.slug]?.title ?? notification.exam.title} sub="All updates and dates for this exam" />
+        )}
+        <Row href={`/contact?page=${encodeURIComponent(`/notifications/${notification.slug}`)}`} title="Contact us" sub="Questions or corrections about this update" />
+      </GroupList>
 
       <TelegramNudge className="mt-6" />
     </article>

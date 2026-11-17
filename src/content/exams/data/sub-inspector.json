@@ -1,0 +1,181 @@
+{
+ "slug": "sub-inspector",
+ "title": "JK Police Sub-Inspector",
+ "board": "JKSSB",
+ "advert": {
+  "no": "02 of 2024",
+  "date": "22 Nov 2024",
+  "items": "07"
+ },
+ "postsTotal": 669,
+ "postsNote": null,
+ "postTables": [
+  {
+   "label": "All posts",
+   "counts": [
+    267,
+    53,
+    67,
+    67,
+    54,
+    27,
+    67,
+    67
+   ]
+  }
+ ],
+ "postList": null,
+ "mainPosts": null,
+ "pay": "Level-6C (35700-113100)",
+ "cadre": "UT",
+ "qualification": [
+  [
+   "",
+   "Bachelor's degree from a recognised university"
+  ]
+ ],
+ "age": {
+  "asOn": "1 Jan 2024",
+  "rows": [
+   [
+    "all categories and govt/contractual employees",
+    "28"
+   ],
+   [
+    "in-service police",
+    "30"
+   ]
+  ],
+  "min": 18,
+  "note": "Ex-servicemen may deduct service period (up to 3 years over the limit)."
+ },
+ "fee": [
+  [
+   "general",
+   "₹700"
+  ],
+  [
+   "SC/ST-1/ST-2/EWS",
+   "₹600"
+  ]
+ ],
+ "dates": [
+  [
+   "Applications opened",
+   "3 Dec 2024"
+  ],
+  [
+   "Last date to apply",
+   "2 Jan 2025"
+  ],
+  [
+   "Exam date",
+   "29 Nov 2026"
+  ],
+  [
+   "Admit card",
+   "Seven days before the exam (about 22 Nov)"
+  ]
+ ],
+ "status": null,
+ "pattern": {
+  "questions": 100,
+  "marksEach": 2,
+  "total": 200,
+  "negative": 0.5,
+  "durationMin": 120,
+  "sections": [
+   [
+    "General Intelligence & Reasoning",
+    40
+   ],
+   [
+    "General Awareness",
+    40
+   ],
+   [
+    "Quantitative Aptitude",
+    30
+   ],
+   [
+    "English",
+    30
+   ],
+   [
+    "Mathematical Abilities",
+    30
+   ],
+   [
+    "Computer Proficiency",
+    30
+   ]
+  ],
+  "sectionUnit": "marks"
+ },
+ "negativeText": null,
+ "syllabusNote": null,
+ "selection": [
+  "Written test (merit) + NCC bonus marks",
+  "PST: 6x vacancies per category called, qualifying",
+  "PET: qualifying",
+  "Document verification, medical"
+ ],
+ "physical": [
+  [
+   "PST_male",
+   "Height 5'6\" min; chest 32\" unexpanded, 33.5\" expanded"
+  ],
+  [
+   "PST_female",
+   "Height 5'2\" min"
+  ],
+  [
+   "relaxation",
+   "Height relaxed by 2\" for Gorkha community / Bot tribe"
+  ],
+  [
+   "PET_male",
+   "1600 m in 6.5 min; 20 push-ups"
+  ],
+  [
+   "PET_female",
+   "1000 m in 6.5 min; shot put (4 kg) 14.5 ft in three attempts"
+  ],
+  [
+   "ex_servicemen",
+   "Relaxed by age band (see advertisement Annexure B)"
+  ]
+ ],
+ "extras": [
+  [
+   "NCC bonus",
+   "5% of max marks (C cert), 3% (B), 2% (A), per S.O. 290 of 2021"
+  ],
+  [
+   "Horizontal reservation",
+   "15% of posts for women (S.O. 288 of 2022); ex-servicemen as per indent; persons with disability not eligible"
+  ]
+ ],
+ "weightage": null,
+ "pastCutoffs": null,
+ "papers": [],
+ "docs": [
+  {
+   "label": "Advertisement 02 of 2024 (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Advertisement_Notification_No_02_of_2024_22112024.pdf"
+  },
+  {
+   "label": "Syllabus (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Syllabus_SI_Home_Department_26122024.pdf"
+  },
+  {
+   "label": "Exam schedule notice (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/notice_01082026.pdf"
+  }
+ ],
+ "notes": [
+  "Section marks are question count x 2 (e.g. 20 questions = 40 marks).",
+  "The 2021-22 SI recruitment (Advt 06 of 2021) is not a usable cut-off reference."
+ ],
+ "checked": "2026-11-16"
+}

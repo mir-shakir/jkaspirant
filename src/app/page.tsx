@@ -14,7 +14,7 @@ import { siteConfig } from "@/config/site";
 export const revalidate = 1800; // ISR: revalidate every 30 minutes
 
 export const metadata = buildMetadata({
-  title: "JK Aspirant — JKSSB & JKPSC Updates, Exam Dates & Rank Predictor",
+  title: "JK Aspirant — JKSSB Updates, Exam Dates, Cut-offs & Rank Predictor",
   description:
     "Latest JKSSB updates, upcoming exam dates and a rank predictor for J&K aspirants. Fast, clean, no ads.",
   canonicalPath: "/",
@@ -52,7 +52,7 @@ export default async function HomePage() {
       {spotlight ? (
         <FocusCard spotlight={spotlight} />
       ) : (
-        <PageHeader kicker="JKSSB · JKPSC" title="Every exam update, the day it happens." />
+        <PageHeader kicker="JKSSB" title="Every exam update, the day it happens." />
       )}
 
       {events.length > 0 && (
@@ -73,14 +73,14 @@ export default async function HomePage() {
             ))}
           </GroupList>
         ) : (
-          <EmptyState>New notices from JKSSB and JKPSC appear here the day they are published.</EmptyState>
+          <EmptyState>New JKSSB notices appear here the day they are published.</EmptyState>
         )}
       </Section>
 
       {exams.length > 0 && (
         <Section title="Exams" action={{ href: "/exams", label: "All exams" }} id="your-exam">
           <GroupList>
-            {exams.filter((exam) => !liveExams[exam.slug]?.awaited).map((exam) => (
+            {exams.filter((exam) => !liveExams[exam.slug]?.awaited && !liveExams[exam.slug]?.unlisted).map((exam) => (
               <Row
                 key={exam.id}
                 href={`/exams/${exam.slug}`}

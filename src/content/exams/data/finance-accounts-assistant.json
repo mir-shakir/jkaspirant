@@ -1,0 +1,154 @@
+{
+ "slug": "finance-accounts-assistant",
+ "title": "Accounts Assistant (Finance)",
+ "board": "JKSSB",
+ "advert": {
+  "no": "10 of 2025",
+  "date": "24 Nov 2025",
+  "items": "271"
+ },
+ "postsTotal": 600,
+ "postsNote": null,
+ "postTables": [
+  {
+   "label": "All posts",
+   "counts": [
+    240,
+    48,
+    60,
+    60,
+    48,
+    24,
+    60,
+    60
+   ]
+  }
+ ],
+ "postList": null,
+ "mainPosts": null,
+ "pay": "Level-5 (29200-92300)",
+ "cadre": "UT",
+ "qualification": [
+  [
+   "",
+   "Graduation in any stream: 50% (OM), 45% (reserved); PG with 50% or PhD also eligible"
+  ]
+ ],
+ "age": {
+  "asOn": "1 Jan 2025",
+  "rows": [
+   [
+    "OM",
+    "40"
+   ],
+   [
+    "reserved categories",
+    "43"
+   ],
+   [
+    "PwBD",
+    "42"
+   ],
+   [
+    "ex-servicemen",
+    "48"
+   ]
+  ],
+  "min": null,
+  "note": null
+ },
+ "fee": [
+  [
+   "general",
+   "₹600"
+  ],
+  [
+   "SC/ST-1/ST-2/EWS/PwBD",
+   "₹500"
+  ]
+ ],
+ "dates": [
+  [
+   "Applications opened",
+   "8 Dec 2025"
+  ],
+  [
+   "Last date to apply",
+   "6 Jan 2026"
+  ],
+  [
+   "Exam date",
+   "15 Nov 2026"
+  ]
+ ],
+ "status": "Exam held 15 Nov; objections 16-18 Nov; final key and result awaited",
+ "pattern": {
+  "questions": null,
+  "marksEach": null,
+  "total": 120,
+  "negative": 0.25,
+  "durationMin": 120,
+  "sections": [
+   [
+    "GK with special reference to J&K",
+    30
+   ],
+   [
+    "Accountancy & book keeping",
+    30
+   ],
+   [
+    "General English",
+    10
+   ],
+   [
+    "Statistics",
+    10
+   ],
+   [
+    "Mathematics",
+    10
+   ],
+   [
+    "General Economics",
+    10
+   ],
+   [
+    "General Science",
+    10
+   ],
+   [
+    "Computers",
+    10
+   ]
+  ],
+  "sectionUnit": "marks"
+ },
+ "negativeText": null,
+ "syllabusNote": null,
+ "selection": [
+  "Written test merit only",
+  "Document verification"
+ ],
+ "physical": null,
+ "extras": [],
+ "weightage": null,
+ "pastCutoffs": null,
+ "papers": [],
+ "docs": [
+  {
+   "label": "Advertisement 10 of 2025 (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Advt_10OF2025_24112025.pdf"
+  },
+  {
+   "label": "Syllabus (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Syllabus_FAA_23122025.pdf"
+  },
+  {
+   "label": "Provisional answer key (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/PROV_ANSKEY_FAA_15112026.pdf"
+  }
+ ],
+ "notes": [],
+ "checked": "2026-11-16"
+}
