@@ -18,12 +18,13 @@ export interface Spotlight {
 
 export const spotlight: Spotlight | null = {
   exam: "JKSSB FAA 2026",
-  headline: "Answer key is out.",
-  detail: "Provisional key, all four series · objections 16–18 Nov, in person",
+  headline: "Final answer key awaited.",
+  detail: "Objections closed 18 Nov · provisional key still available",
   stages: [
     { label: "Exam", status: "done" },
     { label: "Answer key", status: "done" },
-    { label: "Objections", status: "current" },
+    { label: "Objections", status: "done" },
+    { label: "Final key", status: "current" },
     { label: "Result", status: "upcoming" },
   ],
   primaryCta: { href: "/tools/jkssb-faa-rank-predictor", label: "Predict my rank" },
