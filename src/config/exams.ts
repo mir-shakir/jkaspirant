@@ -28,13 +28,13 @@ export const liveExams: Record<string, LiveExam> = {
     title: "Finance Accounts Assistant",
     board: "JKSSB",
     posts: 600,
-    status: "Answer key out · objections 16–18 Nov",
+    status: "Objections closed · final answer key awaited",
   },
   "sub-inspector": {
     title: "JK Police Sub-Inspector",
     board: "JKSSB",
     posts: 669,
-    status: "Exam on 29 Nov",
+    status: "Exam on 29 Nov · admit card from 26 Nov",
   },
   "sub-inspector-telecom": {
     title: "JK Police Sub-Inspector (Telecommunication)",
@@ -93,7 +93,7 @@ export const liveExams: Record<string, LiveExam> = {
     title: "Junior Engineer (Mechanical)",
     board: "JKSSB",
     posts: 127,
-    status: "Application dates postponed · new dates awaited",
+    status: "Apply 23 Nov – 22 Dec",
     awaited: true,
   },
 };
