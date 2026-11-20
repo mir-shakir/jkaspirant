@@ -47,6 +47,7 @@ export default async function ExamsPage() {
 
       <GroupList className="mt-6">
         <Row href="/calendar" title="Exam calendar" sub="Upcoming exam and admit card dates" />
+        <Row href="/previous-papers" title="Previous question papers" sub="Official JKSSB papers, 2023 to 2026" />
       </GroupList>
     </div>
   );

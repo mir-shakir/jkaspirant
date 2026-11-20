@@ -51,6 +51,12 @@ export interface ExamFacts {
   } | null;
   negativeText?: string | null;
   syllabusNote?: string | null;
+  /** Topic-by-topic syllabus copied from the official syllabus notice (wording kept close to the notice). */
+  syllabus?: {
+    source: string;
+    sections: { name: string; questions: number; marks: number; topics: [string | null, string][] }[];
+    note?: string | null;
+  } | null;
   selection?: string[] | null;
   physical?: Pair[] | null;
   extras: Pair[];

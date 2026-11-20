@@ -57,6 +57,7 @@ Every public page must have: `<title>`, meta description, Open Graph tags, JSON-
 /exams/[slug]/cut-offs           SSG
 /exams/[slug]/important-dates    SSG
 /calendar                        Upcoming exam / admit card dates
+/previous-papers                 All official JKSSB question papers (links to jkssb.nic.in PDFs)
 /tools, /tools/[tool]            Rank predictors
 /admin/*                         Client-side CRM (auth-protected)
 ```
@@ -99,6 +100,7 @@ Claude Code sessions (scheduled or manual, on the owner's Mac or in the cloud) d
 - **Deterministic steps are scripts** in `scripts/`. When a session gets something working (a scraper, an import), it saves it as a script and commits it; later runs execute the script and only fix it when it breaks.
   - `scripts/publish-notification.mjs` — upsert a notification (draft by default), revalidate, announce on Telegram once. Run with `node --env-file=.env.local ...`.
   - `scripts/sources/*.mjs` — one scraper per official source, printing JSON lines `{title, url, date}`.
+  - `scripts/sources/jkssb-papers.mjs` — reads JKSSB's official "Previous Question Papers" page and rewrites `src/content/papers.json`, which feeds `/previous-papers`. We only link the official PDFs, never re-host them. Papers tied to an exam go in that exam's `papers` list in `src/content/exams/data/*.json` (label stand-ins "(similar level)").
   - `scripts/telegram-post.mjs` — posts updates that are already live on jkaspirant.in (read from the sitemap) to the channel in `TELEGRAM_CHANNEL_ID`, once each, max 3 per run. Dry run by default; `--send` posts; `--init` marks everything live as posted. Posted slugs are kept in `../notes/telegram-posted.json` (outside the repo). Currently pointed at a test channel (`@jkaspirant_in`); the site still links the partner channel.
 - **Scratch output** (drafts, downloaded PDFs) goes in `tmp/` (gitignored). PDFs to keep go to Supabase Storage.
 - **Accuracy over speed:** official sources only, link the original notice, never invent dates/numbers. New items are drafts until the owner approves, unless the owner has switched auto-publish on.
