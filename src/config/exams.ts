@@ -34,7 +34,7 @@ export const liveExams: Record<string, LiveExam> = {
     title: "JK Police Sub-Inspector",
     board: "JKSSB",
     posts: 669,
-    status: "Exam on 29 Nov",
+    status: "Exam on 29 Nov · admit card from 26 Nov",
   },
   "sub-inspector-telecom": {
     title: "JK Police Sub-Inspector (Telecommunication)",

@@ -27,6 +27,38 @@ const HOME_EXAMS_NOTICE = `${PDF}/notice_01082026.pdf`;
 
 export const contentNotifications: ContentNotification[] = [
   {
+    slug: "jkssb-sub-inspector-admit-card-2026",
+    title: "JK Police Sub-Inspector admit card from 26 November, exam on 29 November",
+    category: "admit_card",
+    published_at: "2026-11-20T14:45:00+05:30",
+    summary:
+      "JKSSB will release admit cards for the JK Police Sub-Inspector (Home Department) written exam from 26 November 2026. The OMR-based exam is on 29 November 2026.",
+    body: `
+<p>JKSSB has issued a notice on admit cards for the OMR-based written exam for <strong>Sub-Inspector, Home Department</strong> (Advertisement Notification 02 of 2024, Item 07).</p>
+<h2>Key dates</h2>
+<ul>
+  <li><strong>Admit card available from:</strong> 26.11.2026</li>
+  <li><strong>Exam date:</strong> 29.11.2026</li>
+</ul>
+<h2>How to download</h2>
+<ul>
+  <li>Go to jkssb.nic.in and open the E-Admit Card link on the homepage.</li>
+  <li>Log in with your username and password, then enter the OTP sent to your registered email ID and mobile number.</li>
+  <li>Download and print the admit card. Bring a clear printed copy to the exam.</li>
+</ul>
+<h2>On exam day</h2>
+<ul>
+  <li>Reach your centre at least <strong>two hours</strong> before the exam time for biometric/facial checks.</li>
+  <li>After the exam, hand the admit card back to the invigilator, signed by you and the invigilator.</li>
+</ul>
+<h2>Can't download it?</h2>
+<p>Email <strong>ssbjk-grievance@jk.gov.in</strong> with your name, father's name, mother's name, date of birth, application number, post name and advertisement number, or visit the Board two days before the exam with proof that you applied and paid the fee. The same applies if the photo on the admit card is wrong. No claims are taken on exam day.</p>
+<p><a href="${PDF}/AdmitCard_Notice_20112026.pdf">Official notice (PDF)</a></p>
+<p>Notice No. JKSSB-COE0EXAM (UT)/6/2026-03 (7990247), dated 20.11.2026.</p>`,
+    source_url: `${PDF}/AdmitCard_Notice_20112026.pdf`,
+    exam: { slug: "sub-inspector", title: "JK Police Sub-Inspector" },
+  },
+  {
     slug: "jkssb-junior-engineer-mechanical-apply-dates-2026",
     title: "JKSSB Junior Engineer (Mechanical): 127 posts, apply from 23 November to 22 December",
     category: "notification",
@@ -236,11 +268,11 @@ export const contentNotifications: ContentNotification[] = [
     category: "notification",
     published_at: "2026-11-15T17:00:00+05:30",
     summary:
-      "JKSSB will hold the OMR-based written exam for 669 JK Police Sub-Inspector posts on 29 November 2026. Admit cards come out seven days before.",
+      "JKSSB will hold the OMR-based written exam for 669 JK Police Sub-Inspector posts on 29 November 2026. Admit cards are available from 26 November.",
     body: `
 <p>As per the JKSSB advance notice dated 1 August 2026, the OMR-based written exam for <strong>Sub-Inspector (Advertisement Notification 02 of 2024, Item 07)</strong> is scheduled for <strong>Sunday, 29 November 2026</strong>.</p>
 <h2>Admit card</h2>
-<p>JKSSB issues admit cards seven days before the exam, so expect them around 22 November. Dates can change, so confirm on the official site before you travel.</p>
+<p>Update, 20 November: JKSSB says admit cards will be available from <strong>26 November 2026</strong> on jkssb.nic.in (<a href="/notifications/jkssb-sub-inspector-admit-card-2026">details</a>).</p>
 <h2>Posts</h2>
 <p><strong>669</strong>, UT cadre, pay Level-6C (₹35,700–1,13,100): OM 267, SC 53, ST-1 67, ST-2 67, OBC 54, RBA 67, ALC/IB 27, EWS 67.</p>
 <h2>How selection works</h2>
