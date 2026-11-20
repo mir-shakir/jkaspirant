@@ -170,6 +170,36 @@ export function ExamFactsView({ facts }: { facts: ExamFacts }) {
         )}
       </Section>
 
+      {facts.syllabus && (
+        <Section title="Syllabus" id="syllabus">
+          <p className="mb-2 text-[14px] text-[hsl(var(--muted))]">Topics for each section, from the official syllabus notice. Tap a section to open it.</p>
+          <div className="border-y">
+            {facts.syllabus.sections.map((s) => (
+              <details key={s.name} className="group border-b last:border-b-0">
+                <summary className="flex min-h-[52px] cursor-pointer list-none items-center justify-between gap-3 py-2 [&::-webkit-details-marker]:hidden">
+                  <span>
+                    <span className="block text-[15px] font-medium leading-snug">{s.name}</span>
+                    <span className="block text-[13px] text-[hsl(var(--muted))]">
+                      {s.questions} questions · {s.marks} marks
+                    </span>
+                  </span>
+                  <span className="text-xl leading-none text-[hsl(var(--muted))] transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <div className="space-y-2 pb-4 text-[14.5px] leading-6">
+                  {s.topics.map(([label, text], i) => (
+                    <p key={i}>
+                      {label && <strong>{label}: </strong>}
+                      {text}
+                    </p>
+                  ))}
+                </div>
+              </details>
+            ))}
+          </div>
+          {facts.syllabus.note && <p className="mt-2 text-[13px] text-[hsl(var(--muted))]">{facts.syllabus.note}</p>}
+        </Section>
+      )}
+
       {(facts.selection?.length || facts.physical || facts.extras.length > 0 || facts.weightage) && (
         <Section title="How selection works" id="selection">
           <Card>

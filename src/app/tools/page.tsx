@@ -37,6 +37,7 @@ export default function ToolsPage() {
         <GroupList>
           <Row href="/tools/age-checker" title="Age limit checker" sub="Which JKSSB advertisements your age allows" />
           <Row href="/cut-offs" title="Previous cut-offs" sub="Lowest marks selected, for your category" />
+          <Row href="/previous-papers" title="Previous question papers" sub="Official JKSSB papers, 2023 to 2026" />
           <Row href="/results" title="Result search" sub="Find your marks by roll number or name" />
         </GroupList>
       </Section>

@@ -114,6 +114,118 @@
  },
  "negativeText": null,
  "syllabusNote": null,
+ "syllabus": {
+  "source": "https://jkssb.nic.in/Pdf/Syllabus_SI_Home_Department_26122024.pdf",
+  "sections": [
+   {
+    "name": "General Intelligence & Reasoning",
+    "questions": 20,
+    "marks": 40,
+    "topics": [
+     [
+      null,
+      "Analogies, similarities and differences, space visualization, spatial orientation, problem solving, analysis, judgment, decision making, visual memory, discrimination, observation, relationship concepts, arithmetical reasoning and figural classification, arithmetic number series, non-verbal series, coding and decoding, statement conclusion, syllogistic reasoning."
+     ],
+     [
+      "Topics",
+      "Semantic analogy, symbolic/number analogy, figural analogy, semantic classification, symbolic/number classification, figural classification, semantic series, number series, figural series, problem solving, word building, coding and de-coding, numerical operations, symbolic operations, trends, space orientation, space visualization, Venn diagrams, drawing inferences, punched hole/pattern folding and unfolding, figural pattern folding and completion, indexing, address matching, date and city matching, classification of centre codes/roll numbers, small and capital letters/numbers, embedded figures, critical thinking, emotional intelligence, social intelligence."
+     ]
+    ]
+   },
+   {
+    "name": "General Awareness",
+    "questions": 20,
+    "marks": 40,
+    "topics": [
+     [
+      null,
+      "General awareness of the environment and its application to society, current events, and everyday observations in their scientific aspect, as expected of any educated person."
+     ],
+     [
+      "Topics",
+      "History, culture, geography, economics, general policy (India, with special reference to J&K), sports, science, scientific research, people in news, current affairs."
+     ]
+    ]
+   },
+   {
+    "name": "Quantitative Aptitude",
+    "questions": 15,
+    "marks": 30,
+    "topics": [
+     [
+      null,
+      "Computation of whole numbers, decimals, fractions and relationships between numbers, percentage, ratio and proportion, square roots, averages, interest, profit and loss, discount, partnership business, mixture and alligation, time and distance, time and work."
+     ]
+    ]
+   },
+   {
+    "name": "English Comprehension",
+    "questions": 15,
+    "marks": 30,
+    "topics": [
+     [
+      null,
+      "Vocabulary, grammar, sentence structure, synonyms, antonyms and their correct usage; spot the error, fill in the blanks, synonyms/homonyms, antonyms, spellings/detecting mis-spelt words, idioms and phrases, one word substitution, improvement of sentences, active/passive voice of verbs, conversion into direct/indirect narration, shuffling of sentence parts, shuffling of sentences in a passage, cloze passage, comprehension passage."
+     ],
+     [
+      "Comprehension",
+      "Three or more paragraphs with questions on each. At least one is a simple paragraph from a book or story; the other two are on current affairs, based on a report or an editorial."
+     ]
+    ]
+   },
+   {
+    "name": "Mathematical Abilities",
+    "questions": 15,
+    "marks": 30,
+    "topics": [
+     [
+      "Algebra",
+      "Basic algebraic identities of school algebra, elementary surds (simple problems) and graphs of linear equations."
+     ],
+     [
+      "Geometry",
+      "Elementary geometric figures and facts: triangle and its various kinds of centres, congruence and similarity of triangles, circle and its chords, tangents, angles subtended by chords of a circle, common tangents to two or more circles."
+     ],
+     [
+      "Mensuration",
+      "Triangle, quadrilaterals, regular polygons, circle, right prism, right circular cone, right circular cylinder, sphere, hemispheres, rectangular parallelepiped, regular right pyramid with triangular or square base."
+     ],
+     [
+      "Trigonometry",
+      "Trigonometric ratios, complementary angles, heights and distances (simple problems only)."
+     ],
+     [
+      "Statistics and probability",
+      "Use of tables and graphs: histogram, frequency polygon, bar diagram, pie chart; measures of central tendency: mean, median, mode, standard deviation; calculation of simple probabilities."
+     ]
+    ]
+   },
+   {
+    "name": "Computer Proficiency",
+    "questions": 15,
+    "marks": 30,
+    "topics": [
+     [
+      "Computer basics",
+      "Organization of a computer, CPU, input/output devices, computer memory, memory organization, backup devices, ports, Windows Explorer, keyboard shortcuts."
+     ],
+     [
+      "Software",
+      "Windows operating system, including basics of Microsoft Office like MS Word, MS Excel and PowerPoint."
+     ],
+     [
+      "Internet and email",
+      "Web browsing and searching, downloading and uploading, managing an email account, e-banking."
+     ],
+     [
+      "Networking and cyber security",
+      "Networking devices and protocols, network and information security threats (hacking, virus, worms, Trojan etc.) and preventive measures."
+     ]
+    ]
+   }
+  ],
+  "note": "Reasoning, General Awareness and English are at graduation level; Quantitative Aptitude, Mathematical Abilities and Computer Proficiency are at 10th standard level. Source: JKSSB syllabus notice dated 26.12.2024."
+ },
  "selection": [
   "Written test (merit) + NCC bonus marks",
   "PST: 6x vacancies per category called, qualifying",
@@ -158,7 +270,16 @@
  ],
  "weightage": null,
  "pastCutoffs": null,
- "papers": [],
+ "papers": [
+  {
+   "title": "Sub-Inspector (Finance) 2024, Set A (similar level)",
+   "url": "https://jkssb.nic.in/Pdf/SET-A SUB-INSPECTOR (FINANCE) 10-03-2024.pdf"
+  },
+  {
+   "title": "Constable (Executive/Armed/IRP/SDRF) 2024, Set A (similar level)",
+   "url": "https://jkssb.nic.in/Pdf/SET-A CONSTABLE 01-12-2024_0001.pdf"
+  }
+ ],
  "docs": [
   {
    "label": "Advertisement 02 of 2024 (PDF)",
@@ -177,5 +298,5 @@
   "Section marks are question count x 2 (e.g. 20 questions = 40 marks).",
   "The 2021-22 SI recruitment (Advt 06 of 2021) is not a usable cut-off reference."
  ],
- "checked": "2026-11-16"
+ "checked": "2026-11-20"
 }

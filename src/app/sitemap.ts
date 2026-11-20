@@ -51,6 +51,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...examTabs.flat(),
     { url: url("/tools/age-checker"), changeFrequency: "weekly" as const, priority: 0.7 },
     { url: url("/cut-offs"), changeFrequency: "weekly" as const, priority: 0.8 },
+    { url: url("/previous-papers"), changeFrequency: "weekly" as const, priority: 0.7 },
     { url: url("/results"), changeFrequency: "weekly" as const, priority: 0.6 },
     ...resultSheets.map((s) => ({ url: url(`/results/${s.slug}`), changeFrequency: "monthly" as const, priority: 0.7 })),
     ...updates.map((n) => ({
