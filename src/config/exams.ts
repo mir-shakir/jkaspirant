@@ -93,7 +93,7 @@ export const liveExams: Record<string, LiveExam> = {
     title: "Junior Engineer (Mechanical)",
     board: "JKSSB",
     posts: 127,
-    status: "Application dates postponed · new dates awaited",
+    status: "Apply 23 Nov – 22 Dec",
     awaited: true,
   },
 };

@@ -31,7 +31,7 @@
  "qualification": [
   [
    "",
-   "3-year diploma in Mechanical Engineering, or degree in Mechanical Engineering, or AMIE (Sections A & B)"
+   "3-year diploma in Mechanical Engineering, or degree in Mechanical Engineering, or AMIE (Sections A & B). A degree or 3-year diploma in Aeronautical, Automobile or Production Engineering counts as equivalent (corrigendum, 19 Nov 2026)"
   ]
  ],
  "age": {
@@ -66,7 +66,11 @@
  "dates": [
   [
    "Applications open",
-   "Postponed (was 16 Nov 2026 to 15 Dec 2026); new dates awaited"
+   "23 Nov 2026 to 22 Dec 2026 (11:59 PM)"
+  ],
+  [
+   "Fee payment",
+   "By 22 Dec 2026 (11:59 PM)"
   ],
   [
    "Exam date",
@@ -98,8 +102,16 @@
   {
    "label": "Postponement notice (PDF)",
    "url": "https://jkssb.nic.in/Pdf/Notice_10OF2026_15112026.pdf"
+  },
+  {
+   "label": "Corrigendum: new dates and qualification (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Corrigendum_Advt_10OF2026_19112026.pdf"
+  },
+  {
+   "label": "Instructions for applying (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Notice_10OF2026_19112026.pdf"
   }
  ],
  "notes": [],
- "checked": "2026-11-16"
+ "checked": "2026-11-20"
 }
