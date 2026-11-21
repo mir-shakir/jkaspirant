@@ -79,7 +79,7 @@ export const liveExams: Record<string, LiveExam> = {
     title: "Junior Pharmacist, Staff Nurse, Lab Assistant & more",
     board: "JKSSB",
     posts: 518,
-    status: "Advt 08 of 2026 · form edit open till 20 Nov",
+    status: "Advt 08 of 2026 · form edit closed 20 Nov · exam date awaited",
     awaited: true,
   },
   "junior-engineer-civil": {
