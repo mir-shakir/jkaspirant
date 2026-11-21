@@ -37,6 +37,8 @@ export interface ExamFacts {
   qualification?: Pair[] | null;
   age?: { asOn: string; rows: Pair[] | null; min?: number | null; note?: string | null } | null;
   fee?: Pair[] | null;
+  /** "What's official so far": dated official events, each linking its notice or our update about it. */
+  timeline?: { items: { date: string; title: string; href: string }[]; next?: string | null } | null;
   dates: Pair[];
   status?: string | null;
   pattern?: {

@@ -21,6 +21,9 @@
     --ink: 220 35% 13%;
     --focus: 220 35% 13%;
     --focus-fg: 40 33% 96%;
+    /* Charts: one highlight, neutral context (validated for colour-blind separation and 3:1 contrast). */
+    --chart-hi: 8 68% 46%;
+    --chart-base: 220 10% 58%;
   }
 
   .dark {
@@ -37,6 +40,8 @@
     --ink: 40 30% 93%;
     --focus: 14 42% 17%;
     --focus-fg: 40 30% 94%;
+    --chart-hi: 10 72% 58%;
+    --chart-base: 220 8% 44%;
   }
 
   * {

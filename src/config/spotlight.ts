@@ -17,16 +17,16 @@ export interface Spotlight {
 }
 
 export const spotlight: Spotlight | null = {
-  exam: "JKSSB FAA 2026",
-  headline: "Final answer key awaited.",
-  detail: "Objections closed 18 Nov · provisional key still available",
+  exam: "JK Police SI 2026",
+  headline: "Exam on 29 November.",
+  detail: "669 posts · admit cards from 26 Nov · 200 marks, OMR",
   stages: [
-    { label: "Exam", status: "done" },
-    { label: "Answer key", status: "done" },
-    { label: "Objections", status: "done" },
-    { label: "Final key", status: "current" },
+    { label: "Applied", status: "done" },
+    { label: "Admit card", status: "current" },
+    { label: "Exam", status: "upcoming" },
+    { label: "Answer key", status: "upcoming" },
     { label: "Result", status: "upcoming" },
   ],
-  primaryCta: { href: "/tools/jkssb-faa-rank-predictor", label: "Predict my rank" },
-  secondaryCta: { href: "/notifications/jkssb-faa-provisional-answer-key-2026", label: "Answer key & objections" },
+  primaryCta: { href: "/exams/sub-inspector#syllabus", label: "Syllabus & pattern" },
+  secondaryCta: { href: "/tools/jk-police-sub-inspector-rank-predictor", label: "Rank predictor · 29 Nov" },
 };

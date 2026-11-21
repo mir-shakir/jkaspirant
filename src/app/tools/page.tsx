@@ -26,8 +26,14 @@ export default function ToolsPage() {
             <Row
               key={e.toolSlug}
               href={`/tools/${e.toolSlug}`}
-              title={`${e.board} ${e.name} ${e.examDate.slice(0, 4)}`}
-              sub={e.isOpen ? "Your score and expected rank in under a minute" : `Locked · opens ${e.opensOn ?? "after the exam"}`}
+              title={e.closedOn ? `${e.board} ${e.name} ${e.examDate.slice(0, 4)}: expected cut-off` : `${e.board} ${e.name} ${e.examDate.slice(0, 4)}`}
+              sub={
+                e.closedOn
+                  ? "Closed · final estimates from the scores aspirants shared"
+                  : e.isOpen
+                    ? "Your score and expected rank in under a minute"
+                    : `Locked · opens ${e.opensOn ?? "after the exam"}`
+              }
             />
           ))}
         </GroupList>

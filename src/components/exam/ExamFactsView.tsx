@@ -99,6 +99,17 @@ export function ExamFactsView({ facts }: { facts: ExamFacts }) {
 
   return (
     <>
+      {facts.timeline && (
+        <Section title="What's official so far" id="timeline">
+          <GroupList>
+            {facts.timeline.items.map((t, i) => (
+              <Row key={i} href={t.href} external={/^https?:/.test(t.href)} title={t.title} sub={t.date} />
+            ))}
+          </GroupList>
+          {facts.timeline.next && <p className="mt-2 text-[14px] text-[hsl(var(--muted))]">{facts.timeline.next}</p>}
+        </Section>
+      )}
+
       <Section title="Important dates" id="dates">
         <Card>
           <Pairs rows={facts.dates} />
