@@ -91,42 +91,6 @@ export function ScoreSpread({
   );
 }
 
-/** Scores shared per day. */
-export function SharedPerDay({ days }: { days: [string, number][] }) {
-  const max = Math.max(...days.map(([, n]) => n));
-  const W = 340;
-  const H = 120;
-  const padB = 22;
-  const top = 16;
-  const slot = W / days.length;
-  const barW = Math.min(34, slot - 8);
-  const label = (d: string) => new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "Asia/Kolkata" });
-  return (
-    <figure className="surface-card p-4">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label={`Scores shared per day: ${days.map(([d, n]) => `${label(d)} ${n}`).join(", ")}.`}>
-        <line x1={0} x2={W} y1={H - padB} y2={H - padB} stroke="hsl(var(--line))" strokeWidth="1" />
-        {days.map(([d, n], i) => {
-          const h = Math.max(((H - padB - top) * n) / max, 2);
-          const x = i * slot + (slot - barW) / 2;
-          return (
-            <g key={d}>
-              <title>{`${label(d)}: ${fmt(n)} scores`}</title>
-              <rect x={i * slot} y={top} width={slot} height={H - padB - top} fill="transparent" />
-              <path d={roundTop(x, H - padB, barW, h, 4)} fill={i === 0 ? "hsl(var(--chart-hi))" : "hsl(var(--chart-base))"} />
-              <text x={x + barW / 2} y={H - padB - h - 4} fontSize="10" textAnchor="middle" fill="hsl(var(--muted))" className="font-mono-num">
-                {fmt(n)}
-              </text>
-              <text x={x + barW / 2} y={H - 6} fontSize="10" textAnchor="middle" fill="hsl(var(--muted))" className="font-mono-num">
-                {label(d)}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
-    </figure>
-  );
-}
-
 /** Bar with rounded top corners, square at the baseline. */
 function roundTop(x: number, base: number, w: number, h: number, r: number) {
   const rr = Math.min(r, h, w / 2);

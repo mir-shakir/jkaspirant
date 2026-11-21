@@ -6,7 +6,7 @@ import { CutoffCard } from "@/components/rank/CutoffCard";
 import { expectedCutoffs } from "@/lib/rank";
 import { getCutoffStats } from "@/lib/queries/rank";
 import { OpensIn } from "@/components/rank/OpensIn";
-import { ScoreSpread, SharedPerDay } from "@/components/rank/ResultCharts";
+import { ScoreSpread } from "@/components/rank/ResultCharts";
 import { SavedRank } from "@/components/rank/SavedRank";
 import { getRankSnapshot, type RankSnapshot } from "@/content/rank-snapshots";
 import { predict } from "@/lib/rank";
@@ -38,8 +38,8 @@ export function generateMetadata({ params }: PageProps): Metadata {
   if (snap) {
     const om = expectedCutoffs(exam, snap, snap.catCounts).find((c) => c.category === "OM")?.cutoff;
     return buildMetadata({
-      title: `${exam.board} ${exam.name} Expected Cut-off ${year}: Category-wise, From ${snap.total} Candidate Scores`,
-      description: `Expected ${exam.fullName} ${year} cut-off for every category, from ${snap.total} scores checked against the provisional answer key: open merit about ${om} out of ${exam.totalQuestions * exam.marksPerCorrect}. Score spread, category medians and toppers. The rank predictor is now closed.`,
+      title: `${exam.fullName} Expected Cut-off ${year} & Rank Predictor`,
+      description: `Expected ${exam.name} ${year} cut-off for every category (OM, SC, ST, OBC, RBA, EWS and more) from ${snap.total} candidate scores: open merit ${om} out of ${exam.totalQuestions * exam.marksPerCorrect}. Score spread, category medians and top scores.`,
       canonicalPath: `/tools/${exam.toolSlug}`,
       keywords: [
         `${exam.board} ${exam.name} expected cut off ${year}`,
@@ -329,11 +329,11 @@ function Closed({ exam, year, snap }: { exam: NonNullable<ReturnType<typeof getR
   const d = (iso: string, opts: Intl.DateTimeFormatOptions = { day: "numeric", month: "short" }) =>
     new Date(iso).toLocaleDateString("en-IN", { ...opts, timeZone: "Asia/Kolkata" });
   const ranFrom = d(exam.examDate);
-  const ranTo = d(snap.lastScoreAt, { day: "numeric", month: "short", year: "numeric" });
+  const ranTo = d(exam.closedOn ?? snap.closedOn);
   const fmt = (n: number) => n.toLocaleString("en-IN");
   const breadcrumbItems = [
     { name: "Tools", path: "/tools" },
-    { name: `${exam.name} expected cut-off`, path: `/tools/${exam.toolSlug}` },
+    { name: `${exam.name} rank predictor`, path: `/tools/${exam.toolSlug}` },
   ];
   const sorted = [...exam.categories].sort((a, b) => (snap.catCounts[b] ?? 0) - (snap.catCounts[a] ?? 0));
 
@@ -343,7 +343,7 @@ function Closed({ exam, year, snap }: { exam: NonNullable<ReturnType<typeof getR
       a: `Our final estimate for open merit (OM) is about ${om} out of ${max}, most likely between ${omPred.cutoff.low} and ${omPred.cutoff.high}. Category estimates: ${cutoffs
         .filter((c) => c.category !== "OM")
         .map((c) => `${c.category} ${c.cutoff}`)
-        .join(", ")}. These come from ${snap.total} scores checked against the provisional answer key. They are estimates, not official cut-offs.`,
+        .join(", ")}. From ${snap.total} scores checked against the provisional answer key.`,
     },
     {
       q: `Is the ${exam.name} rank predictor still open?`,
@@ -368,7 +368,7 @@ function Closed({ exam, year, snap }: { exam: NonNullable<ReturnType<typeof getR
       "@context": "https://schema.org",
       "@type": "Dataset",
       name: `${exam.fullName} ${year}: scores shared by candidates`,
-      description: `${snap.total} self-reported scores for the ${exam.fullName} exam of ${d(exam.examDate, { day: "numeric", month: "long", year: "numeric" })}, with expected category-wise cut-offs. Estimates, not official.`,
+      description: `${snap.total} self-reported scores for the ${exam.fullName} exam of ${d(exam.examDate, { day: "numeric", month: "long", year: "numeric" })}, with expected category-wise cut-offs.`,
       creator: { "@type": "Organization", name: "JK Aspirant" },
       temporalCoverage: `${exam.examDate}/${snap.lastScoreAt.slice(0, 10)}`,
       isAccessibleForFree: true,
@@ -387,25 +387,21 @@ function Closed({ exam, year, snap }: { exam: NonNullable<ReturnType<typeof getR
             <rect x="4" y="9" width="12" height="8" rx="2" />
             <path d="M7 9V6.5a3 3 0 0 1 6 0V9" />
           </svg>
-          Rank predictor closed
+          {exam.board} {exam.name} {year} rank predictor
         </p>
         <h1 id="closed-title" className="mt-3 text-[30px] leading-[1.1] sm:text-[36px]">
-          {exam.board} {exam.name} expected cut-off {year}
+          Rank predictor closed
         </h1>
-        <p className="mt-2 text-[14.5px] opacity-80">
-          Our rank predictor ran here from {ranFrom} to {ranTo}. {fmt(snap.total)} aspirants shared their scores. It no longer takes new scores; these are the
-          final estimates.
-        </p>
         <dl className="mt-4 grid grid-cols-3 gap-2">
           {(
             [
               [fmt(snap.total), "scores shared"],
-              [String(om), `OM cut-off (of ${max})`],
-              [String(snap.median), "median score"],
+              [ranFrom, "opened"],
+              [ranTo, "closed"],
             ] as [string, string][]
           ).map(([v, k]) => (
             <div key={k} className="rounded-2xl bg-[hsl(var(--focus-fg)/0.1)] px-3 py-2">
-              <dd className="font-mono-num text-[22px] font-semibold leading-tight">{v}</dd>
+              <dd className="whitespace-nowrap font-mono-num text-[19px] font-semibold leading-tight sm:text-[22px]">{v}</dd>
               <dt className="text-[11.5px] leading-tight opacity-75">{k}</dt>
             </div>
           ))}
@@ -429,8 +425,7 @@ function Closed({ exam, year, snap }: { exam: NonNullable<ReturnType<typeof getR
       <div className="mt-4">
         <CutoffCard examLabel={`${exam.board} ${exam.name} ${year}`} cutoffs={cutoffs} shared={snap.total} updatedAt={new Date(snap.lastScoreAt)} outOf={max} />
         <p className="mt-2 text-[13px] leading-5 text-[hsl(var(--muted))]">
-          Open merit most likely between {omPred.cutoff.low} and {omPred.cutoff.high}. Based on the provisional answer key; the final key may shift scores slightly.
-          Official cut-offs come with the result.
+          Open merit most likely between {omPred.cutoff.low} and {omPred.cutoff.high}.
         </p>
       </div>
 
@@ -479,23 +474,12 @@ function Closed({ exam, year, snap }: { exam: NonNullable<ReturnType<typeof getR
         <p className="mt-2 text-[12.5px] text-[hsl(var(--muted))]">Median and cut-off out of {max}. OM posts are open merit, for everyone.</p>
       </section>
 
-      <section className="mt-8" aria-labelledby="per-day">
-        <h2 id="per-day" className="text-[21px]">
-          When people shared
-        </h2>
-        <p className="mb-3 mt-1 text-[14.5px] text-[hsl(var(--muted))]">
-          {fmt(snap.byDay[0][1])} on exam day alone. {fmt(snap.fromAnswerKey)} of the {fmt(snap.total)} were checked against the official key, from{" "}
-          {fmt(snap.networks)} different networks.
-        </p>
-        <SharedPerDay days={snap.byDay} />
-      </section>
-
       <section className="mt-8" aria-labelledby="toppers">
         <h2 id="toppers" className="text-[21px]">
           Top shared scores
         </h2>
         <p className="mb-3 mt-1 text-[14.5px] text-[hsl(var(--muted))]">
-          {fmt(snap.onLeaderboard)} aspirants chose to show their score. Names are shortened for privacy.
+          {fmt(snap.onLeaderboard)} aspirants joined the leaderboard.
         </p>
         <ol className="surface-card divide-y">
           {snap.board.map((b, i) => (

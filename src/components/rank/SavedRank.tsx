@@ -51,7 +51,6 @@ export function SavedRank({ exam, examKey }: { exam: PredictExam; examKey: strin
           </>
         )}
       </p>
-      <p className="mt-2 text-[12.5px] text-[hsl(var(--muted))]">Saved on this phone. An estimate, not the official result.</p>
     </section>
   );
 }

@@ -77,10 +77,10 @@ export default async function ExamOverviewPage({ params }: PageProps) {
           className="mt-5 flex items-center justify-between gap-3 rounded-2xl bg-[hsl(var(--focus))] px-4 py-4 text-[hsl(var(--focus-fg))]"
         >
           <span>
-            <span className="block text-[16px] font-semibold">{rankTool.closedOn ? `${rankTool.name} expected cut-off` : rankTool.isOpen ? `Predict your ${rankTool.name} rank` : `${rankTool.name} rank predictor 🔒`}</span>
+            <span className="block text-[16px] font-semibold">{rankTool.closedOn ? `${rankTool.name} rank predictor` : rankTool.isOpen ? `Predict your ${rankTool.name} rank` : `${rankTool.name} rank predictor 🔒`}</span>
             <span className="mt-0.5 block text-[13px] opacity-75">
               {rankTool.closedOn
-                ? "Category-wise, from the scores aspirants shared"
+                ? "Closed · expected cut-off by category"
                 : rankTool.isOpen
                   ? "Score and expected rank in under a minute"
                   : `Opens ${rankTool.opensOn ?? "after the exam"}`}

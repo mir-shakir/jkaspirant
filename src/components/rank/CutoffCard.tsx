@@ -53,7 +53,7 @@ export function CutoffCard({
       </dl>
 
       <p className="mt-2.5 text-[11.5px] leading-4 text-[hsl(var(--muted))]">
-        Out of {outOf}. Our estimate, not official · {shared > 0 ? `${shared.toLocaleString("en-IN")} scores · ` : ""}
+        Out of {outOf} · {shared > 0 ? `${shared.toLocaleString("en-IN")} scores · ` : ""}
         {when} IST · jkaspirant.in
       </p>
     </section>
