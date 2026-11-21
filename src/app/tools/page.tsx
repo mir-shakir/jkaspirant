@@ -27,7 +27,13 @@ export default function ToolsPage() {
               key={e.toolSlug}
               href={`/tools/${e.toolSlug}`}
               title={`${e.board} ${e.name} ${e.examDate.slice(0, 4)}`}
-              sub={e.isOpen ? "Your score and expected rank in under a minute" : `Locked · opens ${e.opensOn ?? "after the exam"}`}
+              sub={
+                e.closedOn
+                  ? "Closed · expected cut-off by category"
+                  : e.isOpen
+                    ? "Your score and expected rank in under a minute"
+                    : `Locked · opens ${e.opensOn ?? "after the exam"}`
+              }
             />
           ))}
         </GroupList>

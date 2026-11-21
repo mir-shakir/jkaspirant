@@ -45,6 +45,11 @@ export interface RankExamConfig {
   isOpen: boolean;
   /** Shown while closed, e.g. "29 Nov, after the exam". */
   opensOn?: string;
+  /**
+   * Set when the tool has run its course (ISO date). The page then shows the frozen
+   * results from src/content/rank-snapshots instead of the calculator; isOpen must be false.
+   */
+  closedOn?: string;
 }
 
 // J&K vertical reservation categories, as in Annexure-A of the FAA notification.
@@ -113,7 +118,9 @@ export const rankExams: RankExamConfig[] = [
     answerKeyReleased: true,
     answerKeyUrl: "/notices/jkssb-faa-provisional-answer-key-2026.pdf",
     patternVerified: false,
-    isOpen: true,
+    // Closed 21 Nov 2026 after new scores dropped to a handful a day (900 in all).
+    isOpen: false,
+    closedOn: "2026-11-21",
   },
   {
     toolSlug: "jk-police-sub-inspector-rank-predictor",

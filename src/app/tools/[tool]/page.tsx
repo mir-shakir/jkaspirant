@@ -6,6 +6,10 @@ import { CutoffCard } from "@/components/rank/CutoffCard";
 import { expectedCutoffs } from "@/lib/rank";
 import { getCutoffStats } from "@/lib/queries/rank";
 import { OpensIn } from "@/components/rank/OpensIn";
+import { ScoreSpread } from "@/components/rank/ResultCharts";
+import { SavedRank } from "@/components/rank/SavedRank";
+import { getRankSnapshot, type RankSnapshot } from "@/content/rank-snapshots";
+import { predict } from "@/lib/rank";
 import { TelegramNudge } from "@/components/TelegramNudge";
 import { CATEGORIES, getExamFacts } from "@/content/exams";
 import { GroupList, PageHeader, Row } from "@/components/ui";
@@ -30,6 +34,21 @@ export function generateMetadata({ params }: PageProps): Metadata {
   const exam = getRankExam(params.tool);
   if (!exam) return {};
   const year = exam.examDate.slice(0, 4);
+  const snap = exam.closedOn ? getRankSnapshot(exam.examKey) : null;
+  if (snap) {
+    const om = expectedCutoffs(exam, snap, snap.catCounts).find((c) => c.category === "OM")?.cutoff;
+    return buildMetadata({
+      title: `${exam.fullName} Expected Cut-off ${year} & Rank Predictor`,
+      description: `Expected ${exam.name} ${year} cut-off for every category (OM, SC, ST, OBC, RBA, EWS and more) from ${snap.total} candidate scores: open merit ${om} out of ${exam.totalQuestions * exam.marksPerCorrect}. Score spread, category medians and top scores.`,
+      canonicalPath: `/tools/${exam.toolSlug}`,
+      keywords: [
+        `${exam.board} ${exam.name} expected cut off ${year}`,
+        `${exam.name} cut off ${year} category wise`,
+        `${exam.fullName} cut off`,
+        `${exam.board} ${exam.name} rank predictor`,
+      ],
+    });
+  }
   if (!exam.isOpen) {
     const opens = new Date(exam.examDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "Asia/Kolkata" });
     return buildMetadata({
@@ -57,6 +76,8 @@ export default async function RankToolPage({ params }: PageProps) {
   if (!exam) notFound();
 
   const year = exam.examDate.slice(0, 4);
+  const snap = exam.closedOn ? getRankSnapshot(exam.examKey) : null;
+  if (snap) return <Closed exam={exam} year={year} snap={snap} />;
   if (!exam.isOpen) return <NotOpenYet exam={exam} year={year} />;
   const cutoffData = await getCutoffStats(exam.examKey);
   const cutoffs = cutoffData ? expectedCutoffs(exam, cutoffData.stats, cutoffData.catCounts) : null;
@@ -275,6 +296,215 @@ function NotOpenYet({ exam, year }: { exam: NonNullable<ReturnType<typeof getRan
       <GroupList className="mt-6">
         <Row href={`/exams/${exam.examSlug}`} title={`${exam.fullName} exam page`} sub="Pattern, syllabus, selection steps and official notices" />
       </GroupList>
+
+      <section className="mt-9">
+        <h2 className="text-[21px]">Common questions</h2>
+        <div className="mt-1 divide-y border-b">
+          {faqs.map((f) => (
+            <details key={f.q} className="group">
+              <summary className="flex min-h-[52px] cursor-pointer list-none items-center justify-between gap-3 py-2 text-[15px] font-medium [&::-webkit-details-marker]:hidden">
+                {f.q}
+                <span className="text-xl leading-none text-[hsl(var(--muted))] transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <p className="pb-4 text-[14.5px] leading-6 text-[hsl(var(--muted))]">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+/**
+ * After a rank tool closes: say clearly that it ran and is closed, then give the
+ * answer people search for (the expected cut-off by category) from the frozen
+ * snapshot, with the data behind it. Nothing here reads the database except the
+ * visitor's own saved score.
+ */
+function Closed({ exam, year, snap }: { exam: NonNullable<ReturnType<typeof getRankExam>>; year: string; snap: RankSnapshot }) {
+  const max = exam.totalQuestions * exam.marksPerCorrect;
+  const cutoffs = expectedCutoffs(exam, snap, snap.catCounts);
+  const omPred = predict(exam, 0, { total: snap.total, histogram: snap.histogram, above: 0, catAbove: 0, catTotal: snap.catCounts.OM ?? 0 }, "OM");
+  const om = cutoffs.find((c) => c.category === "OM")?.cutoff ?? omPred.cutoff.mid;
+  const d = (iso: string, opts: Intl.DateTimeFormatOptions = { day: "numeric", month: "short" }) =>
+    new Date(iso).toLocaleDateString("en-IN", { ...opts, timeZone: "Asia/Kolkata" });
+  const ranFrom = d(exam.examDate);
+  const ranTo = d(exam.closedOn ?? snap.closedOn);
+  const fmt = (n: number) => n.toLocaleString("en-IN");
+  const breadcrumbItems = [
+    { name: "Tools", path: "/tools" },
+    { name: `${exam.name} rank predictor`, path: `/tools/${exam.toolSlug}` },
+  ];
+  const sorted = [...exam.categories].sort((a, b) => (snap.catCounts[b] ?? 0) - (snap.catCounts[a] ?? 0));
+
+  const faqs = [
+    {
+      q: `What is the expected ${exam.name} cut-off ${year}?`,
+      a: `Our final estimate for open merit (OM) is about ${om} out of ${max}, most likely between ${omPred.cutoff.low} and ${omPred.cutoff.high}. Category estimates: ${cutoffs
+        .filter((c) => c.category !== "OM")
+        .map((c) => `${c.category} ${c.cutoff}`)
+        .join(", ")}. From ${snap.total} scores checked against the provisional answer key.`,
+    },
+    {
+      q: `Is the ${exam.name} rank predictor still open?`,
+      a: `No. It ran from ${ranFrom} to ${ranTo} and took ${snap.total} scores. New scores are no longer accepted. If you saved a score on this phone, you can still see it here.`,
+    },
+    {
+      q: `When will the official ${exam.name} cut-off and result come out?`,
+      a: `JKSSB has not announced a date. The final answer key comes first, then the result and the official cut-offs. We post each one the day JKSSB publishes it.`,
+    },
+    {
+      q: "How were these estimates made?",
+      a: `Aspirants entered their right and wrong answers after checking them against the provisional key. We combined how those ${snap.total} scores spread with the ${exam.posts} posts by category and the number of candidates (about ${fmt(exam.registered)} registered), allowing for the fact that people who share scores tend to have done well. ${snap.excludedAsFake} obviously fake scores were left out.`,
+    },
+  ];
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Dataset",
+      name: `${exam.fullName} ${year}: scores shared by candidates`,
+      description: `${snap.total} self-reported scores for the ${exam.fullName} exam of ${d(exam.examDate, { day: "numeric", month: "long", year: "numeric" })}, with expected category-wise cut-offs.`,
+      creator: { "@type": "Organization", name: "JK Aspirant" },
+      temporalCoverage: `${exam.examDate}/${snap.lastScoreAt.slice(0, 10)}`,
+      isAccessibleForFree: true,
+    },
+  ];
+
+  return (
+    <div className="page-shell max-w-xl py-4 sm:py-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(breadcrumbItems)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <Breadcrumb items={breadcrumbItems} />
+
+      <section className="rounded-3xl bg-[hsl(var(--focus))] p-5 text-[hsl(var(--focus-fg))] sm:p-6" aria-labelledby="closed-title">
+        <p className="flex items-center gap-2 font-mono-num text-[11px] uppercase tracking-[0.16em] opacity-75">
+          <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden>
+            <rect x="4" y="9" width="12" height="8" rx="2" />
+            <path d="M7 9V6.5a3 3 0 0 1 6 0V9" />
+          </svg>
+          {exam.board} {exam.name} {year} rank predictor
+        </p>
+        <h1 id="closed-title" className="mt-3 text-[30px] leading-[1.1] sm:text-[36px]">
+          Rank predictor closed
+        </h1>
+        <dl className="mt-4 grid grid-cols-3 gap-2">
+          {(
+            [
+              [fmt(snap.total), "scores shared"],
+              [ranFrom, "opened"],
+              [ranTo, "closed"],
+            ] as [string, string][]
+          ).map(([v, k]) => (
+            <div key={k} className="rounded-2xl bg-[hsl(var(--focus-fg)/0.1)] px-3 py-2">
+              <dd className="whitespace-nowrap font-mono-num text-[19px] font-semibold leading-tight sm:text-[22px]">{v}</dd>
+              <dt className="text-[11.5px] leading-tight opacity-75">{k}</dt>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <SavedRank
+        examKey={exam.examKey}
+        exam={{
+          totalQuestions: exam.totalQuestions,
+          marksPerCorrect: exam.marksPerCorrect,
+          negativePerWrong: exam.negativePerWrong,
+          posts: exam.posts,
+          appeared: exam.appeared,
+          model: exam.model,
+          openSeats: exam.openSeats,
+          reserved: exam.reserved,
+        }}
+      />
+
+      <div className="mt-4">
+        <CutoffCard examLabel={`${exam.board} ${exam.name} ${year}`} cutoffs={cutoffs} shared={snap.total} updatedAt={new Date(snap.lastScoreAt)} outOf={max} />
+        <p className="mt-2 text-[13px] leading-5 text-[hsl(var(--muted))]">
+          Open merit most likely between {omPred.cutoff.low} and {omPred.cutoff.high}.
+        </p>
+      </div>
+
+      <section className="mt-8" aria-labelledby="spread">
+        <h2 id="spread" className="text-[21px]">
+          How the {fmt(snap.total)} scores spread
+        </h2>
+        <p className="mb-3 mt-1 text-[14.5px] text-[hsl(var(--muted))]">
+          Half scored {snap.median} or more; the top 10% scored {snap.p90} or more. On average people got {snap.avgCorrect} right and {snap.avgWrong} wrong out
+          of {exam.totalQuestions}.
+        </p>
+        <ScoreSpread histogram={snap.histogram} cutoff={om} from={20} to={110} />
+      </section>
+
+      <section className="mt-8" aria-labelledby="by-category">
+        <h2 id="by-category" className="text-[21px]">
+          By category
+        </h2>
+        <div className="surface-card mt-3 overflow-x-auto">
+          <table className="w-full text-[14px]">
+            <thead>
+              <tr className="border-b text-left text-[12px] text-[hsl(var(--muted))]">
+                <th className="px-3 py-2 font-medium">Category</th>
+                <th className="px-3 py-2 text-right font-medium">Scores</th>
+                <th className="px-3 py-2 text-right font-medium">Median</th>
+                <th className="px-3 py-2 text-right font-medium">Cut-off</th>
+                <th className="px-3 py-2 text-right font-medium">Posts</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {sorted.map((c) => {
+                const co = cutoffs.find((x) => x.category === c);
+                return (
+                  <tr key={c}>
+                    <td className="px-3 py-2 font-medium">{c}</td>
+                    <td className="px-3 py-2 text-right font-mono-num">{fmt(snap.catCounts[c] ?? 0)}</td>
+                    <td className="px-3 py-2 text-right font-mono-num">{snap.catMedian[c] !== undefined ? Math.round(snap.catMedian[c] * 10) / 10 : "–"}</td>
+                    <td className="px-3 py-2 text-right font-mono-num">{co?.cutoff ?? "–"}</td>
+                    <td className="px-3 py-2 text-right font-mono-num">{co?.seats ?? "–"}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-2 text-[12.5px] text-[hsl(var(--muted))]">Median and cut-off out of {max}. OM posts are open merit, for everyone.</p>
+      </section>
+
+      <section className="mt-8" aria-labelledby="toppers">
+        <h2 id="toppers" className="text-[21px]">
+          Top shared scores
+        </h2>
+        <p className="mb-3 mt-1 text-[14.5px] text-[hsl(var(--muted))]">
+          {fmt(snap.onLeaderboard)} aspirants joined the leaderboard.
+        </p>
+        <ol className="surface-card divide-y">
+          {snap.board.map((b, i) => (
+            <li key={i} className="flex items-center gap-3 px-4 py-2.5 text-[14.5px]">
+              <span className="w-5 font-mono-num text-[hsl(var(--muted))]">{i + 1}</span>
+              <span className="min-w-0 flex-1 truncate">{b.name}</span>
+              <span className="text-[12.5px] text-[hsl(var(--muted))]">{b.category}</span>
+              <span className="w-14 text-right font-mono-num font-semibold">{b.score}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <GroupList className="mt-8">
+        {exam.answerKeyUrl && <Row href={exam.answerKeyUrl} external title="Provisional answer key (PDF)" sub="Series A, B, C and D" />}
+        <Row href={`/exams/${exam.examSlug}`} title={`${exam.fullName} exam page`} sub="What's official so far, posts, pattern and notices" />
+        <Row href="/notifications/jkssb-faa-exam-integrity-press-note-2026" title="JKSSB press note on the exam" sub="19 November 2026" />
+        {rankExams
+          .filter((t) => t.toolSlug !== exam.toolSlug && !t.closedOn)
+          .map((t) => (
+            <Row key={t.toolSlug} href={`/tools/${t.toolSlug}`} title={`${t.fullName} rank predictor`} sub={t.isOpen ? "Open now" : `Opens ${t.opensOn ?? "after the exam"}`} />
+          ))}
+      </GroupList>
+
+      <TelegramNudge className="mt-4" title="Get the result the day it's out" sub="Final key, result and cut-offs, on Telegram" />
 
       <section className="mt-9">
         <h2 className="text-[21px]">Common questions</h2>
