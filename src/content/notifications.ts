@@ -27,6 +27,42 @@ const HOME_EXAMS_NOTICE = `${PDF}/notice_01082026.pdf`;
 
 export const contentNotifications: ContentNotification[] = [
   {
+    slug: "jkssb-advt-04-2026-apply-dates",
+    title: "JKSSB Machineman, Binder, Head Weaver, Lab Assistant and more: 130 posts, apply from 16 December",
+    category: "notification",
+    published_at: "2026-11-25T15:49:00+05:30",
+    summary:
+      "JKSSB has announced fresh dates for the 130 posts of Advertisement 04 of 2026, including Machineman, Binder, Head Weaver, Laboratory Assistant and Library Assistant: apply online from 16 December 2026 to 14 January 2027.",
+    body: `
+<p>JKSSB has announced fresh application dates for the <strong>130 posts of Advertisement Notification No. 04 of 2026</strong> (dated 25 May 2026). Applications were to open on 22 June and had been postponed.</p>
+<h2>Key dates</h2>
+<ul>
+  <li><strong>Apply online:</strong> 16.12.2026 (12:00 AM) to 14.01.2027 (11:59 PM)</li>
+  <li><strong>Fee online:</strong> same window, last date 14.01.2027 (11:59 PM)</li>
+  <li><strong>Exam date:</strong> not announced yet</li>
+</ul>
+<h2>Posts</h2>
+<ul>
+  <li><strong>ARI &amp; Trainings (Government Press), 42:</strong> Machineman/Assistant Machineman 21, Binder (Jr. Scale) 18, Copy Holder 1, Lathe Runner 1, Press Mechanic (Jr. Scale) 1</li>
+  <li><strong>Industries &amp; Commerce (Handicrafts &amp; Handloom), 34:</strong> Head Weaver 15, Weaver 4, Assistant Extension Officer 3, Caretaker 3, and one each of Assistant Jobber, Dyeing Instructor, Dyeing Master, Fitter, Loan Inspector, Quality Control Supervisor, Technical Assistant, Inspector Induscos, Supervisor Common Facility Centre</li>
+  <li><strong>Home (Forensic Science Laboratory and Prisons), 21:</strong> Laboratory Assistant 13, Electrician Grade-II 4, and one each of Junior Storekeeper, Laboratory Attendant, Plumber Grade-II, Tailor</li>
+  <li><strong>Agriculture Production, 17:</strong> Senior Horticulture Technician 6, Electrician 4, Incubator Mechanic 2, Refrigerator Mechanic 2, and one each of Boiler Mechanic, Junior Grader, Plumber</li>
+  <li><strong>Higher Education (Director Colleges), 15:</strong> Library Assistant 9, Computer Assistant 2, Mistry 2, Plumber-II 2</li>
+  <li><strong>Law, Justice and Parliamentary Affairs, 1:</strong> Library Assistant 1</li>
+</ul>
+<p>Cadre, category-wise posts and qualification for each post are in Annexure A of the advertisement (Items 45 to 91).</p>
+<h2>Who can apply</h2>
+<ul>
+  <li><strong>Domicile:</strong> a valid J&amp;K domicile certificate.</li>
+  <li><strong>Maximum age as on 01.01.2026:</strong> OM 40; SC, ST-1, ST-2, RBA, ALC/IB, EWS and OBC 43; physically challenged 42; ex-servicemen 48.</li>
+  <li><strong>Fee:</strong> ₹600; ₹500 for SC, ST-1, ST-2, EWS and PwBD.</li>
+  <li><strong>Selection:</strong> merit in the written (OMR) exam only.</li>
+</ul>
+<p><a href="${PDF}/Notice_04OF2026_19112026.pdf">Notice with the new dates (PDF)</a> · <a href="${PDF}/Advt_04OF2026_25052026.pdf">Full advertisement (PDF)</a></p>
+<p>Notice No. JKSSB-PLAN/17/2025-06 (E-7817791), dated 19.11.2026.</p>`,
+    source_url: `${PDF}/Notice_04OF2026_19112026.pdf`,
+  },
+  {
     slug: "jkssb-sub-inspector-admit-card-2026",
     title: "JK Police Sub-Inspector admit card from 26 November, exam on 29 November",
     category: "admit_card",

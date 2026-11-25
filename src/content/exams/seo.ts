@@ -20,6 +20,7 @@ function year(f: ExamFacts) {
 }
 
 export function examSeoTitle(f: ExamFacts) {
+  if (f.seoTitle) return f.seoTitle;
   const parts = [`${f.postsTotal.toLocaleString("en-IN")} Posts`, f.pattern ? "Exam Pattern" : "Eligibility", f.pastCutoffs ? "Cut-off" : "Dates"];
   return `${name(f)} ${year(f)}: ${parts.join(", ")}`;
 }

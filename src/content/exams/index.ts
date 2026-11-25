@@ -26,6 +26,8 @@ export interface ExamFacts {
   title: string;
   board: string;
   advert: { no: string; date: string; items?: string | null };
+  /** Replaces the generated page title when people search for the exam in other words. */
+  seoTitle?: string | null;
   postsTotal: number;
   postsNote?: string | null;
   /** Category-wise posts; counts follow CATEGORIES. */

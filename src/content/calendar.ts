@@ -23,6 +23,7 @@ const SI_ADMIT_UPDATE = "/notifications/jkssb-sub-inspector-admit-card-2026";
 const MTS_UPDATE = "/notifications/jkssb-class-iv-mts-last-date-extended-2026";
 const JE_MECH_UPDATE = "/notifications/jkssb-junior-engineer-mechanical-apply-dates-2026";
 const JE_CIVIL_UPDATE = "/notifications/jkssb-junior-engineer-civil-notification-2026";
+const ADVT04_UPDATE = "/notifications/jkssb-advt-04-2026-apply-dates";
 const FAA_KEY_UPDATE = "/notifications/jkssb-faa-provisional-answer-key-2026";
 
 export const calendarEvents: CalendarEvent[] = [
@@ -36,12 +37,14 @@ export const calendarEvents: CalendarEvent[] = [
   { date: "2026-11-29", title: "Sub-Inspector exam", board: "JKSSB", kind: "exam", examSlug: "sub-inspector", href: SI_UPDATE },
   { date: "2026-11-30", title: "Junior Engineer (Civil): applications open", board: "JKSSB", kind: "deadline", examSlug: "junior-engineer-civil", href: JE_CIVIL_UPDATE },
   { date: "2026-12-13", title: "Constable (Executive) exam", board: "JKSSB", kind: "exam", examSlug: "constable-executive", href: CONSTABLE_UPDATE },
+  { date: "2026-12-16", title: "Machineman, Binder, Head Weaver & more: applications open", board: "JKSSB", kind: "deadline", note: "Advt 04 of 2026 · 130 posts", href: ADVT04_UPDATE },
   { date: "2026-12-20", title: "Constable (Armed / IRP / SDRF) exam", board: "JKSSB", kind: "exam", examSlug: "constable-armed-irp-sdrf", href: CONSTABLE_UPDATE },
   { date: "2026-12-22", title: "Junior Engineer (Mechanical): last date to apply", board: "JKSSB", kind: "deadline", note: "11:59 PM", examSlug: "junior-engineer-mechanical", href: JE_MECH_UPDATE },
   { date: "2026-12-23", title: "Sub-Inspector (Telecommunication) exam", board: "JKSSB", kind: "exam", examSlug: "sub-inspector-telecom", href: CONSTABLE_UPDATE },
   { date: "2026-12-27", title: "Constable (Telecommunication) exam", board: "JKSSB", kind: "exam", examSlug: "constable-telecom-photographer", href: CONSTABLE_UPDATE },
   { date: "2026-12-29", title: "Junior Engineer (Civil): last date to apply", board: "JKSSB", kind: "deadline", examSlug: "junior-engineer-civil", href: JE_CIVIL_UPDATE },
   { date: "2026-12-30", title: "Constable (Photographer) exam", board: "JKSSB", kind: "exam", examSlug: "constable-telecom-photographer", href: CONSTABLE_UPDATE },
+  { date: "2027-01-14", title: "Machineman, Binder, Head Weaver & more: last date to apply", board: "JKSSB", kind: "deadline", note: "Advt 04 of 2026 · 11:59 PM", href: ADVT04_UPDATE },
 ];
 
 /** Today's date in IST as YYYY-MM-DD. */
