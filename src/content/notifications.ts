@@ -27,6 +27,33 @@ const HOME_EXAMS_NOTICE = `${PDF}/notice_01082026.pdf`;
 
 export const contentNotifications: ContentNotification[] = [
   {
+    slug: "jkssb-admit-card-3-days-exam-centre-rules-2026",
+    title: "JKSSB exams: admit cards now only 3 days before the exam, stricter checks at centres",
+    category: "notification",
+    published_at: "2026-11-25T18:00:00+05:30",
+    summary:
+      "JKSSB has cut the admit card download period to 3 days before each exam (it was 7) and added stricter checks at exam centres: no metal items, water bottles or watches, and no hoodies or clothes with large buttons or baggy cuffs.",
+    body: `
+<p>JKSSB has issued an important notice with extra measures against unfair means for its <strong>upcoming exams</strong>, including the JK Police Sub-Inspector and Constable exams.</p>
+<h2>What changes for candidates</h2>
+<ul>
+  <li><strong>Admit cards:</strong> available to download only <strong>3 days before the exam</strong>, instead of 7. Exam centres are still allotted at random.</li>
+  <li><strong>Do not carry:</strong> any metal item, including water bottles, watches and special goggles. Frisking by J&amp;K Police is being tightened.</li>
+  <li><strong>Clothing:</strong> you will not be let in wearing clothes that can hide a small gadget, such as large buttons, baggy cuffs or hoodies.</li>
+  <li><strong>Vehicles:</strong> no parking near the centre, and no one may accompany you.</li>
+</ul>
+<h2>At the centres</h2>
+<ul>
+  <li>Invigilators are picked at random by the Deputy Commissioners from a pool of identified staff; only permanent government staff will do centre duties.</li>
+  <li>Magistrates supervise frisking, and no one may leave the premises until the exam ends.</li>
+  <li>More jammers in exam halls, CCTV in every centre with live monitoring from JKSSB control rooms in Jammu and Srinagar, and flying squads around the centres.</li>
+  <li>Staff must deposit their phones in a locked control room until the exam is over.</li>
+</ul>
+<p>The Board asks candidates to ignore rumours and follow only information on its official website.</p>
+<p>Notice of the Controller of Examination, JKSSB, dated 25.11.2026.</p>`,
+    source_url: `${PDF}/ImportantNotice25112026.pdf`,
+  },
+  {
     slug: "jkssb-advt-04-2026-apply-dates",
     title: "JKSSB Machineman, Binder, Head Weaver, Lab Assistant and more: 130 posts, apply from 16 December",
     category: "notification",
@@ -329,7 +356,7 @@ export const contentNotifications: ContentNotification[] = [
     summary:
       "JKSSB has scheduled the JK Police Constable written exams for 13, 20, 27 and 30 December 2026, and Sub-Inspector (Telecommunication) for 23 December.",
     body: `
-<p>JKSSB announced these Home Department exam dates in its advance notice of 1 August 2026. All are OMR-based written exams. Admit cards are issued seven days before each exam. Dates can change, so confirm on the official site before you travel.</p>
+<p>JKSSB announced these Home Department exam dates in its advance notice of 1 August 2026. All are OMR-based written exams. Admit cards can be downloaded 3 days before each exam (JKSSB cut this from 7 days in its notice of 25.11.2026). Dates can change, so confirm on the official site before you travel.</p>
 <h2>Exam dates</h2>
 <ul>
   <li><strong>13 December 2026:</strong> Constable (Executive), Notification 12 of 2025, Items 273–274</li>
