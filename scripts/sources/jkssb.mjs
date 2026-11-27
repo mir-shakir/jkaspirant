@@ -33,13 +33,15 @@ function dateFrom(url) {
 
 // jkssb.nic.in is slow and drops many new connections (a connect often takes
 // 10-35 s while TCP retries), and it sends an incomplete certificate chain that
-// Node's fetch rejects. So use curl, with a long connect timeout and retries.
+// Node's fetch rejects. Linux curl (cloud runs) rejects it too, so skip the
+// certificate check for this public, read-only page (-k), and use a long connect
+// timeout and retries.
 export const CURL_PATIENT = ["--connect-timeout", "45", "--max-time", "120", "--retry", "3", "--retry-all-errors", "--retry-delay", "5"];
 
 async function getPage(url) {
   const { execFileSync } = await import("node:child_process");
   try {
-    return execFileSync("curl", ["-sSfL", ...CURL_PATIENT, "-A", "Mozilla/5.0", url], { encoding: "utf8", maxBuffer: 50e6 });
+    return execFileSync("curl", ["-sSfLk", ...CURL_PATIENT, "-A", "Mozilla/5.0", url], { encoding: "utf8", maxBuffer: 50e6 });
   } catch (err) {
     console.error(`jkssb: could not load ${url} after 4 tries (${String(err.stderr || err.message).trim()})`);
     process.exit(1);

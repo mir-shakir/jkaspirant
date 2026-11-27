@@ -9,7 +9,7 @@
 //   ... --only <slug> [--force]                                     # limit to one update (--force re-posts it)
 //
 // Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHANNEL_ID (@channel_username or -100… id),
-//      optional TELEGRAM_STATE_FILE (default ../notes/telegram-posted.json), NEXT_PUBLIC_SITE_URL.
+//      optional TELEGRAM_STATE_FILE (default ops/telegram-posted.json, committed so cloud runs share it), NEXT_PUBLIC_SITE_URL.
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -17,7 +17,7 @@ import { fileURLToPath } from "node:url";
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const site = (process.env.NEXT_PUBLIC_SITE_URL || "https://jkaspirant.in").replace(/\/$/, "");
-const stateFile = process.env.TELEGRAM_STATE_FILE || resolve(repo, "..", "notes", "telegram-posted.json");
+const stateFile = process.env.TELEGRAM_STATE_FILE || resolve(repo, "ops", "telegram-posted.json");
 const MAX_PER_RUN = 3;
 
 const args = process.argv.slice(2);
