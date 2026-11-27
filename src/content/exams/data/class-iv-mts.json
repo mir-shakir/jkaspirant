@@ -91,7 +91,7 @@
   ],
   [
    "Last date to apply",
-   "12 Nov 2026 by corrigendum (originally 03.11.2026), extended to 27 Nov 2026"
+   "12 Nov 2026 by corrigendum (originally 03.11.2026), extended to 27 Nov 2026, then to 4 Dec 2026"
   ],
   [
    "Exam date",
@@ -138,8 +138,12 @@
   {
    "label": "Extension notice (PDF)",
    "url": "https://jkssb.nic.in/Pdf/Extension_notice_09OF2026_11112026.pdf"
+  },
+  {
+   "label": "Second extension notice, 27 Nov 2026 (PDF)",
+   "url": "https://jkssb.nic.in/Pdf/Extension_09OF2026_27112026.pdf"
   }
  ],
  "notes": [],
- "checked": "2026-11-16"
+ "checked": "2026-11-27"
 }

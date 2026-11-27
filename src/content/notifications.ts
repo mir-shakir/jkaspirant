@@ -27,6 +27,28 @@ const HOME_EXAMS_NOTICE = `${PDF}/notice_01082026.pdf`;
 
 export const contentNotifications: ContentNotification[] = [
   {
+    slug: "jkssb-class-iv-mts-last-date-extended-december-2026",
+    title: "JKSSB Class-IV (MTS) and Sanitation Worker: last date extended to 4 December",
+    category: "notification",
+    published_at: "2026-11-27T23:30:00+05:30",
+    summary:
+      "JKSSB has extended the last date to apply for the 2,863 Class-IV (MTS) and Sanitation Worker posts under Advertisement 09 of 2026 to 4 December 2026, instead of 27 November.",
+    body: `
+<p>The last date to apply for the <strong>Class-IV (MTS) and Sanitation Worker</strong> posts under Advertisement Notification No. 09 of 2026 (dated 01.09.2026) is now <strong>4 December 2026</strong>, instead of 27 November. JKSSB extended it after requests from candidates.</p>
+<h2>At a glance</h2>
+<ul>
+  <li><strong>Posts:</strong> 2,863 (UT 105, Division Jammu 1,093, Division Kashmir 897, district cadres 768)</li>
+  <li><strong>Pay:</strong> SL-1 (₹14,800–47,100)</li>
+  <li><strong>Qualification:</strong> MTS: Matric to 10+2. Sanitation Worker: 8th pass to 10+2.</li>
+  <li><strong>Apply:</strong> online at jkssb.nic.in, until 4 December 2026</li>
+  <li><strong>Exam date:</strong> not announced yet</li>
+</ul>
+<p>Apply well before the last day. JKSSB warns that the site slows down under heavy load in the closing days.</p>
+<p>Notice No. JKSSB-PLAN/6/2025-03 (E-7661495), dated 27.11.2026.</p>`,
+    source_url: `${PDF}/Extension_09OF2026_27112026.pdf`,
+    exam: { slug: "class-iv-mts", title: "Class-IV (MTS) & Sanitation Worker" },
+  },
+  {
     slug: "jk-police-si-exam-day-instructions-2026",
     title: "JK Police SI exam on 29 November: what to carry, when to reach and rules at the centre",
     category: "notification",
@@ -286,7 +308,8 @@ export const contentNotifications: ContentNotification[] = [
     summary:
       "JKSSB has extended the last date to apply for the 2,863 Class-IV (MTS) and Sanitation Worker posts under Advertisement 09 of 2026 to 27 November 2026.",
     body: `
-<p>Applications for the <strong>Class-IV (MTS) and Sanitation Worker</strong> posts under Advertisement Notification No. 09 of 2026 (dated 01.09.2026) are open again. The last date is now <strong>27 November 2026</strong>, instead of 12 November.</p>
+<p><strong>Newer notice:</strong> the last date has since been extended again, to <strong>4 December 2026</strong>. <a href="/notifications/jkssb-class-iv-mts-last-date-extended-december-2026">See the latest update</a>.</p>
+<p>Applications for the <strong>Class-IV (MTS) and Sanitation Worker</strong> posts under Advertisement Notification No. 09 of 2026 (dated 01.09.2026) are open again. The last date was then <strong>27 November 2026</strong>, instead of 12 November.</p>
 <h2>At a glance</h2>
 <ul>
   <li><strong>Posts:</strong> 2,863 (UT 105, Division Jammu 1,093, Division Kashmir 897, district cadres 768)</li>

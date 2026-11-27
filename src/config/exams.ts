@@ -72,7 +72,7 @@ export const liveExams: Record<string, LiveExam> = {
     title: "Class-IV (MTS) & Sanitation Worker",
     board: "JKSSB",
     posts: 2863,
-    status: "Last date extended to 27 Nov · exam date awaited",
+    status: "Last date extended to 4 Dec · exam date awaited",
     awaited: true,
   },
   "advt-08-2026": {
