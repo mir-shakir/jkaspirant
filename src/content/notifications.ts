@@ -27,6 +27,26 @@ const HOME_EXAMS_NOTICE = `${PDF}/notice_01082026.pdf`;
 
 export const contentNotifications: ContentNotification[] = [
   {
+    slug: "jk-police-si-exam-29-november-cat-no-stay-2026",
+    title: "JK Police SI exam stays on 29 November: CAT refuses to defer it, FAA selection continues",
+    category: "notification",
+    published_at: "2026-11-27T17:00:00+05:30",
+    summary:
+      "The Central Administrative Tribunal, Srinagar, has refused interim relief to defer the JK Police Sub-Inspector exam or stay the Finance Accounts Assistant selection. The SI exam will be held as scheduled on Sunday, 29 November 2026.",
+    body: `
+<p>JKSSB says the OMR-based written exam for <strong>Sub-Inspector, J&amp;K Police (Home Department)</strong> will be held <strong>as scheduled on Sunday, 29 November 2026</strong>.</p>
+<h2>What happened</h2>
+<ul>
+  <li>Some applicants asked the Central Administrative Tribunal (CAT), Srinagar Bench, to defer the SI exam and to stay the recruitment of <strong>Finance Accounts Assistant</strong>, whose exam was held on 15 November (O.A. No. 1326/2026).</li>
+  <li>JKSSB placed its exam protocols and the new measures from its notice of 25 November before the Tribunal.</li>
+  <li>The Tribunal <strong>declined interim relief</strong>: no deferment of the SI exam and no stay on the FAA selection process.</li>
+</ul>
+<p>JKSSB asks candidates to focus on preparation and rely only on its official website. See the <a href="/notifications/jkssb-admit-card-3-days-exam-centre-rules-2026">new rules at exam centres</a> before you go.</p>
+<p>Press release, JKSSB, Jammu, 27 November 2026.</p>`,
+    source_url: `${PDF}/Press_Release_27112026.pdf`,
+    exam: { slug: "sub-inspector", title: "JK Police Sub-Inspector" },
+  },
+  {
     slug: "jkssb-admit-card-3-days-exam-centre-rules-2026",
     title: "JKSSB exams: admit cards now only 3 days before the exam, stricter checks at centres",
     category: "notification",

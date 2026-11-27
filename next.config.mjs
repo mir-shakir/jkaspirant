@@ -17,6 +17,8 @@ const nextConfig = {
       { source: "/search", destination: "/notifications", permanent: true },
       { source: "/resources", destination: "/exams", permanent: true },
       { source: "/feedback", destination: "/contact", permanent: true },
+      // Old exam sub-pages (syllabus and cut-offs now live on the exam page itself).
+      { source: "/exams/:slug/:sub(syllabus|cut-offs)", destination: "/exams/:slug", permanent: true },
     ];
   },
   async headers() {
