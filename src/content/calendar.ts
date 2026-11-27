@@ -20,7 +20,7 @@ const CONSTABLE_UPDATE = "/notifications/jkssb-police-constable-exam-dates-2026"
 const SI_UPDATE = "/notifications/jkssb-sub-inspector-exam-date-2026";
 const SI_ADMIT_UPDATE = "/notifications/jkssb-sub-inspector-admit-card-2026";
 
-const MTS_UPDATE = "/notifications/jkssb-class-iv-mts-last-date-extended-2026";
+const MTS_UPDATE = "/notifications/jkssb-class-iv-mts-last-date-extended-december-2026";
 const JE_MECH_UPDATE = "/notifications/jkssb-junior-engineer-mechanical-apply-dates-2026";
 const JE_CIVIL_UPDATE = "/notifications/jkssb-junior-engineer-civil-notification-2026";
 const ADVT04_UPDATE = "/notifications/jkssb-advt-04-2026-apply-dates";
@@ -33,9 +33,9 @@ export const calendarEvents: CalendarEvent[] = [
   { date: "2026-11-20", title: "Junior Pharmacist, Staff Nurse & more: last day to edit form", board: "JKSSB", kind: "deadline", note: "Advt 08 of 2026 · 11:59 PM", examSlug: "advt-08-2026", href: "/notifications/jkssb-advt-08-2026-edit-option" },
     { date: "2026-11-23", title: "Junior Engineer (Mechanical): applications open", board: "JKSSB", kind: "deadline", examSlug: "junior-engineer-mechanical", href: JE_MECH_UPDATE },
   { date: "2026-11-26", title: "Sub-Inspector admit card", board: "JKSSB", kind: "admit_card", note: "On jkssb.nic.in", examSlug: "sub-inspector", href: SI_ADMIT_UPDATE },
-  { date: "2026-11-27", title: "Class-IV (MTS): last date to apply", board: "JKSSB", kind: "deadline", examSlug: "class-iv-mts", href: MTS_UPDATE },
   { date: "2026-11-29", title: "Sub-Inspector exam", board: "JKSSB", kind: "exam", examSlug: "sub-inspector", href: SI_UPDATE },
   { date: "2026-11-30", title: "Junior Engineer (Civil): applications open", board: "JKSSB", kind: "deadline", examSlug: "junior-engineer-civil", href: JE_CIVIL_UPDATE },
+  { date: "2026-12-04", title: "Class-IV (MTS): last date to apply", board: "JKSSB", kind: "deadline", note: "Extended from 27 Nov", examSlug: "class-iv-mts", href: MTS_UPDATE },
   { date: "2026-12-13", title: "Constable (Executive) exam", board: "JKSSB", kind: "exam", examSlug: "constable-executive", href: CONSTABLE_UPDATE },
   { date: "2026-12-16", title: "Machineman, Binder, Head Weaver & more: applications open", board: "JKSSB", kind: "deadline", note: "Advt 04 of 2026 · 130 posts", href: ADVT04_UPDATE },
   { date: "2026-12-20", title: "Constable (Armed / IRP / SDRF) exam", board: "JKSSB", kind: "exam", examSlug: "constable-armed-irp-sdrf", href: CONSTABLE_UPDATE },
