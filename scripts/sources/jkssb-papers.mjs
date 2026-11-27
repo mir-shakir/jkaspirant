@@ -4,7 +4,8 @@
 //   node scripts/sources/jkssb-papers.mjs          # write src/content/papers.json, print a summary
 //   node scripts/sources/jkssb-papers.mjs --print  # print JSON lines only, write nothing
 //
-// curl is used because Node's fetch rejects jkssb.nic.in's certificate chain.
+// curl is used because Node's fetch rejects jkssb.nic.in's certificate chain;
+// long connect timeout and retries because the server drops many connections.
 
 import { execFileSync } from "node:child_process";
 import { writeFileSync, readFileSync, existsSync } from "node:fs";
@@ -14,7 +15,7 @@ import { fileURLToPath } from "node:url";
 const PAGE = "https://jkssb.nic.in/QP.html";
 const out = resolve(dirname(fileURLToPath(import.meta.url)), "../../src/content/papers.json");
 
-const html = execFileSync("curl", ["-sk", "-A", "Mozilla/5.0", "--max-time", "60", PAGE], { encoding: "utf8", maxBuffer: 20e6 });
+const html = execFileSync("curl", ["-sk", "-A", "Mozilla/5.0", "--connect-timeout", "45", "--max-time", "120", "--retry", "3", "--retry-all-errors", "--retry-delay", "5", PAGE], { encoding: "utf8", maxBuffer: 20e6 });
 
 const decode = (s) =>
   s.replace(/&amp;/g, "&").replace(/&#39;|&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&nbsp;/g, " ").replace(/&lt;/g, "<").replace(/&gt;/g, ">");

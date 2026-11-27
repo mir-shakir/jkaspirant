@@ -31,21 +31,18 @@ function dateFrom(url) {
   return `${y}-${mo}-${d}`;
 }
 
-// jkssb.nic.in sends an incomplete certificate chain, which Node's fetch
-// rejects. curl uses the system trust store and copes, so fall back to it.
+// jkssb.nic.in is slow and drops many new connections (a connect often takes
+// 10-35 s while TCP retries), and it sends an incomplete certificate chain that
+// Node's fetch rejects. So use curl, with a long connect timeout and retries.
+export const CURL_PATIENT = ["--connect-timeout", "45", "--max-time", "120", "--retry", "3", "--retry-all-errors", "--retry-delay", "5"];
+
 async function getPage(url) {
+  const { execFileSync } = await import("node:child_process");
   try {
-    const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (compatible; jkaspirant-sync)" } });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.text();
+    return execFileSync("curl", ["-sSfL", ...CURL_PATIENT, "-A", "Mozilla/5.0", url], { encoding: "utf8", maxBuffer: 50e6 });
   } catch (err) {
-    const { execFileSync } = await import("node:child_process");
-    try {
-      return execFileSync("curl", ["-sSfL", "-m", "60", "-A", "Mozilla/5.0", url], { encoding: "utf8", maxBuffer: 50e6 });
-    } catch {
-      console.error(`jkssb: could not load ${url} (${err.message})`);
-      process.exit(1);
-    }
+    console.error(`jkssb: could not load ${url} after 4 tries (${String(err.stderr || err.message).trim()})`);
+    process.exit(1);
   }
 }
 
