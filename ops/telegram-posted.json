@@ -1,77 +1,149 @@
 {
-  "posted": {
-    "jkssb-sub-inspector-exam-date-2026": {
-      "at": "2026-11-18T09:33:21.934Z",
-      "sent": true,
-      "message_id": 3
+  "channels": {
+    "@jkaspirant_in": {
+      "posted": {
+        "jkssb-sub-inspector-exam-date-2026": {
+          "at": "2026-11-18T09:33:21.934Z",
+          "sent": true,
+          "message_id": 3
+        },
+        "jkssb-class-iv-mts-last-date-extended-2026": {
+          "at": "2026-11-18T09:33:22.378Z",
+          "sent": false
+        },
+        "jkssb-advt-08-2026-edit-option": {
+          "at": "2026-11-18T09:33:22.378Z",
+          "sent": false
+        },
+        "jkssb-junior-engineer-mechanical-notification-2026": {
+          "at": "2026-11-18T09:33:22.378Z",
+          "sent": false
+        },
+        "jkssb-junior-engineer-civil-notification-2026": {
+          "at": "2026-11-18T09:33:22.378Z",
+          "sent": false
+        },
+        "jkssb-faa-provisional-answer-key-2026": {
+          "at": "2026-11-18T09:33:22.378Z",
+          "sent": false
+        },
+        "jkssb-police-constable-exam-dates-2026": {
+          "at": "2026-11-18T09:33:22.378Z",
+          "sent": false
+        },
+        "jkssb-faa-exam-held-answer-key-awaited-2026": {
+          "at": "2026-11-18T09:33:22.378Z",
+          "sent": false
+        },
+        "jkssb-sub-inspector-admit-card-2026": {
+          "at": "2026-11-20T14:36:54.112Z",
+          "sent": true,
+          "message_id": 8
+        },
+        "jkssb-junior-engineer-mechanical-apply-dates-2026": {
+          "at": "2026-11-20T14:36:54.590Z",
+          "sent": true,
+          "message_id": 9
+        },
+        "jkssb-faa-exam-integrity-press-note-2026": {
+          "at": "2026-11-20T14:36:55.147Z",
+          "sent": true,
+          "message_id": 10
+        },
+        "jkssb-advt-04-2026-apply-dates": {
+          "at": "2026-11-25T14:36:29.601Z",
+          "sent": true,
+          "message_id": 11
+        },
+        "jkssb-admit-card-3-days-exam-centre-rules-2026": {
+          "at": "2026-11-26T08:37:11.052Z",
+          "sent": true,
+          "message_id": 12
+        },
+        "jk-police-si-exam-29-november-cat-no-stay-2026": {
+          "at": "2026-11-27T14:38:52.077Z",
+          "sent": true,
+          "message_id": 13
+        },
+        "jkssb-class-iv-mts-last-date-extended-december-2026": {
+          "at": "2026-11-27T18:09:53.220Z",
+          "sent": true,
+          "message_id": 14
+        },
+        "jk-police-si-exam-day-instructions-2026": {
+          "at": "2026-11-27T18:09:53.783Z",
+          "sent": true,
+          "message_id": 15
+        }
+      }
     },
-    "jkssb-class-iv-mts-last-date-extended-2026": {
-      "at": "2026-11-18T09:33:22.378Z",
-      "sent": false
-    },
-    "jkssb-advt-08-2026-edit-option": {
-      "at": "2026-11-18T09:33:22.378Z",
-      "sent": false
-    },
-    "jkssb-junior-engineer-mechanical-notification-2026": {
-      "at": "2026-11-18T09:33:22.378Z",
-      "sent": false
-    },
-    "jkssb-junior-engineer-civil-notification-2026": {
-      "at": "2026-11-18T09:33:22.378Z",
-      "sent": false
-    },
-    "jkssb-faa-provisional-answer-key-2026": {
-      "at": "2026-11-18T09:33:22.378Z",
-      "sent": false
-    },
-    "jkssb-police-constable-exam-dates-2026": {
-      "at": "2026-11-18T09:33:22.378Z",
-      "sent": false
-    },
-    "jkssb-faa-exam-held-answer-key-awaited-2026": {
-      "at": "2026-11-18T09:33:22.378Z",
-      "sent": false
-    },
-    "jkssb-sub-inspector-admit-card-2026": {
-      "at": "2026-11-20T14:36:54.112Z",
-      "sent": true,
-      "message_id": 8
-    },
-    "jkssb-junior-engineer-mechanical-apply-dates-2026": {
-      "at": "2026-11-20T14:36:54.590Z",
-      "sent": true,
-      "message_id": 9
-    },
-    "jkssb-faa-exam-integrity-press-note-2026": {
-      "at": "2026-11-20T14:36:55.147Z",
-      "sent": true,
-      "message_id": 10
-    },
-    "jkssb-advt-04-2026-apply-dates": {
-      "at": "2026-11-25T14:36:29.601Z",
-      "sent": true,
-      "message_id": 11
-    },
-    "jkssb-admit-card-3-days-exam-centre-rules-2026": {
-      "at": "2026-11-26T08:37:11.052Z",
-      "sent": true,
-      "message_id": 12
-    },
-    "jk-police-si-exam-29-november-cat-no-stay-2026": {
-      "at": "2026-11-27T14:38:52.077Z",
-      "sent": true,
-      "message_id": 13
-    },
-    "jkssb-class-iv-mts-last-date-extended-december-2026": {
-      "at": "2026-11-27T18:09:53.220Z",
-      "sent": true,
-      "message_id": 14
-    },
-    "jk-police-si-exam-day-instructions-2026": {
-      "at": "2026-11-27T18:09:53.783Z",
-      "sent": true,
-      "message_id": 15
+    "@JkExamSpark_jkssb": {
+      "posted": {
+        "jkssb-class-iv-mts-last-date-extended-december-2026": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        },
+        "jk-police-si-exam-day-instructions-2026": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        },
+        "jk-police-si-exam-29-november-cat-no-stay-2026": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        },
+        "jkssb-admit-card-3-days-exam-centre-rules-2026": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        },
+        "jkssb-advt-04-2026-apply-dates": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        },
+        "jkssb-sub-inspector-admit-card-2026": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        },
+        "jkssb-junior-engineer-mechanical-apply-dates-2026": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        },
+        "jkssb-faa-exam-integrity-press-note-2026": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        },
+        "jkssb-class-iv-mts-last-date-extended-2026": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        },
+        "jkssb-advt-08-2026-edit-option": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        },
+        "jkssb-junior-engineer-mechanical-notification-2026": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        },
+        "jkssb-junior-engineer-civil-notification-2026": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        },
+        "jkssb-faa-provisional-answer-key-2026": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        },
+        "jkssb-sub-inspector-exam-date-2026": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        },
+        "jkssb-police-constable-exam-dates-2026": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        },
+        "jkssb-faa-exam-held-answer-key-awaited-2026": {
+          "at": "2026-11-27T18:26:26.130Z",
+          "sent": false
+        }
+      }
     }
   }
 }
