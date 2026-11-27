@@ -27,6 +27,46 @@ const HOME_EXAMS_NOTICE = `${PDF}/notice_01082026.pdf`;
 
 export const contentNotifications: ContentNotification[] = [
   {
+    slug: "jk-police-si-exam-day-instructions-2026",
+    title: "JK Police SI exam on 29 November: what to carry, when to reach and rules at the centre",
+    category: "notification",
+    published_at: "2026-11-27T21:00:00+05:30",
+    summary:
+      "Reach the centre at least 2 hours before gate closing for biometrics and frisking. Carry the original printed admit card (both pages), an original photo ID and 2 recent colour photos. Only a transparent water bottle, sanitiser up to 50 ml and a black or blue ball pen are allowed.",
+    body: `
+<p>JKSSB has issued instructions for candidates in the <strong>Sub-Inspector (Home Department)</strong> OMR exam on <strong>29 November 2026</strong>.</p>
+<h2>When to reach</h2>
+<ul>
+  <li>Be at the centre <strong>at least 2 hours before the gate closing time</strong> for biometric fingerprint check, face capture and frisking.</li>
+  <li>No entry after the gate closes, and no one may leave the hall before the exam ends.</li>
+  <li>Check your centre's location a day before. Centres will not be changed.</li>
+</ul>
+<h2>What to carry</h2>
+<ul>
+  <li><strong>Original printed admit card, both pages</strong> (candidate and centre details, and the instructions page), with the self declaration. Scans and photocopies are not accepted. The centre keeps it after the exam, so print a spare copy for yourself.</li>
+  <li><strong>One original photo ID:</strong> PAN, driving licence, voter ID, passport, Aadhaar or printed e-Aadhaar with photo, government or PSU employee ID, or college/university ID. Photocopies are not accepted, even if attested.</li>
+  <li><strong>2 recent colour photographs</strong>, not older than 6 months, with your name and date written on them.</li>
+  <li>Allowed: a <strong>transparent water bottle</strong>, hand sanitiser up to 50 ml, and a simple <strong>black or blue ball pen</strong>.</li>
+</ul>
+<h2>Not allowed</h2>
+<ul>
+  <li>Phones, smart or digital watches, Bluetooth devices, earphones, calculators, pen drives or any electronic device.</li>
+  <li>Notes, papers or books, wallets, handbags, jewellery and food. Religious items are allowed, subject to frisking.</li>
+  <li>Thick-soled footwear and clothes with large metal buttons or hidden pockets.</li>
+  <li>Having a banned item counts as unfair means even if you don't use it, and cancels your candidature. There is no place to keep belongings at the centre.</li>
+</ul>
+<h2>At the centre</h2>
+<ul>
+  <li>A hologram is stuck on your admit card after the biometric check. Without it you cannot enter the hall.</li>
+  <li>Hold your admit card up clearly when your photo or video is taken. Centres have CCTV, jammers and face recognition, and frisking uses a handheld metal detector.</li>
+  <li>If your admit card photo is wrong, report it before exam day at JKSSB's office in Jammu or Srinagar, or email ssbjk-grievance@jk.gov.in. It cannot be fixed at the centre.</li>
+</ul>
+<p>Also read the <a href="/notifications/jkssb-admit-card-3-days-exam-centre-rules-2026">new rules at exam centres</a> from 25 November.</p>
+<p>Instructions of the Controller of Examinations, JKSSB, 27 November 2026.</p>`,
+    source_url: `${PDF}/Important_Instructions_Candidates_27112026.pdf`,
+    exam: { slug: "sub-inspector", title: "JK Police Sub-Inspector" },
+  },
+  {
     slug: "jk-police-si-exam-29-november-cat-no-stay-2026",
     title: "JK Police SI exam stays on 29 November: CAT refuses to defer it, FAA selection continues",
     category: "notification",
@@ -52,13 +92,13 @@ export const contentNotifications: ContentNotification[] = [
     category: "notification",
     published_at: "2026-11-25T18:00:00+05:30",
     summary:
-      "JKSSB has cut the admit card download period to 3 days before each exam (it was 7) and added stricter checks at exam centres: no metal items, water bottles or watches, and no hoodies or clothes with large buttons or baggy cuffs.",
+      "JKSSB has cut the admit card download period to 3 days before each exam (it was 7) and added stricter checks at exam centres: no metal items such as metal water bottles or watches, and no hoodies or clothes with large buttons or baggy cuffs.",
     body: `
 <p>JKSSB has issued an important notice with extra measures against unfair means for its <strong>upcoming exams</strong>, including the JK Police Sub-Inspector and Constable exams.</p>
 <h2>What changes for candidates</h2>
 <ul>
   <li><strong>Admit cards:</strong> available to download only <strong>3 days before the exam</strong>, instead of 7. Exam centres are still allotted at random.</li>
-  <li><strong>Do not carry:</strong> any metal item, including water bottles, watches and special goggles. Frisking by J&amp;K Police is being tightened.</li>
+  <li><strong>Do not carry:</strong> any metal item, such as metal water bottles, watches and special goggles. Frisking by J&amp;K Police is being tightened. (For the SI exam, JKSSB allows a transparent water bottle.)</li>
   <li><strong>Clothing:</strong> you will not be let in wearing clothes that can hide a small gadget, such as large buttons, baggy cuffs or hoodies.</li>
   <li><strong>Vehicles:</strong> no parking near the centre, and no one may accompany you.</li>
 </ul>
