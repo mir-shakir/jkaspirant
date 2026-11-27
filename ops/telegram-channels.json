@@ -1,0 +1,7 @@
+{
+  "_note": "Channels the sync posts every live update to. The bot must be an admin with 'Post messages'. Usernames are public; the bot token is a secret in the environment.",
+  "channels": [
+    "@jkaspirant_in",
+    "@JkExamSpark_jkssb"
+  ]
+}
